@@ -1,0 +1,32 @@
+# Review checklist
+
+- [ ] Không có secret (token, khóa, mật khẩu, connection string) trong diff.
+- [ ] Mọi `TODO`/`FIXME` mới đều có dạng `TODO(TEDU-<số>)`.
+- [ ] Không còn `console.log`, `Console.WriteLine`, `print` debug trong diff.
+- [ ] Không có tên viết tắt ngoài danh sách `Id, Url, Dto, Api, Db, Qr, Hls, Json, Http, Oidc`.
+- [ ] Mọi tên nghiệp vụ trong code và chữ UI khớp glossary (không dùng từ cột "KHÔNG gọi là").
+- [ ] Diff chỉ chứa thay đổi thuộc thẻ đang làm.
+- [ ] Tên nhánh và mọi commit chứa mã thẻ đúng định dạng `TEDU-<số>`.
+- [ ] Lint, format, build với warning-as-error đều pass.
+- [ ] Có test mới đủ theo conventions.md mục 5 (loại, tên, AAA, mock đúng biên ngoài).
+- [ ] Coverage không thấp hơn ngưỡng ở conventions.md mục 5.
+- [ ] Nếu là sửa bug: có test tái hiện bug, đã thấy FAIL trước khi sửa.
+- [ ] Không có test bị skip, `only`, hoặc bị xóa để pass.
+- [ ] Không có business logic trong Endpoint/Controller hay component UI (6.1).
+- [ ] Không có phụ thuộc layer đảo chiều (6.2).
+- [ ] Không truy cập bảng/entity của module khác ở phía ghi (6.3).
+- [ ] Không nối chuỗi SQL (6.4).
+- [ ] Frontend chỉ gọi backend qua `packages/api-client`, không sửa tay file sinh (6.5).
+- [ ] Không lưu token ở `localStorage`/`sessionStorage` (6.6).
+- [ ] Không hardcode secret, không commit `secret.json` (6.7).
+- [ ] Mọi endpoint mới có policy role và kiểm tra sở hữu trong Handler (6.8).
+- [ ] `Paid`, `OutboxMessage`, `Enrollment` đi đúng UPDATE có điều kiện và cùng transaction (6.9).
+- [ ] Không có `catch` rỗng, `.catch(() => {})`, hay `Task` fire-and-forget (6.10).
+- [ ] Lỗi API không chứa stack, thông điệp exception; log không chứa token, mật khẩu (6.11).
+- [ ] Video chỉ phục vụ qua kiểm tra token; ffmpeg gọi bằng danh sách tham số (6.12).
+- [ ] Không có tên khác glossary hoặc tên mới chưa vào glossary (6.13).
+- [ ] Tiền dùng `decimal`/`numeric(18,0)`, không `float`/`double` (6.14).
+- [ ] Schema DB đổi bằng migration mới, không sửa migration đã merge (6.15).
+- [ ] Không thêm thư viện ngoài Tech Stack khi chưa có decision log (6.16).
+- [ ] Không có `any`, `@ts-ignore`, `dangerouslySetInnerHTML` chưa sanitize (6.17).
+- [ ] Không xóa/skip test hoặc nới ngưỡng coverage để CI pass (6.18).

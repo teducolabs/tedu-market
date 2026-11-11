@@ -1,6 +1,6 @@
 # Decision logs
 
-Tra cứu "tại sao lúc đó lại chọn thế". KHÔNG dùng để theo dõi tiến độ (việc của bảng Kanban) và KHÔNG mô tả kiến trúc hiện tại (việc của `docs/architecture.md`). Mỗi quyết định 1 file.
+Tra cứu "tại sao lúc đó lại chọn thế". KHÔNG dùng để theo dõi tiến độ (việc của bảng Kanban hoặc `docs/status.md`) và KHÔNG mô tả kiến trúc hiện tại (việc của `docs/architecture.md`). Mỗi quyết định 1 file.
 
 ## Tên file: `YYYY-MM-DD-<slug>.md`
 

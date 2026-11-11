@@ -13,16 +13,18 @@ Kanban: {{CONG_CU_KANBAN}} · Mã thẻ: {{FORMAT_MA_THE}} · Cột: {{CAC_COT}}
 - `docs/decision-logs/`: `grep -l` theo mã FR/NFR, tên module, thuật ngữ, mã thẻ; đọc các file `status: Active` khớp — không đi ngược quyết định đã chốt.
 - Task giao diện: BẮT BUỘC đọc `docs/ux.md` mục 4, 5 và `### Luồng:` liên quan.
 - Task build/deploy/release/CI-CD: BẮT BUỘC đọc toàn bộ `docs/deploy.md`.
+- `docs/status.md` (nếu có): bảng Kanban + backlog + chi tiết thẻ. `grep -n "T<số>" docs/status.md` rồi Read đúng đoạn của thẻ (mô tả, acceptance criteria, FR/NFR, thẻ phụ thuộc). Không đọc cả file.
 - Không dựa vào ký ức session trước.
 - File bắt buộc (`prd.md`, `domain-glossary.md`, `decision-logs/README.md`, `architecture.md`, `ux.md`, `deploy.md`, `conventions.md`, `review-checklist.md` trong `docs/`) không tồn tại hoặc trống → DỪNG, báo người dùng, không tự suy diễn.
 
 ## 2. Nguồn task là thẻ Kanban
 
 - Mỗi task gắn 1 mã thẻ; người dùng không đưa thì hỏi, trừ khi họ nói rõ là việc ngoài bảng.
-- Phạm vi = mô tả + acceptance criteria của thẻ (có MCP thì đọc thẻ trực tiếp, không thì dùng nội dung người dùng dán). AC thiếu → hỏi, không tự đoán.
+- Phạm vi = mô tả + acceptance criteria của thẻ (có `docs/status.md` thì đọc ở đó; có MCP thì đọc thẻ trực tiếp; không thì dùng nội dung người dùng dán). AC thiếu → hỏi, không tự đoán.
 - Mỗi lúc 1 thẻ. Không nhận thêm thẻ, không làm việc của thẻ khác dù thấy liên quan.
 - Tiếp tục thẻ từ session trước: đọc nhánh của thẻ (git log, diff với nhánh chính) và mô tả PR nếu có, tóm tắt trạng thái để người dùng xác nhận rồi mới làm tiếp.
 - Không tự chuyển cột thẻ khi chưa được yêu cầu, kể cả khi MCP cho phép.
+- Khi được yêu cầu chuyển cột với `docs/status.md`: sửa cả bảng Kanban ở đầu file và checkbox của thẻ trong cùng một commit. Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
 
 ## 3. Definition of Done
 
@@ -41,7 +43,7 @@ Kanban: {{CONG_CU_KANBAN}} · Mã thẻ: {{FORMAT_MA_THE}} · Cột: {{CAC_COT}}
    - **Test:** tầng đã có và pass; tầng thiếu và lý do
    - **Decision log:** file đã tạo/cập nhật (kể cả `Proposed` đang chờ xác nhận)
    - **Tài liệu đã cập nhật:** file, mục
-   - **Việc phát sinh cần tạo thẻ:** việc cố ý hoãn, nợ kỹ thuật, bug ngoài phạm vi, test còn thiếu — mỗi mục: tiêu đề đề xuất, lý do, vị trí, thẻ gốc. Có MCP và người dùng đồng ý thì tạo thẻ. Không bao giờ hoãn việc âm thầm.
+   - **Việc phát sinh cần tạo thẻ:** việc cố ý hoãn, nợ kỹ thuật, bug ngoài phạm vi, test còn thiếu — mỗi mục: tiêu đề đề xuất, lý do, vị trí, thẻ gốc. Người dùng đồng ý thì tạo thẻ (thêm vào `docs/status.md`, hoặc qua MCP nếu có). Không bao giờ hoãn việc âm thầm.
    - **Blocker:** vướng mắc cần người dùng quyết định
 
 Chỉ để `TODO(<MÃ-THẺ>): ...` trong code khi thẻ đã tồn tại; chưa có thẻ thì đưa vào mục Việc phát sinh.

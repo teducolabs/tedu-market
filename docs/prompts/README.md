@@ -18,7 +18,7 @@
 | `docs/conventions.md` | Viết code thế nào | Chi tiết, agent đọc theo mục |
 | `docs/review-checklist.md` | Tự chấm gì trước khi báo xong | Tối đa 40 dòng, nạp sẵn vào mọi session qua CLAUDE.md |
 | `CLAUDE.md` (gốc repo) | Luật chơi của agent | Copy từ [templates/CLAUDE.md](templates/CLAUDE.md). Buộc agent đọc và tuân theo các file trên trong mọi session |
-| Bảng Kanban (ngoài repo) | Đang làm gì, còn gì, việc gì bị hoãn hoặc bị chặn | Thay cho `status.md` của v1.0 |
+| Bảng Kanban (ngoài repo) hoặc `docs/status.md` (tùy chọn, tạo bằng A7) | Đang làm gì, còn gì, việc gì bị hoãn hoặc bị chặn | Có `docs/status.md` thì đó là nơi duy nhất theo dõi tiến độ, không dùng song song bảng ngoài |
 
 - **Luồng A, dự án mới:** viết tài liệu trước, code sau. Tài liệu là bản thiết kế, anh quyết định nội dung.
 - **Luồng B, dự án đang vận hành:** code có trước, tài liệu được tái dựng từ code. Đây là bản mô tả hiện trạng (as-is) có gắn nhãn mức độ chắc chắn, và phải được người nắm hệ thống review trước khi agent coi đó là luật.
@@ -86,7 +86,7 @@ Chọn bằng `/model <alias>`. Ghi theo alias vì mỗi alias trỏ tới phiê
 - [ ] 6. [A5: `docs/deploy.md`](a5-deploy.md)
 - [ ] 7. [A6: `docs/conventions.md` + `docs/review-checklist.md`](a6-conventions.md)
 - [ ] 8. [C2: `CLAUDE.md`](c2-claude-md.md): copy template, tự điền 4 chỗ trống, xóa mục 12
-- [ ] 9. (tùy chọn) [A7: backlog ban đầu cho Kanban](a7-kanban-backlog.md)
+- [ ] 9. (tùy chọn) [A7: `docs/status.md` backlog ban đầu + bảng Kanban](a7-kanban-backlog.md)
 
 ## Luồng B: dự án đang vận hành (checklist thứ tự)
 
@@ -129,12 +129,12 @@ Chạy C1 → [prompt chuyển v1.0 sang v2.0](appendix-migrate-v1-to-v2.md) →
 |---|---|---|
 | Phạm vi | Chỉ dự án mới | Thêm luồng B cho dự án đang vận hành |
 | Nhật ký quyết định | 1 file `docs/decisions.md` | Thư mục `docs/decision-logs/`, mỗi quyết định 1 file `YYYY-MM-DD-<slug>.md` |
-| Theo dõi tiến độ | `docs/status.md` | Bỏ `status.md`, tiến độ nằm trên bảng Kanban |
+| Theo dõi tiến độ | `docs/status.md` | Bỏ `status.md`, tiến độ nằm trên bảng Kanban; hoặc tạo lại `docs/status.md` bằng A7 theo dạng bảng Kanban Markdown (tùy chọn) |
 | Prompt dùng chung | Không có | C1 (decision-logs) và C2 (CLAUDE.md) |
 | Model | Ghi cứng tên phiên bản | Ghi theo alias |
 | Tối ưu token (v2.1) | Không có | Template tĩnh cho C1/C2, `review-checklist.md` tách riêng, glossary và checklist nạp qua `@import`, đọc theo phần, giới hạn độ dài, discovery tách file |
 
-Bỏ `status.md` thì ba thứ phải có chỗ mới:
+Bỏ `status.md` kiểu v1.0 thì ba thứ phải có chỗ mới (nếu dùng `docs/status.md` của A7 thì chúng nằm ngay trong file đó):
 - **Nguồn task** chuyển thành thẻ Kanban, và mỗi task agent làm phải gắn với một mã thẻ.
 - **Deferred Work và Blocker** chuyển thành thẻ mới hoặc thẻ gắn cờ chặn. Agent phải liệt kê chúng ở cuối báo cáo của mỗi task.
 - **Điểm tiếp tục giữa các session** dựa vào thẻ, nhánh git của thẻ và mô tả PR.
