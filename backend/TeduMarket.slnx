@@ -10,4 +10,10 @@
     <Project Path="src/TeduMarket.Domain/TeduMarket.Domain.csproj" />
     <Project Path="src/TeduMarket.Infrastructure/TeduMarket.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TeduMarket.Api.IntegrationTests/TeduMarket.Api.IntegrationTests.csproj" />
+    <Project Path="tests/TeduMarket.Application.Tests/TeduMarket.Application.Tests.csproj" />
+    <Project Path="tests/TeduMarket.Architecture.Tests/TeduMarket.Architecture.Tests.csproj" />
+    <Project Path="tests/TeduMarket.Domain.Tests/TeduMarket.Domain.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -1,0 +1,4 @@
+[*.cs]
+# Tên test theo conventions §5: <Method>_<Condition>_<Expected>
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.xUnit1004.severity = error

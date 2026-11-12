@@ -1,6 +1,6 @@
 # Conventions — TEDU Market
 
-Áp dụng cho stack trong [architecture.md](architecture.md) §2. Tên nghiệp vụ theo [domain-glossary.md](domain-glossary.md). Mã thẻ dạng `TEDU-123`. Quy tắc nào ghi "CI" là máy chặn; "Review" là tự soát bằng [review-checklist.md](review-checklist.md).
+Áp dụng cho stack trong [architecture.md](architecture.md) §2. Tên nghiệp vụ theo [domain-glossary.md](domain-glossary.md). Mã thẻ dạng `T123`. Quy tắc nào ghi "CI" là máy chặn; "Review" là tự soát bằng [review-checklist.md](review-checklist.md).
 
 ## 1. Naming
 
@@ -28,10 +28,10 @@ Ngoại lệ duy nhất: header `X-API-Token` giữ nguyên. Tên kỹ thuật n
 | API endpoint | `/api/v1/<danh-từ-số-nhiều>`; hành động không phải CRUD là danh từ con | `POST /api/v1/orders/{orderId}/resolution` | `POST /api/v1/resolveOrder`, `/api/v1/Order` |
 | Query string, JSON | camelCase | `?categoryId=...&pageSize=20` | `?category_id=` |
 | `errorCode` | `UPPER_SNAKE_CASE` | `AMOUNT_MISMATCH` | `amountMismatch` |
-| Nhánh git | `<feature\|fix\|chore\|docs\|refactor>/<mã thẻ>-<slug không dấu, kebab-case>` | `feature/TEDU-123-dang-ky-hoc-vien` | `feature/dang-ky-hoc-vien`, `TEDU-123` |
-| Commit | `<mã thẻ>: <động từ + việc, tiếng Việt, ≤ 72 ký tự>`; 1 commit 1 mã thẻ | `TEDU-123: thêm API đăng ký học viên` | `fix bug`, `update code` |
+| Nhánh git | `<feature\|fix\|chore\|docs\|refactor>/<mã thẻ>-<slug không dấu, kebab-case>` | `feature/T123-dang-ky-hoc-vien` | `feature/dang-ky-hoc-vien`, `T123` |
+| Commit | `<mã thẻ>: <động từ + việc, tiếng Việt, ≤ 72 ký tự>`; 1 commit 1 mã thẻ | `T123: thêm API đăng ký học viên` | `fix bug`, `update code` |
 
-CI: hook `commit-msg` chặn nếu không khớp `^TEDU-\d+: .{5,72}$`; CI chặn tên nhánh không khớp `^(feature|fix|chore|docs|refactor)/TEDU-\d+(-[a-z0-9]+)+$`.
+CI: hook `commit-msg` chặn nếu không khớp `^T\d+: .{5,72}$`; CI chặn tên nhánh không khớp `^(feature|fix|chore|docs|refactor)/T\d+(-[a-z0-9]+)+$`. Hook nằm ở `.githooks/`, tự bật khi chạy `pnpm install` (script `prepare` đặt `core.hooksPath`); workflow ở `.github/workflows/ci.yml`.
 
 **Viết tắt:** chỉ được dùng danh sách đóng `Id, Url, Dto, Api, Db, Qr, Hls, Json, Http, Oidc`. Tên khác phải viết đủ chữ. Ngoại lệ: biến vòng lặp `i`, tham số lambda một chữ cái trong lambda ≤ 1 dòng.
 
@@ -173,12 +173,12 @@ rules: {
   'no-restricted-imports': ['error', { paths: ['axios', 'pg', 'dapper'], patterns: ['**/features/*/**'] }],
   'react/no-danger': 'error',
   'check-file/filename-naming-convention': ['error', { '**/*.{ts,tsx}': 'KEBAB_CASE' }],
-  'no-warning-comments': ['error', { terms: ['todo', 'fixme'], location: 'start' }], // TODO phải có mã thẻ: dùng // TODO(TEDU-123)
+  'no-warning-comments': ['error', { terms: ['todo', 'fixme'], location: 'start' }], // TODO phải có mã thẻ: dùng // TODO(T123)
 }
 ```
 CI: `pnpm lint --max-warnings 0`, `pnpm prettier --check .`, `pnpm tsc --noEmit`.
 
-TODO hợp lệ: `// TODO(TEDU-123): …`; CI quét `TODO|FIXME` không có `(TEDU-\d+)` thì fail (`git grep -nE 'TODO|FIXME' | grep -vE '\(TEDU-[0-9]+\)'`).
+TODO hợp lệ: `// TODO(T123): …`; CI quét `TODO|FIXME` không có `(T\d+)` thì fail (`git grep -nE 'TODO|FIXME' | grep -vE '\(T[0-9]+\)'`).
 
 ## 4. Error handling
 
@@ -224,7 +224,7 @@ TODO hợp lệ: `// TODO(TEDU-123): …`; CI quét `TODO|FIXME` không có `(TE
 | Unit frontend (Vitest + Testing Library) | Hàm trong `lib/`, hook, form có lỗi 400 theo trường | `lib/` và `hooks/`: line ≥ 70% | CI fail |
 | E2E (Playwright, `e2e/`) | Mỗi luồng chính ux.md §3 ≥ 1 test; bắt buộc: Học viên Checkout → gọi `PaymentHook` giả → `Vào học` → phát Video; Instructor tạo khóa → `Gửi duyệt` → Admin duyệt; Khách xem `PreviewLesson` | 100% luồng chính chạy pass | Chạy trên staging trước deploy production |
 
-**Sửa bug:** bắt buộc có test tái hiện bug, viết trước, chạy thấy FAIL khi chưa sửa, PASS sau khi sửa, đặt cùng commit với bản sửa; tên test ghi mã thẻ (`Handle_..._Regression_TEDU123`, `it('... (TEDU-123)')`). Test lỗi thanh toán/Enrollment nằm ở tầng integration.
+**Sửa bug:** bắt buộc có test tái hiện bug, viết trước, chạy thấy FAIL khi chưa sửa, PASS sau khi sửa, đặt cùng commit với bản sửa; tên test ghi mã thẻ (`Handle_..._Regression_T123`, `it('... (T123)')`). Test lỗi thanh toán/Enrollment nằm ở tầng integration.
 
 **Cấm trong test:** `[Fact(Skip=…)]`, `it.skip`, `it.only`, `Thread.Sleep`/`setTimeout` chờ cố định (dùng `FakeTimeProvider`, `waitFor`), phụ thuộc thứ tự chạy, dữ liệu dùng chung giữa test. CI: ESLint `jest/no-focused-tests`, `jest/no-disabled-tests`; analyzer xUnit `xUnit1004` = error.
 

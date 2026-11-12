@@ -6,7 +6,7 @@ reconstructed: false      # true nếu tái dựng từ code/lịch sử
 supersedes: []            # tên file các quyết định bị thay thế
 superseded_by:            # tên file quyết định thay thế, nếu có
 related: []               # vd [FR-03, NFR-01, Billing]
-cards: []                 # vd [TEDU-123]
+cards: []                 # vd [T123]
 ---
 # <Tiêu đề quyết định>
 

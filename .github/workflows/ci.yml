@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  conventions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tên nhánh khớp conventions §1
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "$GITHUB_HEAD_REF" | grep -E '^(feature|fix|chore|docs|refactor)/T[0-9]+(-[a-z0-9]+)+$' \
+            || { echo "Tên nhánh '$GITHUB_HEAD_REF' không hợp lệ"; exit 1; }
+      - name: Mọi commit của PR khớp T<số>
+        if: github.event_name == 'pull_request'
+        run: |
+          bad=$(git log --format=%s "origin/${{ github.base_ref }}..HEAD" --no-merges | grep -vE '^T[0-9]+: .{5,72}$' || true)
+          if [ -n "$bad" ]; then echo "Commit sai định dạng:"; echo "$bad"; exit 1; fi
+      - name: TODO/FIXME phải có mã thẻ
+        run: |
+          bad=$(git grep -nE 'TODO|FIXME' -- ':!docs' ':!.github' ':!pnpm-lock.yaml' ':!eslint.config.js' ':!AGENTS.md' ':!CLAUDE.md' | grep -vE '\(T[0-9]+\)' || true)
+          if [ -n "$bad" ]; then echo "$bad"; exit 1; fi
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm turbo build
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet format backend/TeduMarket.slnx --verify-no-changes
+      - run: dotnet build backend/TeduMarket.slnx -warnaserror

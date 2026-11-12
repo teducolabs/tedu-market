@@ -46,5 +46,5 @@ KHÔNG ghi: tên biến, format code, việc chi tiết không ảnh hưởng ng
 ls docs/decision-logs                                # theo thời gian
 grep -l "status: Active" docs/decision-logs/*.md     # đang hiệu lực
 grep -l "FR-03" docs/decision-logs/*.md              # theo FR/NFR, module, thuật ngữ
-grep -l "TEDU-123" docs/decision-logs/*.md           # theo mã thẻ
+grep -l "T123" docs/decision-logs/*.md           # theo mã thẻ
 ```

@@ -1,12 +1,12 @@
 # Review checklist
 
 - [ ] Không có secret (token, khóa, mật khẩu, connection string) trong diff.
-- [ ] Mọi `TODO`/`FIXME` mới đều có dạng `TODO(TEDU-<số>)`.
+- [ ] Mọi `TODO`/`FIXME` mới đều có dạng `TODO(T<số>)`.
 - [ ] Không còn `console.log`, `Console.WriteLine`, `print` debug trong diff.
 - [ ] Không có tên viết tắt ngoài danh sách `Id, Url, Dto, Api, Db, Qr, Hls, Json, Http, Oidc`.
 - [ ] Mọi tên nghiệp vụ trong code và chữ UI khớp glossary (không dùng từ cột "KHÔNG gọi là").
 - [ ] Diff chỉ chứa thay đổi thuộc thẻ đang làm.
-- [ ] Tên nhánh và mọi commit chứa mã thẻ đúng định dạng `TEDU-<số>`.
+- [ ] Tên nhánh và mọi commit chứa mã thẻ đúng định dạng `T<số>`.
 - [ ] Lint, format, build với warning-as-error đều pass.
 - [ ] Có test mới đủ theo conventions.md mục 5 (loại, tên, AAA, mock đúng biên ngoài).
 - [ ] Coverage không thấp hơn ngưỡng ở conventions.md mục 5.
