@@ -4,7 +4,9 @@ Backlog ban đầu và bảng theo dõi tiến độ. Nguồn: [prd.md](prd.md),
 
 ## Quy ước cập nhật
 
-- Đổi trạng thái thẻ thì sửa **cả** bảng Kanban và checkbox ở phần Phase trong cùng một commit.
+- Đổi trạng thái thẻ thì sửa **cả** bảng Kanban, checkbox ở phần Phase và checkbox acceptance criteria trong phần Chi tiết thẻ, trong cùng một lần sửa.
+- Checkbox thẻ ở phần Phase: `[ ]` chưa xong · `[~]` đang ở Review (đạt Definition of Done, chờ người review) · `[x]` Xong (do người review quyết định).
+- Acceptance criteria trong Chi tiết thẻ: tick `[x]` khi đã kiểm chứng; chưa kiểm chứng được thì để `[ ]` và ghi lý do ngay cuối dòng.
 - Thẻ xong khi đạt Definition of Done của dự án và tất cả acceptance criteria quan sát được.
 - Thẻ 🚀 cần môi trường staging thật, nên phụ thuộc T15 (Job `deploy-stg`).
 - Thẻ chỉ bắt đầu khi mọi thẻ phụ thuộc đã Xong.
@@ -22,7 +24,7 @@ Backlog ban đầu và bảng theo dõi tiến độ. Nguồn: [prd.md](prd.md),
 
 _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 
-- [ ] T01 Khởi tạo monorepo pnpm + Turborepo và solution .NET — epic: Nền tảng; phụ thuộc: —
+- [~] T01 Khởi tạo monorepo pnpm + Turborepo và solution .NET — epic: Nền tảng; phụ thuộc: —
 - [ ] T02 Khung backend: Minimal API `/api/v1`, Mediator, OpenAPI, ProblemDetails — epic: Nền tảng; phụ thuộc: T01
 - [ ] T03 PostgreSQL 18, EF Core, Dapper, docker-compose dev và migration đầu — epic: Nền tảng; phụ thuộc: T02
 - [ ] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
@@ -165,8 +167,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-13, NFR-17 · **Phụ thuộc:** —
 - **Mô tả:** Tạo monorepo có `apps/student-web`, `apps/admin-app`, `packages/ui`, `packages/api-client` và solution .NET 10 với 4 project Domain, Application, Infrastructure, Api. Thêm `.gitignore` chặn `.env*`, `secret.json`.
 - **Acceptance criteria:**
-  - `pnpm install` và `dotnet build` chạy sạch trên máy mới
-  - `pnpm turbo build` chạy được trên các package rỗng; `.env*` và `secret.json` không bị git theo dõi
+  - [x] `pnpm install` và `dotnet build` chạy sạch trên máy mới (đã kiểm trên máy dev; chưa thử trên máy hoàn toàn mới)
+  - [x] `pnpm turbo build` chạy được trên các package rỗng; `.env*` và `secret.json` không bị git theo dõi
 
 ### T02 Khung backend: Minimal API `/api/v1`, Mediator, OpenAPI, ProblemDetails
 
