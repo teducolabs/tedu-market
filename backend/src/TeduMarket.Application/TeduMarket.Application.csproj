@@ -1,8 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Mediator.Abstractions" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TeduMarket.Domain\TeduMarket.Domain.csproj" />
   </ItemGroup>
-
 
 </Project>
