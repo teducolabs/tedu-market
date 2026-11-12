@@ -6,7 +6,7 @@ reconstructed: false
 supersedes: []
 superseded_by:
 related: [NFR-13, NFR-17]
-cards: []
+cards: [T01]
 ---
 # Monorepo pnpm + Turborepo, API client sinh bằng openapi-ts
 

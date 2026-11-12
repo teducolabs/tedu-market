@@ -1,0 +1,6 @@
+T:System.Console;Dùng ILogger
+P:System.DateTime.Now;Dùng TimeProvider
+P:System.DateTime.UtcNow;Dùng TimeProvider
+P:System.Threading.Tasks.Task`1.Result;Dùng await
+M:System.Threading.Tasks.Task.Wait();Dùng await
+N:MediatR;Dùng Mediator (martinothamar)

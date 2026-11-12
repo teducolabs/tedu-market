@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/TeduMarket.Api/TeduMarket.Api.csproj" />
+    <Project Path="src/TeduMarket.Application/TeduMarket.Application.csproj" />
+    <Project Path="src/TeduMarket.Domain/TeduMarket.Domain.csproj" />
+    <Project Path="src/TeduMarket.Infrastructure/TeduMarket.Infrastructure.csproj" />
+  </Folder>
+</Solution>

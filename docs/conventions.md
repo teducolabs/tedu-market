@@ -68,6 +68,7 @@ Chữ hiển thị trên UI dùng cột "Hiển thị" của glossary, không d�
 
 ```
 backend/
+  TeduMarket.slnx
   src/
     TeduMarket.Domain/<Module>/           Aggregate, Entity, ValueObject, enum trạng thái, domain event, interface repository
     TeduMarket.Application/<Module>/
@@ -107,9 +108,11 @@ Mọi quy tắc dưới đây do công cụ chặn ở CI; không có quy tắc 
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   <AnalysisLevel>latest-recommended</AnalysisLevel>
+  <GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- IDE0005 chỉ chạy khi build nếu bật -->
+  <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- không bắt buộc XML doc -->
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" PrivateAssets="all" />
+  <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" PrivateAssets="all" /> <!-- version khai báo ở Directory.Packages.props (Central Package Management) -->
   <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" />
 </ItemGroup>
 ```

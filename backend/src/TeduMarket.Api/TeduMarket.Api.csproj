@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeduMarket.Domain\TeduMarket.Domain.csproj" />
+    <ProjectReference Include="..\TeduMarket.Application\TeduMarket.Application.csproj" />
+    <ProjectReference Include="..\TeduMarket.Infrastructure\TeduMarket.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+</Project>

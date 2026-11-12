@@ -1,0 +1,25 @@
+# Secret
+.env
+.env.*
+!.env.example
+secret.json
+**/secret.json
+secrets.json
+
+# Node
+node_modules/
+.turbo/
+dist/
+.next/
+coverage/
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# IDE / OS
+.idea/
+.DS_Store
+Thumbs.db
