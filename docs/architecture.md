@@ -39,6 +39,7 @@ flowchart LR
 | Kiểu kiến trúc | Modular monolith, Clean Architecture + CQRS (EF Core ghi / Dapper đọc) | NFR-12, NFR-14, NFR-16 | [log](decision-logs/2026-11-11-chon-modular-monolith-clean-architecture-cqrs.md) |
 | Backend | .NET 10, ASP.NET Core Minimal API, OpenAPI, `/api/v1` | NFR-17, NFR-13 | — (ràng buộc input) |
 | Mediator | Mediator (martinothamar, MIT) | NFR-17 | [log](decision-logs/2026-11-11-dung-mediator-martinothamar-thay-mediatr.md) |
+| Validate request | FluentValidation chạy trong pipeline Mediator, lỗi 400 theo từng trường | FR-26 | [log](decision-logs/2026-11-12-dung-fluentvalidation-cho-validate-request.md) |
 | CSDL | PostgreSQL 18 (full-text search + `unaccent`) | NFR-17, NFR-01, FR-44 | [PG18](decision-logs/2026-11-11-chon-postgresql-18.md), [FTS](decision-logs/2026-11-11-tim-kiem-fulltext-postgresql.md) |
 | Authn | OpenIddict + ASP.NET Core Identity trong API; Google external login | NFR-06, NFR-14 | [log](decision-logs/2026-11-11-openiddict-chay-chung-trong-api-google-external.md), [SSO](decision-logs/2026-11-11-student-dang-nhap-google-sso.md) |
 | StudentWeb | Next.js 16 App Router, SSR/ISR, session phía server | NFR-11, NFR-03, NFR-06 | [log](decision-logs/2026-11-11-chon-nextjs-16.md) |

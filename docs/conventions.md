@@ -204,7 +204,7 @@ TODO hợp lệ: `// TODO(T123): …`; CI quét `TODO|FIXME` không có `(T\d+)`
 ## 5. Testing
 
 **Đặt tên**
-- Backend: class `<TypeUnderTest>Tests`; method `<Method>_<Condition>_<Expected>`, ví dụ `Handle_OrderAlreadyPaid_ReturnsOkWithoutChange`. Sai: `Test1`, `ShouldWork`.
+- Backend: class `<TypeUnderTest>Tests`; method `<Method>_<Condition>_<Expected>`, ví dụ `Handle_OrderAlreadyPaid_ReturnsOkWithoutChange`; test `async` thêm hậu tố `Async` như mọi method (§1): `Handle_OrderAlreadyPaid_ReturnsOkWithoutChangeAsync`. Sai: `Test1`, `ShouldWork`.
 - Frontend: `describe('<Unit>')` + `it('<kết quả> when <điều kiện>')`, ví dụ `it('shows field error when server returns 400')`.
 - Integration/e2e: 1 file / 1 luồng, tên theo luồng ux.md §3.
 
