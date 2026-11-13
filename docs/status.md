@@ -20,7 +20,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 
 - [x] T01 Khởi tạo monorepo pnpm + Turborepo và solution .NET — epic: Nền tảng; phụ thuộc: —
 - [x] T02 Khung backend: Minimal API `/api/v1`, Mediator, OpenAPI, ProblemDetails — epic: Nền tảng; phụ thuộc: T01
-- [ ] T03 PostgreSQL 18, EF Core, Dapper, docker-compose dev và migration đầu — epic: Nền tảng; phụ thuộc: T02
+- [~] T03 PostgreSQL 18, EF Core, Dapper, docker-compose dev và migration đầu — epic: Nền tảng; phụ thuộc: T02
 - [ ] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
 - [ ] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
 - [ ] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
@@ -177,8 +177,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-12, NFR-17 · **Phụ thuộc:** T02
 - **Mô tả:** Thêm `docker-compose.dev.yml` (PostgreSQL 18, MinIO, Seq), DbContext EF Core cho phía ghi, kết nối Dapper cho phía đọc, migration đầu tiên.
 - **Acceptance criteria:**
-  - `docker compose -f docker-compose.dev.yml up` rồi `dotnet ef database update` tạo được schema
-  - Một query mẫu qua Dapper và một lệnh ghi qua EF Core chạy được
+  - [x] `docker compose -f docker-compose.dev.yml up` rồi `dotnet ef database update` tạo được schema
+  - [x] Một query mẫu qua Dapper và một lệnh ghi qua EF Core chạy được
 
 ### T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready
 

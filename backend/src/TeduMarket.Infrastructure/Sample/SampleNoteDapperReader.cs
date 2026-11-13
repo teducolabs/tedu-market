@@ -16,7 +16,10 @@ internal sealed class SampleNoteDapperReader(NpgsqlDataSource dataSource) : ISam
     public async Task<IReadOnlyList<SampleNoteDto>> ListAsync(CancellationToken cancellationToken)
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<SampleNoteDto>(new CommandDefinition(_listSql, cancellationToken: cancellationToken));
-        return rows.AsList();
+        var rows = await connection.QueryAsync<SampleNoteRow>(new CommandDefinition(_listSql, cancellationToken: cancellationToken));
+        return rows.Select(row => new SampleNoteDto(row.SampleNoteId, row.Title, new DateTimeOffset(row.CreatedAt, TimeSpan.Zero))).ToList();
     }
+
+    /// <summary>Npgsql trả <c>timestamptz</c> thành <see cref="DateTime"/> UTC, nên đọc qua Row rồi đổi sang <see cref="DateTimeOffset"/>.</summary>
+    private sealed record SampleNoteRow(Guid SampleNoteId, string Title, DateTime CreatedAt);
 }

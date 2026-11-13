@@ -18,7 +18,7 @@ services:
       retries: 10
 
   minio:
-    image: minio/minio
+    image: chainguard/minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?Thiếu MINIO_ACCESS_KEY trong .env.local}
@@ -33,6 +33,7 @@ services:
     image: datalust/seq
     environment:
       ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
     ports:
       - "127.0.0.1:5340:80"
       - "127.0.0.1:5341:5341"
