@@ -54,7 +54,7 @@ export default defineConfig(
         {
           selector: 'variable',
           types: ['boolean'],
-          format: ['camelCase'],
+          format: ['PascalCase'],
           prefix: ['is', 'has', 'can'],
         },
       ],
@@ -74,7 +74,11 @@ export default defineConfig(
         },
       ],
       'react/no-danger': 'error',
-      'check-file/filename-naming-convention': ['error', { '**/*.{ts,tsx}': 'KEBAB_CASE' }],
+      'check-file/filename-naming-convention': [
+        'error',
+        { '**/*.{ts,tsx}': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
       'no-warning-comments': ['error', { terms: ['todo', 'fixme'], location: 'start' }],
     },
   },
