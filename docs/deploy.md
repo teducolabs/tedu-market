@@ -42,6 +42,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `PaymentHook__ApiToken` | `X-API-Token` của hook (NFR-07) |
 | `VideoPlayback__SigningKey` | ký token phát video |
 | `Minio__AccessKey`, `Minio__SecretKey` | thumbnail |
+| `Minio__Endpoint` | URL MinIO cho `/health/ready` (không bí mật; mặc định `http://localhost:9000`) |
 | `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google |
 | `Resend__ApiKey` | email (NFR-18) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
