@@ -24,7 +24,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [~] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
 - [~] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
 - [~] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
-- [ ] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
+- [~] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
 - [ ] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
 - [ ] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [ ] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
@@ -203,16 +203,16 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-01, NFR-09, NFR-10 · **Phụ thuộc:** T02
 - **Mô tả:** Cấu hình CORS chỉ cho origin của App quản trị và Web học viên, security headers, Output Cache (có tag để xóa cache) và policy RateLimiter 10 request/phút/người dùng.
 - **Acceptance criteria:**
-  - Request từ origin lạ bị chặn CORS; response có security headers
-  - Endpoint gắn policy rate limit trả 429 ở request thứ 11 trong 1 phút
+  - [x] Request từ origin lạ bị chặn CORS; response có security headers
+  - [x] Endpoint gắn policy rate limit trả 429 ở request thứ 11 trong 1 phút
 
 ### T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern
 
 - **Epic:** Nền tảng · **FR/NFR:** NFR-23 · **Phụ thuộc:** T01
 - **Mô tả:** Dựng `packages/ui` theo ux.md mục 4-6: tokens màu/chữ/spacing, Form, Table, Modal, Toast, Empty state, Skeleton, Badge trạng thái, Banner, tiêu chuẩn accessibility.
 - **Acceptance criteria:**
-  - Trang mẫu hiển thị đủ các component ở trạng thái Loading/Empty/Error/Success
-  - Badge mọi trạng thái có chữ đúng glossary; focus ring 2px `primary`, contrast chữ ≥ 4.5:1
+  - [x] Trang mẫu hiển thị đủ các component ở trạng thái Loading/Empty/Error/Success
+  - [x] Badge mọi trạng thái có chữ đúng glossary; focus ring 2px `primary`, contrast chữ ≥ 4.5:1
 
 ### T08 API client dùng chung sinh bằng openapi-ts
 

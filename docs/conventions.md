@@ -168,7 +168,7 @@ rules: {
   '@typescript-eslint/no-floating-promises': 'error',
   '@typescript-eslint/naming-convention': ['error',
     { selector: 'typeLike', format: ['PascalCase'] },
-    { selector: 'variable', types: ['boolean'], format: ['camelCase'], prefix: ['is', 'has', 'can'] }],
+    { selector: 'variable', types: ['boolean'], format: ['PascalCase'], prefix: ['is', 'has', 'can'] }],
   'no-restricted-globals': ['error', 'localStorage', 'sessionStorage'],
   'no-restricted-imports': ['error', { paths: ['axios', 'pg', 'dapper'], patterns: ['**/features/*/**'] }],
   'react/no-danger': 'error',
