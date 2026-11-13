@@ -13,7 +13,7 @@ Kanban: {{CONG_CU_KANBAN}} · Mã thẻ: {{FORMAT_MA_THE}} · Cột: {{CAC_COT}}
 - `docs/decision-logs/`: `grep -l` theo mã FR/NFR, tên module, thuật ngữ, mã thẻ; đọc các file `status: Active` khớp — không đi ngược quyết định đã chốt.
 - Task giao diện: BẮT BUỘC đọc `docs/ux.md` mục 4, 5 và `### Luồng:` liên quan.
 - Task build/deploy/release/CI-CD: BẮT BUỘC đọc toàn bộ `docs/deploy.md`.
-- `docs/status.md` (nếu có): bảng Kanban + backlog + chi tiết thẻ. `grep -n "T<số>" docs/status.md` rồi Read đúng đoạn của thẻ (mô tả, acceptance criteria, FR/NFR, thẻ phụ thuộc). Không đọc cả file.
+- `docs/status.md` (nếu có): backlog theo phase + chi tiết thẻ. `grep -n "T<số>" docs/status.md` rồi Read đúng đoạn của thẻ (mô tả, acceptance criteria, FR/NFR, thẻ phụ thuộc). Không đọc cả file.
 - Không dựa vào ký ức session trước.
 - File bắt buộc (`prd.md`, `domain-glossary.md`, `decision-logs/README.md`, `architecture.md`, `ux.md`, `deploy.md`, `conventions.md`, `review-checklist.md` trong `docs/`) không tồn tại hoặc trống → DỪNG, báo người dùng, không tự suy diễn.
 
@@ -24,7 +24,7 @@ Kanban: {{CONG_CU_KANBAN}} · Mã thẻ: {{FORMAT_MA_THE}} · Cột: {{CAC_COT}}
 - Mỗi lúc 1 thẻ. Không nhận thêm thẻ, không làm việc của thẻ khác dù thấy liên quan.
 - Tiếp tục thẻ từ session trước: đọc nhánh của thẻ (git log, diff với nhánh chính) và mô tả PR nếu có, tóm tắt trạng thái để người dùng xác nhận rồi mới làm tiếp.
 - Không tự chuyển cột thẻ khi chưa được yêu cầu, kể cả khi MCP cho phép.
-- Khi được yêu cầu chuyển cột với `docs/status.md`: sửa cả bảng Kanban ở đầu file và checkbox của thẻ trong cùng một commit. Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
+- Khi được yêu cầu chuyển cột với `docs/status.md`: sửa checkbox của thẻ trong cùng một commit. Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
 
 ## 3. Definition of Done
 

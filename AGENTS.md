@@ -13,7 +13,7 @@ Kanban: `docs/status.md` · Mã thẻ: `T123` · Cột: Backlog → To Do → In
 - `docs/decision-logs/`: `grep -l` theo mã FR/NFR, tên module, thuật ngữ, mã thẻ; đọc các file `status: Active` khớp — không đi ngược quyết định đã chốt.
 - Task giao diện: BẮT BUỘC đọc `docs/ux.md` mục 4, 5 và `### Luồng:` liên quan.
 - Task build/deploy/release/CI-CD: BẮT BUỘC đọc toàn bộ `docs/deploy.md`.
-- `docs/status.md` (nếu có): bảng Kanban + backlog + chi tiết thẻ. `grep -n "T<số>" docs/status.md` rồi Read đúng đoạn của thẻ (mô tả, acceptance criteria, FR/NFR, thẻ phụ thuộc). Không đọc cả file.
+- `docs/status.md` (nếu có): backlog theo phase + chi tiết thẻ. `grep -n "T<số>" docs/status.md` rồi Read đúng đoạn của thẻ (mô tả, acceptance criteria, FR/NFR, thẻ phụ thuộc). Không đọc cả file.
 - Không dựa vào ký ức session trước.
 - File bắt buộc (`prd.md`, `domain-glossary.md`, `decision-logs/README.md`, `architecture.md`, `ux.md`, `deploy.md`, `conventions.md`, `review-checklist.md` trong `docs/`) không tồn tại hoặc trống → DỪNG, báo người dùng, không tự suy diễn.
 
@@ -24,7 +24,7 @@ Kanban: `docs/status.md` · Mã thẻ: `T123` · Cột: Backlog → To Do → In
 - Mỗi lúc 1 thẻ. Không nhận thêm thẻ, không làm việc của thẻ khác dù thấy liên quan.
 - Tiếp tục thẻ từ session trước: đọc nhánh của thẻ (git log, diff với nhánh chính) và mô tả PR nếu có, tóm tắt trạng thái để người dùng xác nhận rồi mới làm tiếp.
 - Chuyển cột thẻ: chỉ chuyển sang Review khi thẻ đạt DoD (mục 3) — việc này làm tự động ngay khi xong, không cần chờ yêu cầu. Các cột khác (In Progress, Done...) không tự chuyển khi chưa được yêu cầu, kể cả khi MCP cho phép.
-- Chuyển cột với `docs/status.md`: sửa cả bảng Kanban ở đầu file và checkbox/chi tiết của thẻ trong cùng một lần sửa (người dùng tự commit). Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
+- Chuyển cột với `docs/status.md`: sửa checkbox ở phần Phase và chi tiết của thẻ trong cùng một lần sửa (người dùng tự commit). Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
 
 ## 3. Definition of Done
 
@@ -38,7 +38,7 @@ Kanban: `docs/status.md` · Mã thẻ: `T123` · Cột: Backlog → To Do → In
 1. Chạy test, xác nhận pass.
 2. Tự review theo `docs/review-checklist.md`.
 3. Thay đổi làm 1 mô tả trong `docs/` sai đi (FR, module, thuật ngữ, bước deploy...) → sửa file đó trong cùng nhánh. Tài liệu lệch code là lỗi.
-4. Cập nhật `docs/status.md`: thẻ đạt DoD thì chuyển sang Review (sửa cả bảng Kanban, checkbox thẻ ở phần Phase và tick acceptance criteria trong Chi tiết thẻ, theo "Quy ước cập nhật" trong file). Không commit và không push — để người dùng tự review diff rồi tự commit, trừ khi họ yêu cầu rõ trong lượt đó.
+4. Cập nhật `docs/status.md`: thẻ đạt DoD thì chuyển sang Review (sửa checkbox thẻ ở phần Phase và tick acceptance criteria trong Chi tiết thẻ, theo "Quy ước cập nhật" trong file). Không commit và không push — để người dùng tự review diff rồi tự commit, trừ khi họ yêu cầu rõ trong lượt đó.
 5. Báo cáo đúng mẫu:
    - **Thẻ:** mã thẻ + tóm tắt việc đã làm
    - **Test:** tầng đã có và pass; tầng thiếu và lý do
