@@ -133,7 +133,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 - Upload (FR-35): kiểm tra đuôi, magic bytes mp4 và 1 GB ở Nginx + Kestrel; tên file sinh bằng GUID; ffmpeg gọi bằng danh sách tham số (không qua shell), có timeout. Thumbnail: presigned PUT giới hạn kiểu/dung lượng.
 - XSS: React escape mặc định; mô tả khóa nếu cho HTML phải sanitize phía server. CSRF: API dùng Bearer; cookie session StudentWeb `SameSite=Lax`.
 - Rate limit (NFR-10): nhóm checkout/payment 10 request/phút/người dùng → 429; hook thêm giới hạn theo IP để chống dò token.
-- NFR-09: HTTPS ở Nginx, CORS chỉ origin AdminApp và StudentWeb, security headers. Lỗi trả ProblemDetails, không lộ stack trace (FR-26).
+- NFR-09: HTTPS ở Nginx, CORS chỉ origin AdminApp và StudentWeb (cấu hình `Cors:AllowedOrigins`, danh sách ngăn bởi dấu phẩy), security headers (`SecurityHeadersMiddleware`). Output Cache policy `Catalog` 60 s, tag `catalog` để xóa cache; rate limit policy `Checkout` dùng `ApiPolicies` (`Api/Common`), vượt giới hạn trả 429 `errorCode: RATE_LIMITED`. Lỗi trả ProblemDetails, không lộ stack trace (FR-26).
 - Log không ghi token, mật khẩu; `Payout`, `OrderResolution` lưu người thực hiện.
 
 ## 5. Performance

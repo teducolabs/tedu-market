@@ -1,4 +1,5 @@
 using Mediator;
+using TeduMarket.Api.Common;
 using TeduMarket.Application.Sample.Commands.CreateSample;
 using TeduMarket.Application.Sample.Commands.SaveSampleNote;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
@@ -20,6 +21,12 @@ public static class SampleEndpoints
 
         group.MapGet("/notes", async (IMediator mediator, CancellationToken cancellationToken) =>
             Results.Ok(await mediator.Send(new GetSampleNotesQuery(), cancellationToken)));
+
+        group.MapGet("/cached", () => Results.Ok(new { value = Guid.NewGuid() }))
+            .CacheOutput(ApiPolicies.CatalogCachePolicy);
+
+        group.MapGet("/limited", () => Results.Ok())
+            .RequireRateLimiting(ApiPolicies.CheckoutRateLimitPolicy);
 
         group.MapGet("/failure", () =>
         {

@@ -35,14 +35,19 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
     context.ProblemDetails.Extensions["correlationId"] = context.HttpContext.TraceIdentifier);
+builder.Services.AddApiPolicies(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+app.UseCors(ApiPolicies.CorsPolicy);
+app.UseRateLimiter();
+app.UseOutputCache();
 app.MapOpenApi();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });

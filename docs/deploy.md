@@ -46,7 +46,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google |
 | `Resend__ApiKey` | email (NFR-18) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
-| `Cors__AllowedOrigins` | origin AdminApp, StudentWeb (NFR-09) |
+| `Cors__AllowedOrigins` | origin AdminApp, StudentWeb, ngăn bởi dấu phẩy (NFR-09) |
 | `Seq__ServerUrl`, `Seq__ApiKey` | log |
 | `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server |
 | `IMAGE_TAG` | tag image cần chạy |
