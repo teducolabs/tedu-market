@@ -48,4 +48,19 @@ public sealed class LayerDependencyTests
         // Assert
         Assert.True(result.IsSuccessful);
     }
+
+    [Fact]
+    public void DomainAndApplication_ReferenceEfCoreOrDapper_ReturnsFailure()
+    {
+        // Arrange
+        var assemblies = new[] { typeof(DomainAssemblyMarker).Assembly, typeof(ApplicationAssemblyMarker).Assembly };
+        var forbiddenNamespaces = new[] { "Microsoft.EntityFrameworkCore", "Dapper", "Npgsql" };
+
+        // Act
+        var results = assemblies.Select(assembly =>
+            Types.InAssembly(assembly).ShouldNot().HaveDependencyOnAny(forbiddenNamespaces).GetResult());
+
+        // Assert
+        Assert.All(results, result => Assert.True(result.IsSuccessful));
+    }
 }

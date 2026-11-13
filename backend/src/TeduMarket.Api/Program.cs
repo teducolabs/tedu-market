@@ -2,6 +2,7 @@ using TeduMarket.Api.Common;
 using TeduMarket.Api.Sample;
 using TeduMarket.Application;
 using TeduMarket.Application.Common.Behaviors;
+using TeduMarket.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddMediator(options =>
     options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
 });
 builder.Services.AddApplicationValidators();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();

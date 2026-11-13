@@ -1,5 +1,7 @@
 using Mediator;
 using TeduMarket.Application.Sample.Commands.CreateSample;
+using TeduMarket.Application.Sample.Commands.SaveSampleNote;
+using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 
 namespace TeduMarket.Api.Sample;
 
@@ -12,6 +14,12 @@ public static class SampleEndpoints
 
         group.MapPost("/", async (CreateSampleCommand command, IMediator mediator, CancellationToken cancellationToken) =>
             Results.Ok(await mediator.Send(command, cancellationToken)));
+
+        group.MapPost("/notes", async (SaveSampleNoteCommand command, IMediator mediator, CancellationToken cancellationToken) =>
+            Results.Ok(await mediator.Send(command, cancellationToken)));
+
+        group.MapGet("/notes", async (IMediator mediator, CancellationToken cancellationToken) =>
+            Results.Ok(await mediator.Send(new GetSampleNotesQuery(), cancellationToken)));
 
         group.MapGet("/failure", () =>
         {
