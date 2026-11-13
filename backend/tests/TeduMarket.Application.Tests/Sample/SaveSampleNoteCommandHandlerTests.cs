@@ -5,6 +5,7 @@ using TeduMarket.Domain.Sample;
 
 namespace TeduMarket.Application.Tests.Sample;
 
+[Trait("Category", "Unit")]
 public sealed class SaveSampleNoteCommandHandlerTests
 {
     [Fact]

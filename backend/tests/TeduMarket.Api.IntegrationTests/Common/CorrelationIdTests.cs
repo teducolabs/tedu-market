@@ -8,6 +8,7 @@ using Serilog.Core;
 
 namespace TeduMarket.Api.IntegrationTests.Common;
 
+[Trait("Category", "Integration")]
 public sealed class CorrelationIdTests : IDisposable
 {
     private readonly CollectingLogSink _sink = new();

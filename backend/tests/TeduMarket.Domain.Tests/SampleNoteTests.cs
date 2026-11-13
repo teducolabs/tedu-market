@@ -3,6 +3,7 @@ using TeduMarket.Domain.Sample;
 
 namespace TeduMarket.Domain.Tests;
 
+[Trait("Category", "Unit")]
 public sealed class SampleNoteTests
 {
     private static readonly DateTimeOffset _now = new(2026, 11, 13, 0, 0, 0, TimeSpan.Zero);

@@ -59,7 +59,7 @@ Tài khoản nhận QR nằm trong `appsettings.json`, không phải secret.
 
 GitHub Actions, các job nối bằng `needs`; tầng nào fail thì job sau skipped, không có ngoại lệ, không `continue-on-error`.
 
-1. `unit`: `dotnet test --filter Category=Unit --collect:"XPlat Code Coverage"`; Domain + Application phủ ≥ 70% (NFR-16), dưới ngưỡng thì fail.
+1. `unit`: `dotnet test --filter Category=Unit --settings backend/coverage.runsettings --collect:"XPlat Code Coverage"`; Domain + Application phủ ≥ 70% (NFR-16), dưới ngưỡng thì fail.
 2. `integration`: `dotnet test --filter Category=Integration` (Testcontainers, PostgreSQL thật; gồm test race hook/checkout, NFR-04). Chỉ chạy khi `unit` pass.
 3. `e2e`: dựng compose trên runner, chạy `pnpm --filter e2e test` (đăng ký → mua → hook → Enrollment → phát video). Chỉ chạy khi `integration` pass.
 4. `build`: `pnpm turbo build --filter=...[origin/master]`, `docker build` 3 image (api, web, admin), push GHCR tag `${GITHUB_SHA}`.

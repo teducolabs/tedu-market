@@ -5,6 +5,7 @@ using TeduMarket.Application.Common.Exceptions;
 
 namespace TeduMarket.Application.Tests.Common;
 
+[Trait("Category", "Unit")]
 public sealed class ValidationBehaviorTests
 {
     private sealed record TestMessage(string? Name, int Age) : IMessage;
