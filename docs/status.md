@@ -22,7 +22,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T02 Khung backend: Minimal API `/api/v1`, Mediator, OpenAPI, ProblemDetails — epic: Nền tảng; phụ thuộc: T01
 - [~] T03 PostgreSQL 18, EF Core, Dapper, docker-compose dev và migration đầu — epic: Nền tảng; phụ thuộc: T02
 - [~] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
-- [ ] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
+- [~] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
 - [ ] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
 - [ ] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
 - [ ] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
@@ -195,8 +195,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-16 · **Phụ thuộc:** T03
 - **Mô tả:** Tạo project test, phân loại `Category=Unit` và `Category=Integration`, Testcontainers PostgreSQL thật, thu thập coverage.
 - **Acceptance criteria:**
-  - `dotnet test --filter Category=Unit` và `--filter Category=Integration` chạy độc lập
-  - Integration test tự dựng PostgreSQL bằng container và dọn sau khi chạy
+  - [x] `dotnet test --filter Category=Unit` và `--filter Category=Integration` chạy độc lập
+  - [x] Integration test tự dựng PostgreSQL bằng container và dọn sau khi chạy
 
 ### T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ
 

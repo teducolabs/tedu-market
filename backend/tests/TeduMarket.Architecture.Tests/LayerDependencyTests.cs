@@ -5,6 +5,7 @@ using TeduMarket.Infrastructure;
 
 namespace TeduMarket.Architecture.Tests;
 
+[Trait("Category", "Unit")]
 public sealed class LayerDependencyTests
 {
     [Fact]

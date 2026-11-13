@@ -2,6 +2,7 @@ using TeduMarket.Application.Sample.Commands.CreateSample;
 
 namespace TeduMarket.Application.Tests.Sample;
 
+[Trait("Category", "Unit")]
 public sealed class CreateSampleCommandHandlerTests
 {
     [Fact]

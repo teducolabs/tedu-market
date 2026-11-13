@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace TeduMarket.Api.IntegrationTests.Common;
 
+[Trait("Category", "Integration")]
 public sealed class ApiFrameworkTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
