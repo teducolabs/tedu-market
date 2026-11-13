@@ -74,7 +74,7 @@ Pull request chỉ chạy bước 1–3. Lighthouse SEO ≥ 90 (NFR-11) chạy t
 - Xem SQL trước khi merge: `dotnet ef migrations script <from> <to> --idempotent`. Migration khóa bảng lớn (Order, Course) phải chạy ngoài giờ cao điểm.
 - Mọi migration phải có `Down` chạy được **hoặc** kế hoạch rollback ghi trong PR (restore từ dump bước 6.3). Thiếu cả hai thì không lên production.
 - Đổi schema theo expand/contract: thêm cột/bảng ở bản N, bỏ cột cũ ở bản N+1, để image N-1 vẫn chạy được trên schema mới (bắt buộc cho rollback mục 7).
-- Local: `dotnet ef database update`. Staging và production: bundle trong bước 6.
+- Local: `docker compose --env-file .env.local -f docker-compose.dev.yml up -d`, đặt `ConnectionStrings__Default` (cùng `POSTGRES_PASSWORD` trong `.env.local`), rồi `dotnet ef database update --project backend/src/TeduMarket.Infrastructure --startup-project backend/src/TeduMarket.Api`. Staging và production: bundle trong bước 6.
 
 ## 6. Quy trình deploy
 
