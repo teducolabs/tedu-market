@@ -21,7 +21,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T01 Khởi tạo monorepo pnpm + Turborepo và solution .NET — epic: Nền tảng; phụ thuộc: —
 - [x] T02 Khung backend: Minimal API `/api/v1`, Mediator, OpenAPI, ProblemDetails — epic: Nền tảng; phụ thuộc: T01
 - [~] T03 PostgreSQL 18, EF Core, Dapper, docker-compose dev và migration đầu — epic: Nền tảng; phụ thuộc: T02
-- [ ] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
+- [~] T04 Log có cấu trúc Serilog + Seq, CorrelationId, health live/ready — epic: Nền tảng; phụ thuộc: T02, T03
 - [ ] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
 - [ ] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
 - [ ] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
@@ -187,8 +187,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-14, NFR-15 · **Phụ thuộc:** T02, T03
 - **Mô tả:** Ghi log có cấu trúc, gắn CorrelationId vào mọi request và vào ProblemDetails, thêm `/health/live` và `/health/ready` (kiểm tra PostgreSQL, MinIO).
 - **Acceptance criteria:**
-  - Tìm trong Seq theo một CorrelationId thấy toàn bộ log của request đó
-  - `/health/ready` trả 200 khi PostgreSQL và MinIO sống, trả lỗi khi một trong hai tắt; log không chứa token hay mật khẩu
+  - [x] Tìm trong Seq theo một CorrelationId thấy toàn bộ log của request đó
+  - [x] `/health/ready` trả 200 khi PostgreSQL và MinIO sống, trả lỗi khi một trong hai tắt; log không chứa token hay mật khẩu
 
 ### T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage
 

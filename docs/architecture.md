@@ -53,7 +53,7 @@ flowchart LR
 | Cache / rate limit | Output Cache + RateLimiter trong bộ nhớ, không Redis | NFR-01, NFR-10, NFR-12 | [log](decision-logs/2026-11-11-cache-trong-bo-nho-khong-dung-redis.md) |
 | Email | Resend | NFR-18 | [log](decision-logs/2026-11-11-gui-email-bang-resend.md) |
 | Bảo vệ hook | Header `X-API-Token` | NFR-07, NFR-22 | [log](decision-logs/2026-11-11-bao-ve-hook-bang-x-api-token.md) |
-| Log | Serilog + Seq, CorrelationId | NFR-15 | — |
+| Log | Serilog + Seq, CorrelationId (header `X-Correlation-Id`, có trong log, ProblemDetails và response); `/health/live`, `/health/ready` (PostgreSQL, MinIO) | NFR-15, NFR-14 | — |
 | Test | xUnit, integration test với PostgreSQL thật (Testcontainers) | NFR-16, NFR-04 | — |
 | Hosting | 1 VPS, Docker Compose, Nginx, CI chạy test trước deploy | NFR-14, NFR-19, NFR-16 | [log](decision-logs/2026-11-11-chay-1-vps-docker-compose-nginx.md) |
 
