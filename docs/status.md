@@ -28,6 +28,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [ ] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
 - [ ] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [ ] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
+- [ ] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
 
 ### Phase 1 — Hạ tầng và CI/CD
 
@@ -41,6 +42,7 @@ _Chạy song song với Phase 2 sau T11. Mọi thẻ đánh dấu 🚀 (cần de
 - [ ] T16 Job `deploy-prod` có người duyệt và script rollback — epic: Hạ tầng/CI-CD; phụ thuộc: T15
 - [ ] T17 Backup và restore: pg_dump hằng ngày, đồng bộ Video và MinIO ra ngoài VPS — epic: Hạ tầng/CI-CD; phụ thuộc: T14
 - [ ] T18 Giám sát: probe ngoài VPS, alert, đĩa, TLS, backup — epic: Hạ tầng/CI-CD; phụ thuộc: T15, T17
+- [ ] T92 Chọn và ghim image MinIO cho staging/production — epic: Hạ tầng/CI-CD; phụ thuộc: T12
 
 ### Phase 2 — Identity
 
@@ -883,6 +885,22 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Acceptance criteria:**
   - Smoke test production pass, HTTPS hợp lệ
   - Mật khẩu Admin seed đã được đổi; không có secret trong repo
+
+### T92 Chọn và ghim image MinIO cho staging/production
+
+- **Epic:** Hạ tầng/CI-CD · **FR/NFR:** NFR-14, NFR-22 · **Phụ thuộc:** T12
+- **Mô tả:** `minio/minio` và `quay.io/minio/minio` không còn pull được; compose dev tạm dùng `chainguard/minio:latest` (chưa ghim, bên thứ ba duy trì, xem decision log 2026-11-13). Chọn nguồn image chính thức cho staging/production, ghim tag hoặc digest, cập nhật `docker-compose.prod.yml` và decision log.
+- **Acceptance criteria:**
+  - [ ] Image MinIO của staging/production ghim tag hoặc digest cụ thể, ghi lý do chọn trong decision log
+  - [ ] Compose dev dùng cùng image đã ghim (hoặc ghi rõ lý do khác)
+
+### T93 Fixture PostgreSQL dùng chung cho integration test
+
+- **Epic:** Nền tảng · **FR/NFR:** NFR-16 · **Phụ thuộc:** T05
+- **Mô tả:** Hiện mỗi class integration test (vd `SampleNotePersistenceTests`, T03) tự dựng 1 container PostgreSQL 18. Chuyển sang fixture dùng chung (collection fixture) để chạy nhanh hơn, vẫn đảm bảo test không dùng chung dữ liệu.
+- **Acceptance criteria:**
+  - [ ] Cả suite Integration chỉ dựng 1 container PostgreSQL
+  - [ ] Test độc lập dữ liệu, không phụ thuộc thứ tự chạy
 
 ## Đối chiếu FR/NFR → thẻ
 
