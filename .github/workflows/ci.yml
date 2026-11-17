@@ -41,7 +41,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm e2e
 
-  backend:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,3 +50,19 @@ jobs:
           dotnet-version: 10.0.x
       - run: dotnet format backend/TeduMarket.slnx --verify-no-changes
       - run: dotnet build backend/TeduMarket.slnx -warnaserror
+      - run: >
+          dotnet test backend/TeduMarket.slnx --no-build --filter Category=Unit
+          --settings backend/coverage.runsettings --collect:"XPlat Code Coverage"
+          --results-directory coverage
+      - name: Coverage Domain + Application >= 70%
+        run: python3 .github/scripts/check_coverage.py coverage 70
+
+  integration:
+    needs: unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test backend/TeduMarket.slnx --filter Category=Integration

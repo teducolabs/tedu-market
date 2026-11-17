@@ -28,13 +28,13 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
 - [x] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [x] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
-- [~] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
+- [x] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
 
 ### Phase 1 — Hạ tầng và CI/CD
 
 _Chạy song song với Phase 2 sau T11. Mọi thẻ đánh dấu 🚀 (cần deploy thật) phụ thuộc T15._
 
-- [ ] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
+- [~] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
 - [ ] T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA — epic: Hạ tầng/CI-CD; phụ thuộc: T03, T09, T10, T11
 - [ ] T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video — epic: Hạ tầng/CI-CD; phụ thuộc: —
 - [ ] T14 docker-compose.prod.yml, `.env.example`, secrets, project `tedu-stg` và `tedu-prod` — epic: Hạ tầng/CI-CD; phụ thuộc: T12, T13
@@ -243,8 +243,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Hạ tầng/CI-CD · **FR/NFR:** NFR-16 · **Phụ thuộc:** T05
 - **Mô tả:** GitHub Actions chạy `unit` rồi `integration` (needs), coverage Domain + Application ≥ 70% mới pass, không `continue-on-error`.
 - **Acceptance criteria:**
-  - PR có unit test lỗi thì job `integration` bị skipped
-  - Coverage dưới 70% làm job `unit` fail
+  - [x] PR có unit test lỗi thì job `integration` bị skipped — `integration` khai báo `needs: unit`
+  - [x] Coverage dưới 70% làm job `unit` fail — `.github/scripts/check_coverage.py` gộp cobertura, đã thử cục bộ (84.8% pass, ngưỡng 101% fail)
 
 ### T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA
 
