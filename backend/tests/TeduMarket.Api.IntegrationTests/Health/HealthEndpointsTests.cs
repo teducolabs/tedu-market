@@ -1,28 +1,24 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using TeduMarket.Api.IntegrationTests.Common;
 using TeduMarket.Infrastructure.Health;
-using Testcontainers.PostgreSql;
 
 namespace TeduMarket.Api.IntegrationTests.Health;
 
 [Trait("Category", "Integration")]
-public sealed class HealthEndpointsTests : IAsyncLifetime, IDisposable
+[Collection(PostgresTestGroup.Name)]
+public sealed class HealthEndpointsTests(PostgresFixture postgres) : IAsyncLifetime, IDisposable
 {
-    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:18").Build();
     private readonly StubMinioHandler _minio = new();
     private WebApplicationFactory<Program>? _factory;
+    private string _connectionString = string.Empty;
 
     public async Task InitializeAsync()
     {
-        await _postgres.StartAsync();
-        var connectionString = _postgres.GetConnectionString();
-        _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-        {
-            builder.UseSetting("ConnectionStrings:Default", connectionString);
-            builder.ConfigureServices(services =>
-                services.AddHttpClient(MinioHealthCheck.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => _minio));
-        });
+        _connectionString = await postgres.CreateDatabaseAsync();
+        _factory = CreateFactory(_connectionString);
     }
 
     public void Dispose() => _minio.Dispose();
@@ -33,8 +29,6 @@ public sealed class HealthEndpointsTests : IAsyncLifetime, IDisposable
         {
             await _factory.DisposeAsync();
         }
-
-        await _postgres.DisposeAsync();
     }
 
     [Fact]
@@ -42,8 +36,8 @@ public sealed class HealthEndpointsTests : IAsyncLifetime, IDisposable
     {
         // Arrange
         _minio.StatusCode = HttpStatusCode.ServiceUnavailable;
-        await _postgres.StopAsync();
-        using var client = _factory!.CreateClient();
+        using var downFactory = CreateFactory(UnreachableConnectionString());
+        using var client = downFactory.CreateClient();
 
         // Act
         var response = await client.GetAsync("/health/live");
@@ -83,8 +77,8 @@ public sealed class HealthEndpointsTests : IAsyncLifetime, IDisposable
     public async Task GetHealthReady_PostgresDown_ReturnsServiceUnavailableAsync()
     {
         // Arrange
-        await _postgres.StopAsync();
-        using var client = _factory!.CreateClient();
+        using var downFactory = CreateFactory(UnreachableConnectionString());
+        using var client = downFactory.CreateClient();
 
         // Act
         var response = await client.GetAsync("/health/ready");
@@ -92,6 +86,18 @@ public sealed class HealthEndpointsTests : IAsyncLifetime, IDisposable
         // Assert
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
     }
+
+    private WebApplicationFactory<Program> CreateFactory(string connectionString) =>
+        new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("ConnectionStrings:Default", connectionString);
+            builder.ConfigureServices(services =>
+                services.AddHttpClient(MinioHealthCheck.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => _minio));
+        });
+
+    /// <summary>Trỏ tới database không tồn tại trong cùng container, mô phỏng PostgreSQL không dùng được mà không dừng container dùng chung.</summary>
+    private string UnreachableConnectionString() =>
+        new NpgsqlConnectionStringBuilder(_connectionString) { Database = "database_not_exist", Timeout = 3 }.ConnectionString;
 
     private sealed class StubMinioHandler : HttpMessageHandler
     {

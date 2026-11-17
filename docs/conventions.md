@@ -212,7 +212,7 @@ TODO hợp lệ: `// TODO(T123): …`; CI quét `TODO|FIXME` không có `(T\d+)`
 
 **Mock**
 - Chỉ mock biên ngoài: Resend, MinIO, Google OIDC, tiến trình ffmpeg, thời gian (`FakeTimeProvider`), HTTP của `api-client` ở frontend.
-- Không mock: Domain, Handler, EF Core/Dapper, PostgreSQL (integration dùng Testcontainers PostgreSQL 18 thật). Dùng 1 thư viện mock duy nhất toàn solution.
+- Không mock: Domain, Handler, EF Core/Dapper, PostgreSQL (integration dùng Testcontainers PostgreSQL 18 thật). Integration backend dùng `PostgresFixture` (collection fixture `PostgresTestGroup`): cả suite 1 container, mỗi test class gọi `CreateDatabaseAsync()` để có database riêng đã migrate; không dừng/xóa container dùng chung trong test. Dùng 1 thư viện mock duy nhất toàn solution.
 - Unit test Domain không cần mock.
 
 **Mức test tối thiểu** (tương xứng NFR-04, 05, 16, 21; ngưỡng ≥ 90% cho Order/Payment/Enrollment là PO đề xuất thêm so với NFR-16):

@@ -28,7 +28,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
 - [x] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [x] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
-- [ ] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
+- [~] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
 
 ### Phase 1 — Hạ tầng và CI/CD
 
@@ -899,8 +899,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-16 · **Phụ thuộc:** T05
 - **Mô tả:** Hiện mỗi class integration test (vd `SampleNotePersistenceTests`, T03) tự dựng 1 container PostgreSQL 18. Chuyển sang fixture dùng chung (collection fixture) để chạy nhanh hơn, vẫn đảm bảo test không dùng chung dữ liệu.
 - **Acceptance criteria:**
-  - [ ] Cả suite Integration chỉ dựng 1 container PostgreSQL
-  - [ ] Test độc lập dữ liệu, không phụ thuộc thứ tự chạy
+  - [x] Cả suite Integration chỉ dựng 1 container PostgreSQL
+  - [x] Test độc lập dữ liệu, không phụ thuộc thứ tự chạy
 
 ## Đối chiếu FR/NFR → thẻ
 

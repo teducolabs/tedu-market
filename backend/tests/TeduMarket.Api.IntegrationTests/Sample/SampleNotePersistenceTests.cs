@@ -2,27 +2,21 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using TeduMarket.Infrastructure.Persistence;
-using Testcontainers.PostgreSql;
+using TeduMarket.Api.IntegrationTests.Common;
 
 namespace TeduMarket.Api.IntegrationTests.Sample;
 
 [Trait("Category", "Integration")]
-public sealed class SampleNotePersistenceTests : IAsyncLifetime
+[Collection(PostgresTestGroup.Name)]
+public sealed class SampleNotePersistenceTests(PostgresFixture postgres) : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:18").Build();
     private WebApplicationFactory<Program>? _factory;
 
     public async Task InitializeAsync()
     {
-        await _postgres.StartAsync();
-        var connectionString = _postgres.GetConnectionString();
+        var connectionString = await postgres.CreateDatabaseAsync();
         _factory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:Default", connectionString));
-        await using var scope = _factory.Services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
     }
 
     public async Task DisposeAsync()
@@ -31,8 +25,6 @@ public sealed class SampleNotePersistenceTests : IAsyncLifetime
         {
             await _factory.DisposeAsync();
         }
-
-        await _postgres.DisposeAsync();
     }
 
     [Fact]
