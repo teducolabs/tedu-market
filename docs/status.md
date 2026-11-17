@@ -35,7 +35,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 _Chạy song song với Phase 2 sau T11. Mọi thẻ đánh dấu 🚀 (cần deploy thật) phụ thuộc T15._
 
 - [x] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
-- [ ] T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA — epic: Hạ tầng/CI-CD; phụ thuộc: T03, T09, T10, T11
+- [x] T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA — epic: Hạ tầng/CI-CD; phụ thuộc: T03, T09, T10, T11
 - [ ] T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video — epic: Hạ tầng/CI-CD; phụ thuộc: —
 - [ ] T14 docker-compose.prod.yml, `.env.example`, secrets, project `tedu-stg` và `tedu-prod` — epic: Hạ tầng/CI-CD; phụ thuộc: T12, T13
 - [ ] T15 Job `deploy-stg`, bundle migration và smoke test staging — epic: Hạ tầng/CI-CD; phụ thuộc: T14
