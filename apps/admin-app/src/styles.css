@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter/wght.css';
+@import '@tedu-market/ui/tokens.css';
+@source '../../../packages/ui/src';
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  /* ux.md mục 4: AdminApp cỡ chữ nền sm (14px). */
+  body {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}

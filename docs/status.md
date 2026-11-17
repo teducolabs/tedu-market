@@ -26,8 +26,8 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
 - [x] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
 - [x] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
-- [ ] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
-- [ ] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
+- [x] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
+- [x] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
 - [ ] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
 
 ### Phase 1 — Hạ tầng và CI/CD
@@ -235,8 +235,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-17, NFR-23 · **Phụ thuộc:** T07, T08
 - **Mô tả:** Dựng SPA React Vite với sidebar theo ux.md mục 2 (ẩn/hiện theo vai trò), layout desktop-first; dưới 640px hiện thông báo "Vui lòng dùng máy tính hoặc máy tính bảng để quản trị".
 - **Acceptance criteria:**
-  - Sidebar hiển thị đúng mục theo vai trò Admin hoặc Instructor (dữ liệu giả)
-  - Dưới 640px hiện thông báo kèm nút Đăng xuất
+  - [x] Sidebar hiển thị đúng mục theo vai trò Admin hoặc Instructor (dữ liệu giả)
+  - [ ] Dưới 640px hiện thông báo kèm nút Đăng xuất — đã có unit test và e2e `e2e/admin-app-shell.spec.ts` (Playwright) nhưng chưa chạy được trên máy dev (thiếu thư viện hệ thống cho Chromium, cần `sudo pnpm exec playwright install-deps chromium`); sẽ chạy ở job `frontend` của CI
 
 ### T11 CI cho pull request: unit, integration và ngưỡng coverage
 

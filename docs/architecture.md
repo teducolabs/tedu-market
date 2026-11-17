@@ -43,7 +43,7 @@ flowchart LR
 | CSDL | PostgreSQL 18 (full-text search + `unaccent`) | NFR-17, NFR-01, FR-44 | [PG18](decision-logs/2026-11-11-chon-postgresql-18.md), [FTS](decision-logs/2026-11-11-tim-kiem-fulltext-postgresql.md) |
 | Authn | OpenIddict + ASP.NET Core Identity trong API; Google external login | NFR-06, NFR-14 | [log](decision-logs/2026-11-11-openiddict-chay-chung-trong-api-google-external.md), [SSO](decision-logs/2026-11-11-student-dang-nhap-google-sso.md) |
 | StudentWeb | Next.js 16 App Router, SSR/ISR, session phía server | NFR-11, NFR-03, NFR-06 | [log](decision-logs/2026-11-11-chon-nextjs-16.md) |
-| AdminApp | React (Vite) SPA, `react-oidc-context` | NFR-06, NFR-17 | [log](decision-logs/2026-11-11-monorepo-pnpm-turborepo-api-client-openapi-ts.md) |
+| AdminApp | React (Vite) SPA, `react-router`, `react-oidc-context` | NFR-06, NFR-17 | [log](decision-logs/2026-11-11-monorepo-pnpm-turborepo-api-client-openapi-ts.md), [router](decision-logs/2026-11-17-admin-app-react-router-font-va-vai-tro-gia.md) |
 | API client | Monorepo pnpm + Turborepo, `@hey-api/openapi-ts` | NFR-13 | cùng log trên |
 | Job nền | BackgroundService + bảng `OutboxMessage` | NFR-02, NFR-05 | [log](decision-logs/2026-11-11-job-nen-hosted-service-voi-outbox-thay-hangfire.md) |
 | Chống Paid trùng | UPDATE có điều kiện + unique index | NFR-04 | [log](decision-logs/2026-11-11-chong-paid-hai-lan-bang-cap-nhat-co-dieu-kien.md) |
