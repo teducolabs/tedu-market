@@ -1,12 +1,19 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
+    "generate": {
+      "inputs": ["openapi.json", "package.json"],
+      "outputs": ["src/client/**"]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "generate", "^generate"],
       "outputs": ["dist/**", ".next/**"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^typecheck", "generate", "^generate"]
+    },
+    "test": {
+      "dependsOn": ["generate", "^generate"]
     }
   }
 }

@@ -23,3 +23,6 @@ obj/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Sinh bởi @hey-api/openapi-ts (pnpm generate), không commit
+packages/api-client/src/client/

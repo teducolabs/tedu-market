@@ -5,5 +5,8 @@
   "scripts": {
     "build": "node -e \"process.exit(0)\"",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tedu-market/api-client": "workspace:*"
   }
 }
