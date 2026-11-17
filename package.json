@@ -11,11 +11,13 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "turbo typecheck",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "git config core.hooksPath .githooks",
+    "e2e": "playwright test -c e2e/playwright.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "@next/eslint-plugin-next": "^16.4.6",
+    "@playwright/test": "^1.65.1",
     "eslint": "^9.39.5",
     "eslint-plugin-boundaries": "^7.4.2",
     "eslint-plugin-check-file": "^3.3.2",

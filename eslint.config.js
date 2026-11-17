@@ -18,6 +18,7 @@ export default defineConfig(
       'docs/**',
       '**/coverage/**',
       'packages/api-client/src/client/**',
+      '**/next-env.d.ts',
     ],
   },
   js.configs.recommended,
@@ -82,5 +83,5 @@ export default defineConfig(
       'no-warning-comments': ['error', { terms: ['todo', 'fixme'], location: 'start' }],
     },
   },
-  { files: ['**/*.js'], extends: [tseslint.configs.disableTypeChecked] },
+  { files: ['**/*.{js,mjs}'], extends: [tseslint.configs.disableTypeChecked] },
 );

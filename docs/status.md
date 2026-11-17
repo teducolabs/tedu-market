@@ -227,8 +227,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-03, NFR-11, NFR-17 · **Phụ thuộc:** T07, T08
 - **Mô tả:** Next.js 16 App Router với Header (logo, ô tìm kiếm, Giỏ hàng, Khóa học của tôi, tài khoản), font Inter, `next/image`, layout mobile-first theo ux.md mục 8.
 - **Acceptance criteria:**
-  - Header hiển thị đúng ở 4 breakpoint `sm/md/lg/xl`
-  - Trang mẫu render phía server và có thẻ metadata
+  - [ ] Header hiển thị đúng ở 4 breakpoint `sm/md/lg/xl` — đã có e2e `e2e/student-web-header.spec.ts` (Playwright) nhưng chưa chạy được trên máy dev (thiếu thư viện hệ thống `libnspr4`, cần `sudo pnpm exec playwright install-deps chromium`); sẽ chạy ở job `frontend` của CI
+  - [x] Trang mẫu render phía server và có thẻ metadata
 
 ### T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive
 
@@ -994,6 +994,6 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **T64/T75**: hủy Đơn đã Đã thanh toán thì Khoản chia đã sinh xử lý thế nào (hủy khoản chia chờ duyệt? Số dư có âm?) chưa có quy tắc (architecture.md mục 7). Cần chủ dự án quyết trước khi làm T64.
 - **T59**: payload hook, mã giao dịch ngân hàng và cộng dồn tiền chuyển bù chưa định nghĩa; hiện mỗi lần gọi xét riêng. Cần chốt khi tích hợp đối tác thật.
 - **T18**: kênh nhận alert chưa chốt, hỏi chủ dự án trước khi cấu hình.
-- **T07, T09, T10**: design tokens trong ux.md đang `[ĐỀ XUẤT - CẦN DUYỆT]`; log chọn Tailwind + shadcn/ui, kiến trúc modular monolith, 1 VPS, Outbox, MinIO, HLS đang `Proposed`.
+- **T07, T09, T10**: design tokens trong ux.md đã được duyệt ngày 2026-11-17; log chọn Tailwind + shadcn/ui, kiến trúc modular monolith, 1 VPS, Outbox, MinIO, HLS đang `Proposed`.
 - **T86, T51**: 500 người xem video đồng thời phụ thuộc băng thông VPS; upload 1 GB không resume (architecture.md mục 7).
 - `docs/conventions.md` (mục 5) và `CLAUDE.md` chưa có trong repo; Definition of Done chưa được định nghĩa ở nơi nào nên quy ước ở trên chỉ nêu tạm. (Template `CLAUDE.md` đã có ở `docs/prompts/templates/`, còn file ở gốc repo thì chưa tạo.)

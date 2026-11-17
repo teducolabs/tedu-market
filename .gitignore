@@ -26,3 +26,9 @@ Thumbs.db
 
 # Sinh bởi @hey-api/openapi-ts (pnpm generate), không commit
 packages/api-client/src/client/
+
+# Next.js
+next-env.d.ts
+*.tsbuildinfo
+test-results/
+playwright-report/

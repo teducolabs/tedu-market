@@ -1,3 +1,5 @@
+'use client';
+
 import { FileQuestion, Inbox, Lock, type LucideIcon } from 'lucide-react';
 import { Button } from './button';
 

@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+@import '@tedu-market/ui/tokens.css';
+@source '../../../../packages/ui/src';
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  /* ux.md mục 4: StudentWeb cỡ chữ nền base (16px). */
+  body {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}

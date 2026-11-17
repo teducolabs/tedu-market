@@ -1,3 +1,5 @@
+'use client';
+
 import { useSyncExternalStore } from 'react';
 import { toast, Toaster as SonnerToaster } from 'sonner';
 
