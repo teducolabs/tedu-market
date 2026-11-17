@@ -49,6 +49,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `Cors__AllowedOrigins` | origin AdminApp, StudentWeb, ngăn bởi dấu phẩy (NFR-09) |
 | `Seq__ServerUrl`, `Seq__ApiKey` | log |
 | `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server |
+| `SITE_URL` | URL công khai của StudentWeb cho canonical, Open Graph, robots (không bí mật; đọc lúc chạy, mặc định `http://localhost:3000`) |
 | `IMAGE_TAG` | tag image cần chạy |
 | `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY` (chỉ GitHub Secrets) | CI SSH, key riêng cho CI |
 | `BACKUP_REMOTE`, `BACKUP_REMOTE_KEY` (chỉ trên VPS) | đích backup ngoài VPS |

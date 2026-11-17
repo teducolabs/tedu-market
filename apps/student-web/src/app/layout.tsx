@@ -12,12 +12,17 @@ const inter = Inter({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  metadataBase: getSiteUrl(),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
-  description: SITE_DESCRIPTION,
-  openGraph: { siteName: SITE_NAME, locale: SITE_LOCALE, type: 'website' },
-};
+/** Render lúc request để đọc SITE_URL của môi trường đang chạy, một image dùng cho cả stg và prod. */
+export const dynamic = 'force-dynamic';
+
+export function generateMetadata(): Metadata {
+  return {
+    metadataBase: getSiteUrl(),
+    title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+    description: SITE_DESCRIPTION,
+    openGraph: { siteName: SITE_NAME, locale: SITE_LOCALE, type: 'website' },
+  };
+}
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
 
