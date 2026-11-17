@@ -24,7 +24,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 |---|---|---|
 | Api + BackgroundService (Outbox, hết hạn đơn, ffmpeg) | container `api` | không có worker riêng |
 | StudentWeb | container `web` | Next.js standalone |
-| AdminApp | container `admin` hoặc file tĩnh Nginx | SPA |
+| AdminApp | container `admin` (Nginx không đặc quyền, SPA fallback, cổng 8080) | SPA |
 | PostgreSQL 18, MinIO, Seq | container, volume riêng mỗi môi trường | Seq và MinIO console chỉ bind `127.0.0.1`, vào bằng SSH tunnel |
 | Thư mục Video | volume ngoài wwwroot, Nginx `internal` | chỉ phục vụ qua X-Accel-Redirect |
 | Image | GHCR, tag = commit SHA | không deploy tag `latest` |
@@ -62,7 +62,7 @@ GitHub Actions, các job nối bằng `needs`; tầng nào fail thì job sau ski
 1. `unit`: `dotnet test --filter Category=Unit --settings backend/coverage.runsettings --collect:"XPlat Code Coverage"`; Domain + Application phủ ≥ 70% (NFR-16), dưới ngưỡng thì fail.
 2. `integration`: `dotnet test --filter Category=Integration` (Testcontainers, PostgreSQL thật; gồm test race hook/checkout, NFR-04). Chỉ chạy khi `unit` pass.
 3. `e2e`: dựng compose trên runner, chạy `pnpm --filter e2e test` (đăng ký → mua → hook → Enrollment → phát video). Chỉ chạy khi `integration` pass.
-4. `build`: `pnpm turbo build --filter=...[origin/master]`, `docker build` 3 image (api, web, admin), push GHCR tag `${GITHUB_SHA}`.
+4. `build`: `pnpm turbo build --filter=...[origin/master]`, `docker build` 4 image (api, web, admin, migrator; Dockerfile: `backend/Dockerfile` target `api`/`migrator`, `apps/student-web/Dockerfile`, `apps/admin-app/Dockerfile`, context = thư mục gốc), push GHCR tag `${GITHUB_SHA}`.
 5. `deploy-stg`: tự chạy trên `master` khi 1–4 pass (mục 6).
 6. `deploy-prod`: job `workflow_dispatch` dùng GitHub Environment `production` có required reviewer; không tự chạy.
 

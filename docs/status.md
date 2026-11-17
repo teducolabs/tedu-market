@@ -34,7 +34,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 
 _Chạy song song với Phase 2 sau T11. Mọi thẻ đánh dấu 🚀 (cần deploy thật) phụ thuộc T15._
 
-- [~] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
+- [x] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
 - [ ] T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA — epic: Hạ tầng/CI-CD; phụ thuộc: T03, T09, T10, T11
 - [ ] T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video — epic: Hạ tầng/CI-CD; phụ thuộc: —
 - [ ] T14 docker-compose.prod.yml, `.env.example`, secrets, project `tedu-stg` và `tedu-prod` — epic: Hạ tầng/CI-CD; phụ thuộc: T12, T13
@@ -251,8 +251,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Hạ tầng/CI-CD · **FR/NFR:** NFR-16 · **Phụ thuộc:** T03, T09, T10, T11
 - **Mô tả:** Viết Dockerfile cho `api` (có ffmpeg), `web` (Next.js standalone), `admin`, `migrator` (EF bundle); job `build` push GHCR tag = commit SHA, không dùng `latest`.
 - **Acceptance criteria:**
-  - Sau khi merge `master`, 4 image có tag SHA trên GHCR
-  - `docker run` image `api` thấy được `ffmpeg -version`
+  - [ ] Sau khi merge `master`, 4 image có tag SHA trên GHCR — job `build` đã viết, chỉ chạy được sau khi merge; chưa kiểm chứng. Cục bộ: cả 4 image build và chạy được (api `/health/live` 200, web `/` 200, admin SPA 200, migrator áp migration lên PostgreSQL 18)
+  - [x] `docker run` image `api` thấy được `ffmpeg -version` (ffmpeg 6.1.1)
 
 ### T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video
 

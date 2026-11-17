@@ -1,0 +1,16 @@
+**/node_modules
+**/bin
+**/obj
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/test-results
+**/playwright-report
+.git
+.github
+.env
+.env.*
+**/secret.json
+docs
+e2e
