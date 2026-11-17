@@ -83,7 +83,7 @@ apps/
   student-web/src/  app/<route theo ux.md>/   features/<module>/{components,hooks}/   lib/
   admin-app/src/    routes/                   features/<module>/{components,hooks}/   lib/
 packages/
-  api-client/       sinh bởi @hey-api/openapi-ts, không sửa tay
+  api-client/       openapi.json (snapshot) → `pnpm generate` sinh src/client/ bằng @hey-api/openapi-ts, không sửa tay, không commit src/client/; cập nhật snapshot: `pnpm --filter @tedu-market/api-client schema:fetch` (backend đang chạy, `API_URL` mặc định http://localhost:5000)
   ui/               Tailwind + shadcn dùng chung, token theo ux.md §4
 e2e/                Playwright
 ```

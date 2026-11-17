@@ -25,7 +25,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [~] T05 Khung test: xUnit, Testcontainers, phân loại Unit/Integration, coverage — epic: Nền tảng; phụ thuộc: T03
 - [~] T06 CORS, security headers, Output Cache và RateLimiter trong bộ nhớ — epic: Nền tảng; phụ thuộc: T02
 - [ ] T07 Package `ui`: Tailwind v4, shadcn/ui, design tokens, component pattern — epic: Nền tảng; phụ thuộc: T01
-- [ ] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
+- [~] T08 API client dùng chung sinh bằng openapi-ts — epic: Nền tảng; phụ thuộc: T02
 - [ ] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [ ] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
 - [ ] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
@@ -219,8 +219,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Nền tảng · **FR/NFR:** NFR-13 · **Phụ thuộc:** T02
 - **Mô tả:** Sinh `packages/api-client` từ OpenAPI schema bằng `@hey-api/openapi-ts`, chạy qua Turborepo.
 - **Acceptance criteria:**
-  - Đổi một endpoint ở backend rồi chạy generate thì client trong cả hai app đổi theo
-  - Hai app import được cùng một client
+  - [x] Đổi một endpoint ở backend rồi chạy generate thì client trong cả hai app đổi theo
+  - [x] Hai app import được cùng một client
 
 ### T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền
 

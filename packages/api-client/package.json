@@ -2,8 +2,19 @@
   "name": "@tedu-market/api-client",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
+    "schema:fetch": "curl -fsS \"${API_URL:-http://localhost:5000}/openapi/v1.json\" -o openapi.json && node -e \"const f='openapi.json',fs=require('node:fs'),d=JSON.parse(fs.readFileSync(f,'utf8'));delete d.servers;fs.writeFileSync(f,JSON.stringify(d))\" && prettier --write openapi.json",
+    "generate": "openapi-ts",
     "build": "node -e \"process.exit(0)\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
+    "vitest": "^5.1.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
   }
 }
