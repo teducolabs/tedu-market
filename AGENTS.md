@@ -22,7 +22,8 @@ Kanban: `docs/status.md` · Mã thẻ: `T123` · Cột: Backlog → To Do → In
 - Mỗi task gắn 1 mã thẻ; người dùng không đưa thì hỏi, trừ khi họ nói rõ là việc ngoài bảng.
 - Phạm vi = mô tả + acceptance criteria của thẻ (có `docs/status.md` thì đọc ở đó; có MCP thì đọc thẻ trực tiếp; không thì dùng nội dung người dùng dán). AC thiếu → hỏi, không tự đoán.
 - Mỗi lúc 1 thẻ. Không nhận thêm thẻ, không làm việc của thẻ khác dù thấy liên quan.
-- Tiếp tục thẻ từ session trước: đọc nhánh của thẻ (git log, diff với nhánh chính) và mô tả PR nếu có, tóm tắt trạng thái để người dùng xác nhận rồi mới làm tiếp.
+- Tiếp tục thẻ từ session trước: đọc `git log` trên `master` (commit có mã thẻ) và `git status`/diff chưa commit, tóm tắt trạng thái để người dùng xác nhận rồi mới làm tiếp.
+- Git: KHÔNG tạo nhánh riêng cho từng thẻ; làm thẳng trên `master`. Mọi commit bắt đầu bằng mã thẻ: `T123: <việc>`.
 - Chuyển cột thẻ: chỉ chuyển sang Review khi thẻ đạt DoD (mục 3) — việc này làm tự động ngay khi xong, không cần chờ yêu cầu. Các cột khác (In Progress, Done...) không tự chuyển khi chưa được yêu cầu, kể cả khi MCP cho phép.
 - Chuyển cột với `docs/status.md`: sửa checkbox ở phần Phase và chi tiết của thẻ trong cùng một lần sửa (người dùng tự commit). Thẻ thêm mới ghi vào `docs/status.md` với mã tiếp theo, không chèn giữa.
 
@@ -37,8 +38,8 @@ Kanban: `docs/status.md` · Mã thẻ: `T123` · Cột: Backlog → To Do → In
 
 1. Chạy test, xác nhận pass.
 2. Tự review theo `docs/review-checklist.md`.
-3. Thay đổi làm 1 mô tả trong `docs/` sai đi (FR, module, thuật ngữ, bước deploy...) → sửa file đó trong cùng nhánh. Tài liệu lệch code là lỗi.
-4. Cập nhật `docs/status.md`: thẻ đạt DoD thì chuyển sang Review (sửa checkbox thẻ ở phần Phase và tick acceptance criteria trong Chi tiết thẻ, theo "Quy ước cập nhật" trong file). Không commit và không push — để người dùng tự review diff rồi tự commit, trừ khi họ yêu cầu rõ trong lượt đó.
+3. Thay đổi làm 1 mô tả trong `docs/` sai đi (FR, module, thuật ngữ, bước deploy...) → sửa file đó trong cùng lượt làm. Tài liệu lệch code là lỗi.
+4. Cập nhật `docs/status.md`: thẻ đạt DoD thì chuyển sang Review (sửa checkbox thẻ ở phần Phase và tick acceptance criteria trong Chi tiết thẻ, theo "Quy ước cập nhật" trong file). Commit thẳng lên `master` với message bắt đầu bằng mã thẻ (`T123: ...`) khi đã xong và đã cập nhật status; không push trừ khi người dùng yêu cầu.
 5. Báo cáo đúng mẫu:
    - **Thẻ:** mã thẻ + tóm tắt việc đã làm
    - **Test:** tầng đã có và pass; tầng thiếu và lý do

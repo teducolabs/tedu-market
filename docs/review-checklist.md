@@ -6,7 +6,7 @@
 - [ ] Không có tên viết tắt ngoài danh sách `Id, Url, Dto, Api, Db, Qr, Hls, Json, Http, Oidc`.
 - [ ] Mọi tên nghiệp vụ trong code và chữ UI khớp glossary (không dùng từ cột "KHÔNG gọi là").
 - [ ] Diff chỉ chứa thay đổi thuộc thẻ đang làm.
-- [ ] Tên nhánh và mọi commit chứa mã thẻ đúng định dạng `T<số>`.
+- [ ] Mọi commit bắt đầu bằng mã thẻ đúng định dạng `T<số>: ...` (làm thẳng trên `master`).
 - [ ] Lint, format, build với warning-as-error đều pass.
 - [ ] Có test mới đủ theo conventions.md mục 5 (loại, tên, AAA, mock đúng biên ngoài).
 - [ ] Coverage không thấp hơn ngưỡng ở conventions.md mục 5.

@@ -28,10 +28,10 @@ Ngoại lệ duy nhất: header `X-API-Token` giữ nguyên. Tên kỹ thuật n
 | API endpoint | `/api/v1/<danh-từ-số-nhiều>`; hành động không phải CRUD là danh từ con | `POST /api/v1/orders/{orderId}/resolution` | `POST /api/v1/resolveOrder`, `/api/v1/Order` |
 | Query string, JSON | camelCase | `?categoryId=...&pageSize=20` | `?category_id=` |
 | `errorCode` | `UPPER_SNAKE_CASE` | `AMOUNT_MISMATCH` | `amountMismatch` |
-| Nhánh git | `<feature\|fix\|chore\|docs\|refactor>/<mã thẻ>-<slug không dấu, kebab-case>` | `feature/T123-dang-ky-hoc-vien` | `feature/dang-ky-hoc-vien`, `T123` |
+| Nhánh git | Làm thẳng trên `master`, không tạo nhánh theo thẻ ([log](decision-logs/2026-11-17-duyet-de-xuat-mac-dinh-ux-va-lam-tren-master.md)) | `master` | `feature/T123-...` |
 | Commit | `<mã thẻ>: <động từ + việc, tiếng Việt, ≤ 72 ký tự>`; 1 commit 1 mã thẻ | `T123: thêm API đăng ký học viên` | `fix bug`, `update code` |
 
-CI: hook `commit-msg` chặn nếu không khớp `^T\d+: .{5,72}$`; CI chặn tên nhánh không khớp `^(feature|fix|chore|docs|refactor)/T\d+(-[a-z0-9]+)+$`. Hook nằm ở `.githooks/`, tự bật khi chạy `pnpm install` (script `prepare` đặt `core.hooksPath`); workflow ở `.github/workflows/ci.yml`.
+CI: hook `commit-msg` chặn nếu không khớp `^T\d+: .{5,72}$`; CI kiểm tra commit của push lên `master` cũng khớp mẫu này. Hook nằm ở `.githooks/`, tự bật khi chạy `pnpm install` (script `prepare` đặt `core.hooksPath`); workflow ở `.github/workflows/ci.yml`.
 
 **Viết tắt:** chỉ được dùng danh sách đóng `Id, Url, Dto, Api, Db, Qr, Hls, Json, Http, Oidc`. Tên khác phải viết đủ chữ. Ngoại lệ: biến vòng lặp `i`, tham số lambda một chữ cái trong lambda ≤ 1 dòng.
 
@@ -80,7 +80,7 @@ backend/
   tests/
     TeduMarket.Domain.Tests/  TeduMarket.Application.Tests/  TeduMarket.Api.IntegrationTests/  TeduMarket.Architecture.Tests/
 apps/
-  student-web/src/  app/<route theo ux.md>/   features/<module>/{components,hooks}/   lib/
+  student-web/src/  app/<route theo ux.md>/   components/ (khung dùng chung: header)   features/<module>/{components,hooks}/   lib/
   admin-app/src/    routes/                   features/<module>/{components,hooks}/   lib/
 packages/
   api-client/       openapi.json (snapshot) → `pnpm generate` sinh src/client/ bằng @hey-api/openapi-ts, không sửa tay, không commit src/client/; cập nhật snapshot: `pnpm --filter @tedu-market/api-client schema:fetch` (backend đang chạy, `API_URL` mặc định http://localhost:5000)

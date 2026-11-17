@@ -1,6 +1,6 @@
 # UX — TEDU Market
 
-Nguồn: [prd.md](prd.md) (persona, FR), [domain-glossary.md](domain-glossary.md) (mọi label, tên màn hình, tên trạng thái lấy từ cột Hiển thị), [architecture.md](architecture.md) mục 2 (Next.js 16 + React Vite). Chưa có brand guideline: mọi giá trị thị giác đánh `[ĐỀ XUẤT - CẦN DUYỆT]`. Nền UI: Tailwind v4 + shadcn/ui, dùng chung qua `packages/ui` ([log](decision-logs/2026-11-11-ui-tailwind-shadcn-dung-chung-package-ui.md)).
+Nguồn: [prd.md](prd.md) (persona, FR), [domain-glossary.md](domain-glossary.md) (mọi label, tên màn hình, tên trạng thái lấy từ cột Hiển thị), [architecture.md](architecture.md) mục 2 (Next.js 16 + React Vite). Chưa có brand guideline: các giá trị thị giác và đề xuất mặc định trong file này đã được chủ dự án duyệt ngày 2026-11-17 ([log](decision-logs/2026-11-17-duyet-de-xuat-mac-dinh-ux-va-lam-tren-master.md)). Nền UI: Tailwind v4 + shadcn/ui, dùng chung qua `packages/ui` ([log](decision-logs/2026-11-11-ui-tailwind-shadcn-dung-chung-package-ui.md)).
 
 ## 1. Nguyên tắc thiết kế
 
@@ -30,7 +30,7 @@ Header: logo · ô tìm kiếm · Giỏ hàng (số khóa) · Khóa học của 
 └─ Lịch sử đơn ............................... FR-37              (cần đăng nhập)
 ```
 
-Chưa đăng nhập mà vào trang cần đăng nhập → chuyển sang Đăng nhập bằng Google, xong quay lại đúng trang đó (FR-03). `/` hiển thị Danh sách khóa học [ĐỀ XUẤT].
+Chưa đăng nhập mà vào trang cần đăng nhập → chuyển sang Đăng nhập bằng Google, xong quay lại đúng trang đó (FR-03). `/` hiển thị Danh sách khóa học.
 
 ### App quản trị (Admin + Instructor)
 
@@ -83,7 +83,7 @@ Mỗi luồng ghi bốn trạng thái bắt buộc: **Loading / Empty / Error / 
 
 ### Luồng: Checkout và Thanh toán (Học viên)
 1. Checkout → tạo Đơn trạng thái Mới (hai lần bấm vẫn một Đơn, FR-09) → màn hình Thanh toán.
-2. Hiển thị Mã QR, số tiền, Nội dung chuyển khoản (nút sao chép), Mã đơn, đếm ngược 15 phút (FR-32). Trang tự hỏi trạng thái định kỳ ~3 giây [ĐỀ XUẤT] (FR-11).
+2. Hiển thị Mã QR, số tiền, Nội dung chuyển khoản (nút sao chép), Mã đơn, đếm ngược 15 phút (FR-32). Trang tự hỏi trạng thái định kỳ ~3 giây (FR-11).
 3. Đơn thành Đã thanh toán → màn hình thành công → nút Vào học (tới Khóa học của tôi).
 - **Loading:** nút Checkout có spinner và bị khóa tới khi có kết quả; QR dùng skeleton vuông cùng kích thước.
 - **Empty:** vào Thanh toán mà không có Đơn Mới → chuyển về Giỏ hàng.
@@ -120,7 +120,7 @@ Mỗi luồng ghi bốn trạng thái bắt buộc: **Loading / Empty / Error / 
 - **Success:** toast "Đã duyệt khóa học" hoặc "Đã từ chối khóa học"; hàng rời khỏi hàng đợi.
 
 ### Luồng: Admin Xử lý đơn
-1. Đơn → lọc theo trạng thái; Đang chờ và Hết hạn xếp trước [ĐỀ XUẤT]. Mở Đơn: Mã đơn, Học viên, khóa, Nội dung chuyển khoản, Chênh lệch tiền (thừa/thiếu).
+1. Đơn → lọc theo trạng thái; Đang chờ và Hết hạn xếp trước. Mở Đơn: Mã đơn, Học viên, khóa, Nội dung chuyển khoản, Chênh lệch tiền (thừa/thiếu).
 2. Chọn "Chuyển sang Đã thanh toán" hoặc "Chuyển sang Đã hủy" → modal nêu hệ quả (Đã thanh toán: tạo Enrollment và Khoản chia; Đã hủy: thu hồi Enrollment nếu có) → xác nhận (FR-33).
 - **Loading:** skeleton bảng; nút xác nhận spinner.
 - **Empty:** "Chưa có đơn nào" / lọc không ra → "Không có đơn ở trạng thái này".
@@ -135,7 +135,7 @@ Mỗi luồng ghi bốn trạng thái bắt buộc: **Loading / Empty / Error / 
 - **Error:** số tiền > Số dư → lỗi dưới ô "Số tiền vượt Số dư (1.200.000 ₫)", chặn gửi.
 - **Success:** toast "Đã duyệt Khoản chia" / "Đã tạo Phiếu chi"; Số dư cập nhật tại chỗ.
 
-## 4. Design tokens [ĐỀ XUẤT - CẦN DUYỆT]
+## 4. Design tokens
 
 Chưa có brand: baseline sạch, trung tính, một màu nhấn xanh (hợp nội dung học tập). Cỡ chữ và độ tương phản chọn để người dùng cơ bản đọc dễ. Giá trị theo bảng màu Tailwind; kiểm lại contrast khi implement.
 
@@ -164,7 +164,7 @@ Chưa có brand: baseline sạch, trung tính, một màu nhấn xanh (hợp n�
 | Breakpoint | `sm` 640 · `md` 768 · `lg` 1024 · `xl` 1280 (Tailwind mặc định); container tối đa 1280 |
 |---|---|
 
-Định dạng hiển thị: tiền `1.200.000 ₫`; ngày `dd/MM/yyyy HH:mm`, múi giờ GMT+7 [ĐỀ XUẤT].
+Định dạng hiển thị: tiền `1.200.000 ₫`; ngày `dd/MM/yyyy HH:mm`, múi giờ GMT+7.
 
 ## 5. Component pattern
 
@@ -213,7 +213,7 @@ Chưa có brand: baseline sạch, trung tính, một màu nhấn xanh (hợp n�
 
 | Breakpoint | Web học viên (mobile-first, NFR-03) | App quản trị (desktop-first) |
 |---|---|---|
-| < 640 | 1 cột; menu thu gọn (hamburger); lưới thẻ 1 cột; Chi tiết khóa học: thanh dính đáy có giá + Thêm vào giỏ/Vào học; Thanh toán: QR rộng tối đa 280 px, Nội dung chuyển khoản và nút sao chép ngay dưới; Trang học: Video 16:9 full chiều ngang, danh sách Bài học bên dưới | Hiện thông báo "Vui lòng dùng máy tính hoặc máy tính bảng để quản trị" kèm nút Đăng xuất [ĐỀ XUẤT] |
+| < 640 | 1 cột; menu thu gọn (hamburger); lưới thẻ 1 cột; Chi tiết khóa học: thanh dính đáy có giá + Thêm vào giỏ/Vào học; Thanh toán: QR rộng tối đa 280 px, Nội dung chuyển khoản và nút sao chép ngay dưới; Trang học: Video 16:9 full chiều ngang, danh sách Bài học bên dưới | Hiện thông báo "Vui lòng dùng máy tính hoặc máy tính bảng để quản trị" kèm nút Đăng xuất |
 | `sm` 640 – `md` 768 | Lưới thẻ 2 cột; Lịch sử đơn dạng thẻ | Dùng được tối thiểu từ 768: sidebar thu thành icon, bảng cuộn ngang |
 | `md` 768 – `lg` 1024 | Lưới thẻ 3 cột; Lịch sử đơn dạng bảng; Chi tiết khóa học 2 cột | Sidebar icon, mở rộng khi bấm; form 1 cột |
 | ≥ `lg` 1024 | Lưới thẻ 4 cột; Chi tiết khóa học 2 cột với thẻ mua dính khi cuộn; Trang học: Video trái, danh sách Bài học phải | Sidebar mở rộng cố định; bảng đầy đủ cột; form Khóa học 2 cột (thông tin + thumbnail) |
