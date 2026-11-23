@@ -29,22 +29,10 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 - [x] T09 Khung Web học viên (Next.js 16): layout, header, responsive, SEO nền — epic: Nền tảng; phụ thuộc: T07, T08
 - [x] T10 Khung App quản trị (React Vite): sidebar theo vai trò, layout, responsive — epic: Nền tảng; phụ thuộc: T07, T08
 - [x] T93 Fixture PostgreSQL dùng chung cho integration test — epic: Nền tảng; phụ thuộc: T05
-
-### Phase 1 — Hạ tầng và CI/CD
-
-_Chạy song song với Phase 2 sau T11. Mọi thẻ đánh dấu 🚀 (cần deploy thật) phụ thuộc T15._
-
 - [x] T11 CI cho pull request: unit, integration và ngưỡng coverage — epic: Hạ tầng/CI-CD; phụ thuộc: T05
 - [x] T12 Dockerfile api/web/admin/migrator và job build đẩy GHCR theo SHA — epic: Hạ tầng/CI-CD; phụ thuộc: T03, T09, T10, T11
-- [ ] T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video — epic: Hạ tầng/CI-CD; phụ thuộc: —
-- [ ] T14 docker-compose.prod.yml, `.env.example`, secrets, project `tedu-stg` và `tedu-prod` — epic: Hạ tầng/CI-CD; phụ thuộc: T12, T13
-- [ ] T15 Job `deploy-stg`, bundle migration và smoke test staging — epic: Hạ tầng/CI-CD; phụ thuộc: T14
-- [ ] T16 Job `deploy-prod` có người duyệt và script rollback — epic: Hạ tầng/CI-CD; phụ thuộc: T15
-- [ ] T17 Backup và restore: pg_dump hằng ngày, đồng bộ Video và MinIO ra ngoài VPS — epic: Hạ tầng/CI-CD; phụ thuộc: T14
-- [ ] T18 Giám sát: probe ngoài VPS, alert, đĩa, TLS, backup — epic: Hạ tầng/CI-CD; phụ thuộc: T15, T17
-- [ ] T92 Chọn và ghim image MinIO cho staging/production — epic: Hạ tầng/CI-CD; phụ thuộc: T12
 
-### Phase 2 — Identity
+### Phase 1 — Identity
 
 _T19 trước; T20-T24 song song sau T19/T23; UI T25-T26 sau backend tương ứng._
 
@@ -58,7 +46,7 @@ _T19 trước; T20-T24 song song sau T19/T23; UI T25-T26 sau backend tương ứ
 - [ ] T26 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T21
 - [ ] T27 🚀 Xác nhận đăng nhập Google và Admin trên staging — epic: Identity; phụ thuộc: T15, T25, T26
 
-### Phase 3 — Instructor
+### Phase 2 — Instructor
 
 _T28 rồi T29; T30-T31 sau T26._
 
@@ -67,7 +55,7 @@ _T28 rồi T29; T30-T31 sau T26._
 - [ ] T30 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T26, T28, T29
 - [ ] T31 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T26, T29
 
-### Phase 4 — Course và catalog
+### Phase 3 — Course và catalog
 
 _Backend T32-T41 theo chuỗi phụ thuộc; UI T42-T48 song song sau backend tương ứng._
 
@@ -89,15 +77,15 @@ _Backend T32-T41 theo chuỗi phụ thuộc; UI T42-T48 song song sau backend t�
 - [ ] T47 Web học viên: Danh sách khóa học (lọc, sắp xếp, tìm kiếm) — epic: Course; phụ thuộc: T08, T09, T41
 - [ ] T48 Web học viên: Chi tiết khóa học (SEO, nhãn Xem thử) — epic: Course; phụ thuộc: T09, T40
 
-### Phase 5 — Video: tải lên và xử lý
+### Phase 4 — Video: tải lên và xử lý
 
-_Phát video nằm ở Phase 8 vì cần Enrollment._
+_Phát video nằm ở Phase 7 vì cần Enrollment._
 
 - [ ] T49 Tải lên Video: chỉ mp4 ≤ 1 GB, kiểm tra magic bytes, trạng thái xử lý — epic: Video; phụ thuộc: T23, T34
 - [ ] T50 Worker ffmpeg: HLS AES-128, giới hạn song song, Sẵn sàng/Lỗi — epic: Video; phụ thuộc: T49
 - [ ] T51 App quản trị: Upload video (tiến độ %, hủy, kiểm tra khi chọn, badge trạng thái) — epic: Video; phụ thuộc: T44, T49
 
-### Phase 6 — Cart, Coupon và Enrollment nền
+### Phase 5 — Cart, Coupon và Enrollment nền
 
 - [ ] T52 Enrollment: thực thể, unique (Học viên, Khóa học), truy vấn sở hữu và Khóa học của tôi — epic: Enrollment; phụ thuộc: T03, T33
 - [ ] T53 Coupon: CRUD cho Admin và tính giá — epic: Cart/Coupon; phụ thuộc: T19, T33
@@ -105,7 +93,7 @@ _Phát video nằm ở Phase 8 vì cần Enrollment._
 - [ ] T55 App quản trị: Coupon (CRUD) — epic: Cart/Coupon; phụ thuộc: T26, T53
 - [ ] T56 Web học viên: Giỏ hàng, Coupon, Thêm vào giỏ, Vào học — epic: Cart/Coupon; phụ thuộc: T25, T48, T54
 
-### Phase 7 — Order và Payment
+### Phase 6 — Order và Payment
 
 _T57 → T58/T61/T65 → T59 → T60/T62/T63 → T64 → T66; UI T67-T69 sau backend._
 
@@ -123,14 +111,14 @@ _T57 → T58/T61/T65 → T59 → T60/T62/T63 → T64 → T66; UI T67-T69 sau bac
 - [ ] T68 Web học viên: Khóa học của tôi và Lịch sử đơn — epic: Enrollment; phụ thuộc: T25, T52, T65
 - [ ] T69 App quản trị: Đơn (danh sách, chi tiết, Xử lý đơn) — epic: Order; phụ thuộc: T26, T64, T65
 
-### Phase 8 — Học và phát video
+### Phase 7 — Học và phát video
 
 - [ ] T70 Phát video: token phát, manifest/segment/key qua API, Nginx X-Accel-Redirect — epic: Learning; phụ thuộc: T13, T38, T50, T52
 - [ ] T71 Báo lỗi video: Học viên gửi, Admin nhận (backend) — epic: Learning; phụ thuộc: T50, T52
 - [ ] T72 Web học viên: Trang học (player HLS, danh sách Bài học, trạng thái, Gửi báo lỗi) — epic: Learning; phụ thuộc: T68, T70, T71
 - [ ] T73 App quản trị: Báo lỗi video — epic: Learning; phụ thuộc: T26, T71
 
-### Phase 9 — Doanh thu Instructor
+### Phase 8 — Doanh thu Instructor
 
 - [ ] T74 Tỷ lệ chia chung (cấu hình) và Tỷ lệ chia riêng (đặt/xóa) — epic: Revenue; phụ thuộc: T28
 - [ ] T75 Khoản chia: sao chép tỷ lệ vào Đơn và ghi Khoản chia chờ duyệt khi Đã thanh toán — epic: Revenue; phụ thuộc: T59, T64, T74
@@ -141,6 +129,18 @@ _T57 → T58/T61/T65 → T59 → T60/T62/T63 → T64 → T66; UI T67-T69 sau bac
 - [ ] T80 App quản trị: Tỷ lệ chia riêng trên màn hình Instructor — epic: Revenue; phụ thuộc: T30, T74
 - [ ] T81 App quản trị: Khoản chia chờ duyệt — epic: Revenue; phụ thuộc: T26, T76
 - [ ] T82 App quản trị: Phiếu chi (Tạo phiếu chi) — epic: Revenue; phụ thuộc: T26, T77
+
+### Phase 9 — Hạ tầng và CI/CD
+
+_Làm sau khi code các phase trước chạy ổn (đảo thứ tự so với kế hoạch đầu; T11, T12 đã làm sớm nên nằm ở Phase 0). Mọi thẻ đánh dấu 🚀 (cần deploy thật) phụ thuộc T15._
+
+- [ ] T13 Dựng VPS: Docker, user deploy, Nginx 3 subdomain, TLS, volume Video — epic: Hạ tầng/CI-CD; phụ thuộc: —
+- [ ] T14 docker-compose.prod.yml, `.env.example`, secrets, project `tedu-stg` và `tedu-prod` — epic: Hạ tầng/CI-CD; phụ thuộc: T12, T13
+- [ ] T15 Job `deploy-stg`, bundle migration và smoke test staging — epic: Hạ tầng/CI-CD; phụ thuộc: T14
+- [ ] T16 Job `deploy-prod` có người duyệt và script rollback — epic: Hạ tầng/CI-CD; phụ thuộc: T15
+- [ ] T17 Backup và restore: pg_dump hằng ngày, đồng bộ Video và MinIO ra ngoài VPS — epic: Hạ tầng/CI-CD; phụ thuộc: T14
+- [ ] T18 Giám sát: probe ngoài VPS, alert, đĩa, TLS, backup — epic: Hạ tầng/CI-CD; phụ thuộc: T15, T17
+- [ ] T92 Chọn và ghim image MinIO cho staging/production — epic: Hạ tầng/CI-CD; phụ thuộc: T12
 
 ### Phase 10 — Chất lượng và go-live (🚀 cần staging)
 
