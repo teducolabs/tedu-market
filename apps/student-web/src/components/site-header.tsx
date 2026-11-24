@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { buildSearchUrl, SITE_NAME } from '../lib/site';
 
 export interface SiteHeaderProps {
-  /** Số khóa trong Giỏ hàng; nối dữ liệu thật thuộc thẻ T56. */
+  /** Số khóa trong Giỏ hàng; nối dữ liệu thật thuộc thẻ T50. */
   cartCount?: number;
 }
 
@@ -111,7 +111,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <BookOpen aria-hidden className="size-5" />
             <span className="sm:hidden lg:inline">Khóa học của tôi</span>
           </Link>
-          {/* Nút chưa nối OIDC và menu tài khoản (Lịch sử đơn, Đăng xuất): thuộc thẻ T25. */}
+          {/* Nút chưa nối OIDC và menu tài khoản (Lịch sử đơn, Đăng xuất): thuộc thẻ T19. */}
           <Button tone="primary">Đăng nhập bằng Google</Button>
         </nav>
       </div>

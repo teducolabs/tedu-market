@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
-/** `/` hiển thị Danh sách khóa học (ux.md mục 2). Lọc, sắp xếp, tìm kiếm, lưới thẻ khóa thuộc thẻ T47. */
+/** `/` hiển thị Danh sách khóa học (ux.md mục 2). Lọc, sắp xếp, tìm kiếm, lưới thẻ khóa thuộc thẻ T41. */
 export default function HomePage() {
   return (
     <section aria-labelledby="course-list-title">

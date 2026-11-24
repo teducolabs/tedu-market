@@ -12,7 +12,7 @@ export function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          {/* Đăng xuất chưa nối OIDC: TODO(T26). */}
+          {/* Đăng xuất chưa nối OIDC: TODO(T20). */}
           <Route element={<AdminLayout role={role} onSignOut={() => undefined} />}>
             <Route index element={<Navigate to="/revenue" replace />} />
             {SIDEBAR_ITEMS.map((item) => (
