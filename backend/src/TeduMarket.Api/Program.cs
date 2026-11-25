@@ -60,6 +60,7 @@ app.UseCors(ApiPolicies.CorsPolicy);
 app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
+app.UseAntiforgery();
 app.UseOutputCache();
 app.MapOpenApi();
 
@@ -67,8 +68,10 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => fa
 app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains(TeduMarket.Infrastructure.DependencyInjection.ReadyTag) });
 
 app.MapConnectEndpoints();
+app.MapLoginPage();
 
 var api = app.MapGroup("/api/v1");
+api.MapAccountEndpoints();
 if (app.Environment.IsDevelopment())
 {
     api.MapSampleEndpoints();

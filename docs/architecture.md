@@ -101,7 +101,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 - FR: FR-25, 38, 39, 47, 48. Phụ thuộc: `Instructor` (đọc `InstructorShareRate`), `Order`.
 
 ### Module: Identity
-- Trách nhiệm: OpenIddict + ASP.NET Core Identity (endpoint `/connect/authorize`, `/connect/token`; bắt buộc PKCE), vai trò `Student`/`Instructor`/`Admin` (`Guest` = chưa đăng nhập; Instructor giữ thêm vai trò Student, [log](decision-logs/2026-11-25-cau-hinh-identity-openiddict-cho-t13.md)), policy theo role, `ICurrentUser` + `OwnershipGuard` cho kiểm tra sở hữu, Google login, seeding `Admin`, đổi mật khẩu, thu hồi token.
+- Trách nhiệm: OpenIddict + ASP.NET Core Identity (endpoint `/connect/authorize`, `/connect/token`; bắt buộc PKCE), vai trò `Student`/`Instructor`/`Admin` (`Guest` = chưa đăng nhập; Instructor giữ thêm vai trò Student, [log](decision-logs/2026-11-25-cau-hinh-identity-openiddict-cho-t13.md)), policy theo role, `ICurrentUser` + `OwnershipGuard` cho kiểm tra sở hữu, Google login, seeding `Admin`, trang đăng nhập email + mật khẩu của Admin (`/account/login`, HTML do API dựng), đổi mật khẩu (`POST /api/v1/account/change-password`, chỉ Admin), đăng xuất `/connect/logout` thu hồi mọi token của người dùng, đăng ký client OIDC `admin-app`/`student-web` từ cấu hình ([log](decision-logs/2026-11-25-dang-nhap-admin-dang-xuat-thu-hoi-token.md)).
 - FR: FR-03, 04, 05, 41, 42. Phụ thuộc: `Notification` (email chào mừng FR-27).
 
 ### Module: Notification
@@ -110,7 +110,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 
 ## 4. Bảo mật
 
-**Authn:** Code + PKCE (NFR-06). AdminApp giữ token trong bộ nhớ SPA; StudentWeb là OIDC client phía server, token trong cookie session httpOnly mã hóa, không dùng localStorage. Đăng xuất thu hồi token (FR-04). `PaymentHook` chỉ dùng `X-API-Token` (không qua OIDC), so sánh thời gian cố định, sai/thiếu → 400 `INVALID_TOKEN`, không đổi dữ liệu (NFR-07).
+**Authn:** Code + PKCE (NFR-06). AdminApp giữ token trong bộ nhớ SPA; StudentWeb là OIDC client phía server, token trong cookie session httpOnly mã hóa, không dùng localStorage. Đăng xuất (`/connect/logout`) thu hồi token (FR-04); API kiểm tra token còn hiệu lực trong DB nên token bị thu hồi bị từ chối ngay. `PaymentHook` chỉ dùng `X-API-Token` (không qua OIDC), so sánh thời gian cố định, sai/thiếu → 400 `INVALID_TOKEN`, không đổi dữ liệu (NFR-07).
 
 **Authz (FR-05, NFR-08):** policy theo role ở endpoint + kiểm tra sở hữu trong Handler (chống IDOR). Ma trận:
 

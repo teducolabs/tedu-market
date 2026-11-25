@@ -19,8 +19,18 @@ namespace TeduMarket.Api.IntegrationTests.Identity;
 /// </summary>
 internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
 {
+    /// <summary>Khóa ký RSA PKCS#8 (base64 DER) dùng chung cho mọi host test.</summary>
+    public static string SharedSigningKey => _sharedSigningKey.Value;
+
     public const string ClientId = "sample-client";
     public const string RedirectUri = "http://localhost/callback";
+    public const string PostLogoutRedirectUri = "http://localhost/signed-out";
+
+    private static readonly Lazy<string> _sharedSigningKey = new(() =>
+    {
+        using var rsa = RSA.Create(2048);
+        return Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
+    });
 
     private readonly WebApplicationFactory<Program> _factory;
     private int _userCount;
@@ -30,7 +40,16 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseSetting("ConnectionStrings:Default", connectionString);
-            builder.ConfigureServices(services => services.AddTransient<IStartupFilter, TestSignInStartupFilter>());
+            // Khóa RSA tạm của Development mất hàng giây mỗi host trên máy chậm: đưa khóa qua cấu hình
+            // (đúng đường cấu hình của production) và dùng chung một khóa ký cho cả tiến trình test.
+            builder.UseSetting("OpenIddict:EncryptionKey", Convert.ToBase64String(new byte[32]));
+            builder.UseSetting("OpenIddict:SigningKey", SharedSigningKey);
+            builder.ConfigureServices(services =>
+            {
+                services.AddTransient<IStartupFilter, TestSignInStartupFilter>();
+                // Băm mật khẩu mặc định (PBKDF2, hàng trăm nghìn vòng) làm test đăng nhập chậm; test chỉ cần băm đúng sai.
+                services.Configure<PasswordHasherOptions>(options => options.IterationCount = 1_000);
+            });
         });
     }
 
@@ -49,11 +68,13 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
             ClientType = ClientTypes.Public,
             ConsentType = ConsentTypes.Implicit,
             RedirectUris = { new Uri(RedirectUri) },
+            PostLogoutRedirectUris = { new Uri(PostLogoutRedirectUri) },
         };
         descriptor.Permissions.UnionWith(
         [
             Permissions.Endpoints.Authorization,
             Permissions.Endpoints.Token,
+            Permissions.Endpoints.EndSession,
             Permissions.GrantTypes.AuthorizationCode,
             Permissions.GrantTypes.RefreshToken,
             Permissions.ResponseTypes.Code,
@@ -76,6 +97,34 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
         Assert.True((await userManager.CreateAsync(user)).Succeeded);
         Assert.True((await userManager.AddToRolesAsync(user, roles)).Succeeded);
         return user.Id;
+    }
+
+    /// <summary>Tạo người dùng có mật khẩu (như Admin seed) để đăng nhập bằng form email + mật khẩu.</summary>
+    public async Task<Guid> CreateUserWithPasswordAsync(string email, string password, params string[] roles)
+    {
+        await using var scope = _factory.Services.CreateAsyncScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var user = new User { UserName = email, Email = email };
+        Assert.True((await userManager.CreateAsync(user, password)).Succeeded);
+        Assert.True((await userManager.AddToRolesAsync(user, roles)).Succeeded);
+        return user.Id;
+    }
+
+    /// <summary>Tải trang đăng nhập rồi gửi form; trả phản hồi của POST (cookie Identity nằm trong <paramref name="client"/>).</summary>
+    public static async Task<HttpResponseMessage> SubmitLoginAsync(HttpClient client, string email, string password, string returnUrl)
+    {
+        var page = await client.GetAsync($"/account/login?returnUrl={Uri.EscapeDataString(returnUrl)}");
+        page.EnsureSuccessStatusCode();
+        var html = await page.Content.ReadAsStringAsync();
+        var match = System.Text.RegularExpressions.Regex.Match(html, "name=\"(__RequestVerificationToken)\" value=\"([^\"]*)\"");
+        Assert.True(match.Success);
+        return await client.PostAsync("/account/login", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            [match.Groups[1].Value] = System.Net.WebUtility.HtmlDecode(match.Groups[2].Value),
+            ["email"] = email,
+            ["password"] = password,
+            ["returnUrl"] = returnUrl,
+        }));
     }
 
     public async Task DeleteUserAsync(Guid userId)

@@ -36,9 +36,9 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 
 _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứng._
 
-- [~] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
-- [~] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
-- [ ] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
+- [x] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
+- [x] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
+- [~] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
 - [ ] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
 - [ ] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
 - [ ] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
@@ -275,8 +275,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-04, FR-42 · **Phụ thuộc:** T13, T14
 - **Mô tả:** Trang đăng nhập email + mật khẩu cho Admin (đường dẫn `/account/login`, nơi `/connect/authorize` chuyển tới khi chưa đăng nhập), endpoint đổi mật khẩu, đăng xuất thu hồi token. Gồm cả đăng ký client OpenIddict thật `admin-app` (public, PKCE) và `student-web` (confidential) với redirect URI và secret đọc từ cấu hình (việc phát sinh từ T13).
 - **Acceptance criteria:**
-  - Admin đổi mật khẩu rồi lần đăng nhập sau chỉ mật khẩu mới có hiệu lực
-  - Sau đăng xuất, token cũ gọi API bị từ chối
+  - [x] Admin đổi mật khẩu rồi lần đăng nhập sau chỉ mật khẩu mới có hiệu lực — test `ChangePasswordTests` (mật khẩu cũ bị từ chối, mật khẩu mới thành công; đổi xong token cũ bị thu hồi)
+  - [x] Sau đăng xuất, token cũ gọi API bị từ chối — test `LogoutTests` (access token 401, refresh token `invalid_grant`, token của người khác không bị ảnh hưởng)
 
 ### T16 Google external login, tạo Học viên ở lần đăng nhập đầu
 

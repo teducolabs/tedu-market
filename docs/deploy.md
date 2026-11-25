@@ -46,15 +46,19 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google |
 | `Resend__ApiKey` | email (NFR-18) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
+| `AdminApp__RedirectUris__0`, `AdminApp__PostLogoutRedirectUris__0` | redirect URI sau đăng nhập/đăng xuất của client OIDC `admin-app` (không bí mật; thêm `__1`... nếu nhiều URI) |
+| `StudentWeb__RedirectUris__0`, `StudentWeb__PostLogoutRedirectUris__0` | như trên cho client `student-web` |
 | `Cors__AllowedOrigins` | origin AdminApp, StudentWeb, ngăn bởi dấu phẩy (NFR-09) |
 | `Seq__ServerUrl`, `Seq__ApiKey` | log |
-| `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server |
+| `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server; `api` cũng đọc `StudentWeb__OidcClientSecret` để đăng ký client `student-web` (cùng giá trị với StudentWeb) |
 | `SITE_URL` | URL công khai của StudentWeb cho canonical, Open Graph, robots (không bí mật; đọc lúc chạy, mặc định `http://localhost:3000`) |
 | `IMAGE_TAG` | tag image cần chạy |
 | `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY` (chỉ GitHub Secrets) | CI SSH, key riêng cho CI |
 | `BACKUP_REMOTE`, `BACKUP_REMOTE_KEY` (chỉ trên VPS) | đích backup ngoài VPS |
 
-`OpenIddict__EncryptionKey` và `OpenIddict__SigningKey` là chuỗi base64 từ 32 byte trở lên (vd `openssl rand -base64 32`); thiếu thì API không khởi động ngoài môi trường Development.
+`api` đăng ký client OIDC `admin-app` (public, PKCE) và `student-web` (confidential) lúc khởi động từ các biến `AdminApp__*`, `StudentWeb__*`; thiếu `AdminApp__RedirectUris` hoặc thiếu `StudentWeb__RedirectUris`/`StudentWeb__OidcClientSecret` thì client tương ứng bị bỏ qua (có log cảnh báo) và không đăng nhập được.
+
+`OpenIddict__EncryptionKey` là chuỗi base64 từ 32 byte trở lên (vd `openssl rand -base64 32`). `OpenIddict__SigningKey` là khóa riêng RSA ≥ 2048 bit định dạng PKCS#8, dạng PEM hoặc base64 của DER (vd `openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -outform DER | base64 -w0`); OpenIddict không nhận khóa ký đối xứng. Thiếu hoặc sai định dạng thì API không khởi động ngoài môi trường Development.
 
 API tin header `X-Forwarded-For` và `X-Forwarded-Proto` từ mọi nguồn (OpenIddict cần scheme https). Vì vậy Nginx phải gửi hai header này (`proxy_set_header X-Forwarded-Proto $scheme;`, `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`) và cổng của container `api` không được publish ra ngoài, chỉ Nginx trong mạng compose gọi tới.
 

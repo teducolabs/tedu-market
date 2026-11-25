@@ -12,7 +12,7 @@ public sealed class SecurityHeadersMiddleware(RequestDelegate next)
             headers["X-Frame-Options"] = "DENY";
             headers["Referrer-Policy"] = "no-referrer";
             headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
-            headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'";
+            headers.TryAdd("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'"); // trang đăng nhập tự đặt CSP riêng
             return Task.CompletedTask;
         });
 

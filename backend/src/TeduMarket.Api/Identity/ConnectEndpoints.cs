@@ -17,7 +17,28 @@ public static class ConnectEndpoints
             .ExcludeFromDescription();
         app.MapPost(IdentityRegistration.TokenEndpointPath, ExchangeAsync)
             .ExcludeFromDescription();
+        app.MapMethods(IdentityRegistration.EndSessionEndpointPath, [HttpMethods.Get, HttpMethods.Post], LogoutAsync)
+            .ExcludeFromDescription();
         return app;
+    }
+
+    /// <summary>
+    /// Đăng xuất (OIDC end session): thu hồi mọi token của người dùng (từ <c>id_token_hint</c> hoặc cookie Identity),
+    /// xóa cookie đăng nhập rồi để OpenIddict chuyển về <c>post_logout_redirect_uri</c> đã đăng ký (FR-04).
+    /// </summary>
+    private static async Task<IResult> LogoutAsync(HttpContext httpContext, SignInManager<User> signInManager, UserSessionRevoker sessionRevoker)
+    {
+        _ = GetRequest(httpContext);
+        var hint = await httpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        var cookie = await httpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+        var subject = hint.Principal?.GetClaim(Claims.Subject) ?? cookie.Principal?.GetClaim(Claims.Subject);
+        if (Guid.TryParse(subject, out var userId))
+        {
+            await sessionRevoker.RevokeAllAsync(userId, httpContext.RequestAborted);
+        }
+
+        await signInManager.SignOutAsync();
+        return Results.SignOut(authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme]);
     }
 
     private static async Task<IResult> AuthorizeAsync(HttpContext httpContext, UserManager<User> userManager, ConnectPrincipalFactory principalFactory)
