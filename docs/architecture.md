@@ -125,7 +125,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 | `CourseApproval`, Category, Coupon, Instructor, `OrderResolution`, danh sách Order, tỷ lệ chia, duyệt `PendingShare`, `Payout` | — | — | — | ✔ |
 | Dashboard `Revenue`, `Balance` | — | — | của mình | tất cả |
 
-**Secret (NFR-22):** mật khẩu Admin seed sinh ngẫu nhiên, ghi `secret.json` (trong `.gitignore`), lưu băm bằng Identity (PBKDF2). `X-API-Token`, Google client secret, Resend key, khóa MinIO, khóa ký token phát video đọc từ biến môi trường/file bí mật ngoài source control. Tài khoản nhận QR không phải secret nên để `appsettings.json` ([log](decision-logs/2026-11-11-qr-vietqr-tai-khoan-trong-appsettings.md)).
+**Secret (NFR-22):** mật khẩu Admin seed sinh ngẫu nhiên, ghi `secret.json` (trong `.gitignore`), lưu băm bằng Identity (PBKDF2). Seeding chạy một lần lúc `api` khởi động (`AdminSeedHostedService`), file mặc định `secrets/secret.json` dưới thư mục gốc ứng dụng ([log](decision-logs/2026-11-25-seeding-admin-chay-luc-api-khoi-dong.md)). `X-API-Token`, Google client secret, Resend key, khóa MinIO, khóa ký token phát video đọc từ biến môi trường/file bí mật ngoài source control. Tài khoản nhận QR không phải secret nên để `appsettings.json` ([log](decision-logs/2026-11-11-qr-vietqr-tai-khoan-trong-appsettings.md)).
 
 **Threat mặc định:**
 - Injection: Dapper chỉ dùng tham số; không nối chuỗi SQL. Tìm kiếm dùng `websearch_to_tsquery` với tham số.

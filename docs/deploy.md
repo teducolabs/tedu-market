@@ -33,7 +33,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 
 - Lưu: `.env.stg`, `.env.prod` trên VPS (`chmod 600`, owner `deploy`) và GitHub Actions Secrets. **Không commit** (`.env*`, `secret.json` đã trong `.gitignore`). Repo chỉ có `.env.example` chứa tên biến, không chứa giá trị.
 - Local: `cp .env.example .env.local`, tự sinh giá trị giả (`openssl rand -hex 32`). Không xin secret staging/production để chạy local.
-- Mật khẩu Admin seed (NFR-22): sinh ngẫu nhiên lần chạy đầu, ghi `secret.json` trong volume secrets. Đọc 1 lần: `docker compose -p tedu-prod exec api cat /app/secrets/secret.json`, cất vào trình quản lý mật khẩu, đổi mật khẩu khi đăng nhập lần đầu.
+- Mật khẩu Admin seed (NFR-22): sinh ngẫu nhiên khi `api` khởi động lần đầu (sau khi migrator đã áp migration), ghi `secret.json` trong volume secrets; đường dẫn đổi được bằng `AdminSeed__SecretFilePath`. Đọc 1 lần: `docker compose -p tedu-prod exec api cat /app/secrets/secret.json`, cất vào trình quản lý mật khẩu, đổi mật khẩu khi đăng nhập lần đầu.
 - Log và output của agent không được in giá trị secret.
 
 | Biến | Dùng cho |

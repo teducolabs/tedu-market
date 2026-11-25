@@ -76,6 +76,9 @@ public static class IdentityRegistration
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
         services.AddScoped<ConnectPrincipalFactory>();
+        services.Configure<AdminSeedOptions>(configuration.GetSection(AdminSeedOptions.SectionName));
+        services.AddScoped<AdminSeeder>();
+        services.AddHostedService<AdminSeedHostedService>();
         return services;
     }
 

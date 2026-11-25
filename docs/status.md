@@ -37,7 +37,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứng._
 
 - [~] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
-- [ ] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
+- [~] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
 - [ ] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
 - [ ] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
 - [ ] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
@@ -267,8 +267,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-41, NFR-22 · **Phụ thuộc:** T13
 - **Mô tả:** Lần chạy đầu tạo Admin `support@tedu.com.vn` với mật khẩu ngẫu nhiên, ghi vào `secret.json` ngoài source control, mật khẩu lưu dạng băm.
 - **Acceptance criteria:**
-  - Chạy lần đầu sinh `secret.json` và đăng nhập được bằng mật khẩu đó
-  - Chạy lại không tạo thêm Admin; `secret.json` không nằm trong git
+  - [x] Chạy lần đầu sinh `secret.json` và đăng nhập được bằng mật khẩu đó — test `AdminSeedTests` kiểm chứng mật khẩu qua `UserManager.CheckPasswordAsync`; endpoint đăng nhập email + mật khẩu thuộc T15
+  - [x] Chạy lại không tạo thêm Admin; `secret.json` không nằm trong git — `**/secret.json` trong `.gitignore` (đã kiểm bằng `git check-ignore`)
 
 ### T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token
 
