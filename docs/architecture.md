@@ -101,7 +101,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 - FR: FR-25, 38, 39, 47, 48. Phụ thuộc: `Instructor` (đọc `InstructorShareRate`), `Order`.
 
 ### Module: Identity
-- Trách nhiệm: OpenIddict + ASP.NET Core Identity, vai trò `Student`/`Instructor`/`Admin` (`Guest` = chưa đăng nhập), Google login, seeding `Admin`, đổi mật khẩu, thu hồi token.
+- Trách nhiệm: OpenIddict + ASP.NET Core Identity (endpoint `/connect/authorize`, `/connect/token`; bắt buộc PKCE), vai trò `Student`/`Instructor`/`Admin` (`Guest` = chưa đăng nhập; Instructor giữ thêm vai trò Student, [log](decision-logs/2026-11-25-cau-hinh-identity-openiddict-cho-t13.md)), policy theo role, `ICurrentUser` + `OwnershipGuard` cho kiểm tra sở hữu, Google login, seeding `Admin`, đổi mật khẩu, thu hồi token.
 - FR: FR-03, 04, 05, 41, 42. Phụ thuộc: `Notification` (email chào mừng FR-27).
 
 ### Module: Notification

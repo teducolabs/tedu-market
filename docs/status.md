@@ -36,7 +36,7 @@ _Sau T01, T02/T07 chạy song song; T03-T06 sau T02; T08-T10 sau T02+T07._
 
 _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứng._
 
-- [ ] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
+- [~] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
 - [ ] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
 - [ ] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
 - [ ] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
@@ -259,8 +259,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-04, FR-05, NFR-06, NFR-08 · **Phụ thuộc:** T03, T06
 - **Mô tả:** Dựng Authorization Server chạy chung trong API, vai trò Student/Instructor/Admin, policy theo role ở endpoint và mẫu kiểm tra sở hữu trong Handler.
 - **Acceptance criteria:**
-  - Client mẫu đăng nhập được bằng Authorization Code + PKCE và nhận token
-  - Gọi endpoint sai vai trò bị từ chối (401/403)
+  - [x] Client mẫu đăng nhập được bằng Authorization Code + PKCE và nhận token
+  - [x] Gọi endpoint sai vai trò bị từ chối (401/403)
 
 ### T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json`
 
@@ -273,7 +273,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 ### T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token
 
 - **Epic:** Identity · **FR/NFR:** FR-04, FR-42 · **Phụ thuộc:** T13, T14
-- **Mô tả:** Trang đăng nhập email + mật khẩu cho Admin, endpoint đổi mật khẩu, đăng xuất thu hồi token.
+- **Mô tả:** Trang đăng nhập email + mật khẩu cho Admin (đường dẫn `/account/login`, nơi `/connect/authorize` chuyển tới khi chưa đăng nhập), endpoint đổi mật khẩu, đăng xuất thu hồi token. Gồm cả đăng ký client OpenIddict thật `admin-app` (public, PKCE) và `student-web` (confidential) với redirect URI và secret đọc từ cấu hình (việc phát sinh từ T13).
 - **Acceptance criteria:**
   - Admin đổi mật khẩu rồi lần đăng nhập sau chỉ mật khẩu mới có hiệu lực
   - Sau đăng xuất, token cũ gọi API bị từ chối

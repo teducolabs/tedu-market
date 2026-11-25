@@ -31,6 +31,22 @@ public sealed class PlatformPoliciesTests : IDisposable
     }
 
     [Fact]
+    public async Task GetSample_ForwardedProtoHttps_ReportsHttpsSchemeAsync()
+    {
+        // Arrange
+        using var client = _factory.CreateClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/samples/scheme");
+        request.Headers.Add("X-Forwarded-Proto", "https");
+
+        // Act
+        var response = await client.SendAsync(request);
+
+        // Assert
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.Equal("https", json.RootElement.GetProperty("scheme").GetString());
+    }
+
+    [Fact]
     public async Task GetSample_UnknownOrigin_ReturnsNoAllowOriginHeaderAsync()
     {
         // Arrange

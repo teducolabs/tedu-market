@@ -5,6 +5,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace TeduMarket.Api.IntegrationTests.Common;
 
@@ -37,9 +38,29 @@ public sealed class CorrelationIdTests : IDisposable
         Assert.Equal("abc-123", response.Headers.GetValues("X-Correlation-Id").Single());
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.Equal("abc-123", json.RootElement.GetProperty("correlationId").GetString());
-        var requestLogs = _sink.Events.Where(e => e.Properties.TryGetValue("CorrelationId", out var value) && value.ToString() == "\"abc-123\"").ToList();
+        // Log request của Serilog ghi sau khi response đã gửi nên chờ có hạn cho đến khi nó xuất hiện.
+        var requestLogs = await WaitForLogsAsync("abc-123", e => e.MessageTemplate.Text.Contains("HTTP", StringComparison.Ordinal));
         Assert.Contains(requestLogs, e => e.Exception is not null);
         Assert.Contains(requestLogs, e => e.MessageTemplate.Text.Contains("HTTP", StringComparison.Ordinal));
+    }
+
+    private async Task<List<LogEvent>> WaitForLogsAsync(string correlationId, Func<LogEvent, bool> expected)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        List<LogEvent> logs;
+        do
+        {
+            logs = [.. _sink.Events.Where(e => e.Properties.TryGetValue("CorrelationId", out var value) && value.ToString() == $"\"{correlationId}\"")];
+            if (logs.Exists(e => expected(e)))
+            {
+                break;
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(50), timeout.Token);
+        }
+        while (true);
+
+        return logs;
     }
 
     [Fact]

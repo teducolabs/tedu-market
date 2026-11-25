@@ -2,6 +2,7 @@ using Mediator;
 using TeduMarket.Api.Common;
 using TeduMarket.Application.Sample.Commands.CreateSample;
 using TeduMarket.Application.Sample.Commands.SaveSampleNote;
+using TeduMarket.Application.Sample.Queries.GetOwnedSample;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 
 namespace TeduMarket.Api.Sample;
@@ -27,6 +28,16 @@ public static class SampleEndpoints
 
         group.MapGet("/limited", () => Results.Ok())
             .RequireRateLimiting(ApiPolicies.CheckoutRateLimitPolicy);
+
+        group.MapGet("/scheme", (HttpContext context) => Results.Ok(new { scheme = context.Request.Scheme }));
+
+        group.MapGet("/admin-only", () => Results.Ok()).RequireAuthorization(AuthorizationPolicies.Admin);
+        group.MapGet("/instructor-only", () => Results.Ok()).RequireAuthorization(AuthorizationPolicies.Instructor);
+        group.MapGet("/student-only", () => Results.Ok()).RequireAuthorization(AuthorizationPolicies.Student);
+
+        group.MapGet("/owned/{ownerId:guid}", async (Guid ownerId, IMediator mediator, CancellationToken cancellationToken) =>
+            Results.Ok(await mediator.Send(new GetOwnedSampleQuery(ownerId), cancellationToken)))
+            .RequireAuthorization();
 
         group.MapGet("/failure", () =>
         {

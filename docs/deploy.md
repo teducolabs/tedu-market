@@ -54,6 +54,10 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY` (chỉ GitHub Secrets) | CI SSH, key riêng cho CI |
 | `BACKUP_REMOTE`, `BACKUP_REMOTE_KEY` (chỉ trên VPS) | đích backup ngoài VPS |
 
+`OpenIddict__EncryptionKey` và `OpenIddict__SigningKey` là chuỗi base64 từ 32 byte trở lên (vd `openssl rand -base64 32`); thiếu thì API không khởi động ngoài môi trường Development.
+
+API tin header `X-Forwarded-For` và `X-Forwarded-Proto` từ mọi nguồn (OpenIddict cần scheme https). Vì vậy Nginx phải gửi hai header này (`proxy_set_header X-Forwarded-Proto $scheme;`, `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`) và cổng của container `api` không được publish ra ngoài, chỉ Nginx trong mạng compose gọi tới.
+
 Tài khoản nhận QR nằm trong `appsettings.json`, không phải secret.
 
 ## 4. Build & CI/CD

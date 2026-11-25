@@ -10,9 +10,10 @@ internal sealed class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<A
     {
         var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__Default")
             ?? throw new InvalidOperationException("Thiếu biến môi trường ConnectionStrings__Default");
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("migrations_history"))
-            .Options;
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        optionsBuilder.UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("migrations_history"));
+        optionsBuilder.UseOpenIddict<Guid>();
+        var options = optionsBuilder.Options;
         return new AppDbContext(options);
     }
 }

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using OpenIddict.Abstractions;
 
 namespace TeduMarket.Api.Common;
 
@@ -54,7 +55,7 @@ public static class ApiPolicies
     /// <summary>Khóa phân vùng rate limit: Id người dùng đã đăng nhập; chưa đăng nhập thì theo địa chỉ IP.</summary>
     public static string GetPartitionKey(HttpContext context)
     {
-        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = context.User.FindFirstValue(OpenIddictConstants.Claims.Subject) ?? context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         return string.IsNullOrEmpty(userId)
             ? $"ip:{context.Connection.RemoteIpAddress}"
             : $"user:{userId}";

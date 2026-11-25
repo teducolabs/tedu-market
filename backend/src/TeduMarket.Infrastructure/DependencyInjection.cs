@@ -23,7 +23,10 @@ public static class DependencyInjection
             configuration.GetConnectionString("Default")
                 ?? throw new InvalidOperationException("Thiếu cấu hình ConnectionStrings:Default")).Build());
         services.AddDbContext<AppDbContext>((provider, options) =>
-            options.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>(), npgsql => npgsql.MigrationsHistoryTable("migrations_history")));
+            {
+                options.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>(), npgsql => npgsql.MigrationsHistoryTable("migrations_history"));
+                options.UseOpenIddict<Guid>();
+            });
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<AppDbContext>());
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();

@@ -1,7 +1,9 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using TeduMarket.Api.Common;
+using TeduMarket.Api.Identity;
 using TeduMarket.Api.Sample;
 using TeduMarket.Application;
 using TeduMarket.Application.Common.Behaviors;
@@ -36,22 +38,35 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
     context.ProblemDetails.Extensions["correlationId"] = context.HttpContext.TraceIdentifier);
 builder.Services.AddApiPolicies(builder.Configuration);
+builder.Services.AddIdentityServer(builder.Configuration, builder.Environment);
 builder.Services.AddOpenApi();
+// API chỉ nhận request qua Nginx trong mạng compose nên tin header X-Forwarded-* từ proxy đó (OpenIddict cần biết scheme https).
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<SecurityHeadersMiddleware>();
-app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging(options => options.Logger = app.Services.GetRequiredService<Serilog.ILogger>());
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseCors(ApiPolicies.CorsPolicy);
+app.UseAuthentication();
 app.UseRateLimiter();
+app.UseAuthorization();
 app.UseOutputCache();
 app.MapOpenApi();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains(TeduMarket.Infrastructure.DependencyInjection.ReadyTag) });
+
+app.MapConnectEndpoints();
 
 var api = app.MapGroup("/api/v1");
 if (app.Environment.IsDevelopment())
