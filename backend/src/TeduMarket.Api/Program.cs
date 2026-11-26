@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using TeduMarket.Api.Common;
 using TeduMarket.Api.Identity;
+using TeduMarket.Api.Instructor;
 using TeduMarket.Api.Sample;
 using TeduMarket.Application;
 using TeduMarket.Application.Common.Behaviors;
@@ -73,6 +74,7 @@ app.MapGoogleLogin();
 
 var api = app.MapGroup("/api/v1");
 api.MapAccountEndpoints();
+api.MapInstructorApprovalEndpoints();
 if (app.Environment.IsDevelopment())
 {
     api.MapSampleEndpoints();

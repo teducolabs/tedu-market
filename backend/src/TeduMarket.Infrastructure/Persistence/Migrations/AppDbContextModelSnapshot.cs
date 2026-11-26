@@ -417,6 +417,29 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.ToTable("openiddict_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>
+                {
+                    b.Property<Guid>("InstructorProfileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("instructor_profile_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("InstructorProfileId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_instructor_profiles_user_id");
+
+                    b.ToTable("instructor_profiles", (string)null);
+                });
+
             modelBuilder.Entity("TeduMarket.Domain.Outbox.OutboxMessage", b =>
                 {
                     b.Property<Guid>("OutboxMessageId")
@@ -708,6 +731,16 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.Navigation("Application");
 
                     b.Navigation("Authorization");
+                });
+
+            modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>
+                {
+                    b.HasOne("TeduMarket.Infrastructure.Identity.User", null)
+                        .WithOne()
+                        .HasForeignKey("TeduMarket.Domain.Instructor.InstructorProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_instructor_profiles_users_user_id");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication<System.Guid>", b =>

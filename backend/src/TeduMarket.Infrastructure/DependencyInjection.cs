@@ -4,12 +4,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using TeduMarket.Application.Common.Outbox;
+using TeduMarket.Application.Identity;
+using TeduMarket.Application.Identity.Queries.ListUsers;
 using TeduMarket.Application.Notification;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 using TeduMarket.Domain.Common;
+using TeduMarket.Domain.Instructor;
 using TeduMarket.Domain.Outbox;
 using TeduMarket.Domain.Sample;
 using TeduMarket.Infrastructure.Health;
+using TeduMarket.Infrastructure.Identity;
+using TeduMarket.Infrastructure.Instructor;
 using TeduMarket.Infrastructure.Notification;
 using TeduMarket.Infrastructure.Outbox;
 using TeduMarket.Infrastructure.Persistence;
@@ -48,6 +53,9 @@ public static class DependencyInjection
         services.AddScoped<IEmailSender, ResendEmailSender>();
         services.AddSingleton<IStudentWebLinks, StudentWebLinks>();
         services.AddScoped<IOutboxMessageHandler, SendWelcomeEmailOutboxHandler>();
+        services.AddScoped<IUserRoleService, UserRoleService>();
+        services.AddScoped<IUserReader, UserDapperReader>();
+        services.AddScoped<IInstructorProfileRepository, InstructorProfileRepository>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();
         services.AddHttpClient(MinioHealthCheck.HttpClientName, client =>

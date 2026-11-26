@@ -68,6 +68,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 
 ### Module: Instructor
 - Trách nhiệm: `InstructorApproval` (gán role + tạo `InstructorProfile`), sửa hồ sơ của mình, `InstructorShareRate` đặt/xóa.
+- API (T21): `POST /api/v1/users/{userId}/instructor-approval` (Admin; chỉ người có role `Student` và chưa là Instructor; gán role và tạo `InstructorProfile` trong một lần lưu, [log](decision-logs/2026-11-26-duyet-instructor-gan-role-cung-transaction-voi-ho-so.md)); `GET /api/v1/users?role=&pageNumber=&pageSize=` (Admin; danh sách người dùng kèm vai trò và Id Hồ sơ Instructor, đọc bằng Dapper). Người được duyệt phải đăng nhập lại để token có role Instructor.
 - FR: FR-18, 39, 40, 43. Phụ thuộc: `Identity`, `Revenue` (đọc `DefaultShareRate`).
 
 ### Module: Video

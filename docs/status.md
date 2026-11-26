@@ -43,13 +43,13 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 - [x] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
 - [x] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
 - [x] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
-- [~] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
+- [x] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
 
 ### Phase 2 — Instructor
 
 _T21 rồi T22; T23-T24 sau T20._
 
-- [ ] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
+- [~] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
 - [ ] T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình — epic: Instructor; phụ thuộc: T21
 - [ ] T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T20, T21, T22
 - [ ] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
@@ -334,8 +334,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Instructor · **FR/NFR:** FR-40 · **Phụ thuộc:** T13
 - **Mô tả:** Admin duyệt một người dùng đã đăng ký thành Instructor: gán role, tạo `InstructorProfile`; danh sách người dùng/Instructor cho Admin.
 - **Acceptance criteria:**
-  - Sau khi duyệt, người đó đăng nhập App quản trị với quyền Instructor
-  - Người không phải Admin gọi API duyệt bị từ chối
+  - [x] Sau khi duyệt, người đó đăng nhập App quản trị với quyền Instructor — test `InstructorApprovalTests` (`Approve_StudentByAdmin_NewSignInGetsInstructorAccessAsync`, `Approve_StudentByAdmin_ReturnsProfileAndRolesAreAssignedAsync`), unit `ApproveInstructorCommandHandlerTests`, `InstructorProfileTests` ([log](decision-logs/2026-11-26-duyet-instructor-gan-role-cung-transaction-voi-ho-so.md))
+  - [x] Người không phải Admin gọi API duyệt bị từ chối — test `InstructorApprovalTests` (`Approve_NoToken_ReturnsUnauthorizedAsync`, `Approve_NotAdmin_ReturnsForbiddenAndAssignsNothingAsync`); danh sách người dùng `GET /api/v1/users` cũng chỉ Admin (`ListUsers_*`)
 
 ### T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình
 
