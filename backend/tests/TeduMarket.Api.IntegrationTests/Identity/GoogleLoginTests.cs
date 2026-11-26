@@ -147,7 +147,7 @@ public sealed class GoogleLoginTests(PostgresFixture postgres) : IAsyncLifetime,
     /// <paramref name="code"/> null nghĩa là người dùng hủy ở Google. Trả phản hồi của <c>/connect/authorize</c> cuối cùng
     /// (hoặc của callback khi lỗi).
     /// </summary>
-    private static async Task<HttpResponseMessage> SignInWithGoogleAsync(HttpClient client, string? code)
+    internal static async Task<HttpResponseMessage> SignInWithGoogleAsync(HttpClient client, string? code)
     {
         var (_, challenge) = IdentityTestHost.CreatePkcePair();
         var authorizeUrl = IdentityTestHost.BuildAuthorizeUrl("openid profile email roles", challenge) + "&identity_provider=google";

@@ -55,7 +55,16 @@ MINIO_SECRET_KEY=$(openssl rand -hex 16)
 ConnectionStrings__Default="Host=localhost;Port=5432;Database=tedu_market;Username=tedu;Password=<POSTGRES_PASSWORD>"
 ```
 
-`<POSTGRES_PASSWORD>` phải trùng giá trị `POSTGRES_PASSWORD` ở trên. Rồi chạy:
+`<POSTGRES_PASSWORD>` phải trùng giá trị `POSTGRES_PASSWORD` ở trên.
+
+Muốn thử đăng nhập Google và email thật, điền thêm các biến tùy chọn trong `.env.local` (để trống thì API tắt tính năng đó):
+
+| Biến | Dùng cho |
+|---|---|
+| `Google__ClientId`, `Google__ClientSecret` | Đăng nhập bằng Google; redirect URI đăng ký ở Google Cloud Console: `http://localhost:5000/signin-google` |
+| `Resend__ApiKey`, `Resend__FromAddress` | Email chào mừng; `FromAddress` bọc dấu nháy, ví dụ `"TEDU Market <no-reply@domain>"` |
+
+`.env.local` nằm trong `.gitignore` (`.env.*`), chỉ `.env.example` (tên biến, không có giá trị) được commit. Không điền secret thật vào `.env.example`, `appsettings*.json` hay docker-compose. Rồi chạy:
 
 ```bash
 docker compose --env-file .env.local -f docker-compose.dev.yml up -d
@@ -73,7 +82,7 @@ Dừng: `docker compose --env-file .env.local -f docker-compose.dev.yml down` (t
 ### 2. Backend
 
 ```bash
-export $(grep -v '^#' .env.local | xargs)   # nạp ConnectionStrings__Default vào shell
+set -a; . ./.env.local; set +a   # nạp biến vào shell (xử lý đúng giá trị có khoảng trắng)
 cd backend
 dotnet tool restore
 dotnet ef database update --project src/TeduMarket.Infrastructure --startup-project src/TeduMarket.Api

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenIddict.Abstractions;
 using TeduMarket.Infrastructure.Identity;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -22,6 +23,7 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
     /// <summary>Khóa ký RSA PKCS#8 (base64 DER) dùng chung cho mọi host test.</summary>
     public static string SharedSigningKey => _sharedSigningKey.Value;
 
+    public const string ResendApiKey = "re_test_key";
     public const string ClientId = "sample-client";
     public const string RedirectUri = "http://localhost/callback";
     public const string PostLogoutRedirectUri = "http://localhost/signed-out";
@@ -35,7 +37,11 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
     private readonly WebApplicationFactory<Program> _factory;
     private int _userCount;
 
-    public IdentityTestHost(string connectionString, FakeGoogleBackchannel? google = null)
+    public IdentityTestHost(
+        string connectionString,
+        FakeGoogleBackchannel? google = null,
+        Notification.FakeResendBackchannel? resend = null,
+        Microsoft.Extensions.Time.Testing.FakeTimeProvider? clock = null)
     {
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
@@ -44,6 +50,15 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
             // (đúng đường cấu hình của production) và dùng chung một khóa ký cho cả tiến trình test.
             builder.UseSetting("OpenIddict:EncryptionKey", Convert.ToBase64String(new byte[32]));
             builder.UseSetting("OpenIddict:SigningKey", SharedSigningKey);
+            // Test tự gọi OutboxProcessor từng lô; vòng thăm dò nền không được tranh việc.
+            builder.UseSetting("Outbox:Enabled", "false");
+            if (resend is not null)
+            {
+                builder.UseSetting("Resend:ApiKey", ResendApiKey);
+                builder.UseSetting("Resend:FromAddress", "TEDU Market <no-reply@example.test>");
+                builder.UseSetting("Notification:StudentWebUrl", "https://hoc.example.test");
+            }
+
             if (google is not null)
             {
                 builder.UseSetting("Google:ClientId", "test-google-client");
@@ -52,6 +67,19 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
 
             builder.ConfigureServices(services =>
             {
+                if (resend is not null)
+                {
+                    // Biên ngoài: HTTP tới Resend; sender thật vẫn chạy.
+                    services.AddHttpClient(TeduMarket.Infrastructure.Notification.ResendEmailSender.HttpClientName)
+                        .ConfigurePrimaryHttpMessageHandler(() => resend);
+                }
+
+                if (clock is not null)
+                {
+                    services.RemoveAll<TimeProvider>();
+                    services.AddSingleton<TimeProvider>(clock);
+                }
+
                 if (google is not null)
                 {
                     // Biên ngoài duy nhất được giả: HTTP tới Google (token và userinfo); handler Google thật vẫn chạy.

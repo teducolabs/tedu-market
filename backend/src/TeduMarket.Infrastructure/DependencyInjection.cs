@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Npgsql;
+using TeduMarket.Application.Common.Outbox;
+using TeduMarket.Application.Notification;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 using TeduMarket.Domain.Common;
 using TeduMarket.Domain.Outbox;
 using TeduMarket.Domain.Sample;
 using TeduMarket.Infrastructure.Health;
+using TeduMarket.Infrastructure.Notification;
 using TeduMarket.Infrastructure.Outbox;
 using TeduMarket.Infrastructure.Persistence;
 using TeduMarket.Infrastructure.Sample;
@@ -34,6 +38,16 @@ public static class DependencyInjection
         services.Configure<OutboxOptions>(configuration.GetSection(OutboxOptions.SectionName));
         services.AddSingleton<OutboxProcessor>();
         services.AddHostedService<OutboxBackgroundService>();
+        services.Configure<ResendOptions>(configuration.GetSection(ResendOptions.SectionName));
+        services.Configure<NotificationOptions>(configuration.GetSection(NotificationOptions.SectionName));
+        services.AddHttpClient(ResendEmailSender.HttpClientName, (provider, client) =>
+        {
+            client.BaseAddress = provider.GetRequiredService<IOptions<ResendOptions>>().Value.BaseUrl;
+            client.Timeout = TimeSpan.FromSeconds(10);
+        });
+        services.AddScoped<IEmailSender, ResendEmailSender>();
+        services.AddSingleton<IStudentWebLinks, StudentWebLinks>();
+        services.AddScoped<IOutboxMessageHandler, SendWelcomeEmailOutboxHandler>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();
         services.AddHttpClient(MinioHealthCheck.HttpClientName, client =>

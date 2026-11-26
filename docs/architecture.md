@@ -106,7 +106,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 
 ### Module: Notification
 - Hạ tầng Outbox dùng chung (T17, không thuộc module nghiệp vụ nào): `OutboxMessage` (Domain), `IOutboxMessageRepository` ghi cùng unit of work với thay đổi nghiệp vụ, `IOutboxMessageHandler` (Application; mỗi loại message một handler, idempotent), `OutboxProcessor` + `OutboxBackgroundService` (Infrastructure; cấu hình mục `Outbox`: `Enabled`, `PollingInterval`, `BatchSize`).
-- Trách nhiệm: gửi email qua Resend từ `OutboxMessage`, retry; tách khỏi Enrollment để lỗi email không chặn quyền học.
+- Trách nhiệm: gửi email qua Resend từ `OutboxMessage`, retry; tách khỏi Enrollment để lỗi email không chặn quyền học. `IEmailSender` (Application) do `ResendEmailSender` (Infrastructure, REST `POST /emails`, header `Idempotency-Key` = `OutboxMessageId`) hiện thực; `SendWelcomeEmailOutboxHandler` xử lý message `notification.welcome-email` do `GoogleAccountService` ghi cùng transaction tạo Học viên. Cấu hình: `Resend:ApiKey`, `Resend:FromAddress`, `Notification:StudentWebUrl` ([log](decision-logs/2026-11-26-gui-email-resend-qua-http-o-t18.md)).
 - FR: FR-14 (email), FR-27; NFR-18. Phụ thuộc: không.
 
 ## 4. Bảo mật

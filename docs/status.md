@@ -41,7 +41,7 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 - [~] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
 - [~] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
 - [~] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
-- [ ] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
+- [~] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
 - [ ] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
 - [ ] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
 - [ ] T21 🚀 Xác nhận đăng nhập Google và Admin trên staging — epic: Identity; phụ thuộc: T19, T20, T88
@@ -299,8 +299,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-27, NFR-18 · **Phụ thuộc:** T16, T17
 - **Mô tả:** Module Notification gửi email Resend từ Outbox có retry; Học viên đăng nhập Google lần đầu nhận email chào mừng có liên kết tới `/courses`, không có bước xác thực email riêng.
 - **Acceptance criteria:**
-  - Đăng nhập Google lần đầu sinh đúng 1 email chào mừng; lần sau không gửi
-  - Resend lỗi thì message ở lại Outbox và gửi lại, không chặn đăng nhập
+  - [x] Đăng nhập Google lần đầu sinh đúng 1 email chào mừng; lần sau không gửi — test `WelcomeEmailTests.ProcessBatch_GoogleFirstSignIn_...`, `..._GoogleSecondSignIn_...`, `..._GoogleSignInRejected_...`
+  - [x] Resend lỗi thì message ở lại Outbox và gửi lại, không chặn đăng nhập — test `WelcomeEmailTests.ProcessBatch_ResendFails_...`, `..._ResendNotConfigured_...`
 
 ### T19 Web học viên: Đăng nhập bằng Google (OIDC server session)
 

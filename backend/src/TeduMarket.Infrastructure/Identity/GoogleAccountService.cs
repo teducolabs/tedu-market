@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using TeduMarket.Application.Notification;
 using TeduMarket.Domain.Identity;
+using TeduMarket.Domain.Outbox;
 using TeduMarket.Infrastructure.Persistence;
 
 namespace TeduMarket.Infrastructure.Identity;
@@ -30,9 +32,14 @@ public sealed record GoogleAccountResult(GoogleAccountOutcome Outcome, User? Use
 
 /// <summary>
 /// Tìm tài khoản theo định danh Google; lần đầu tạo tài khoản Học viên (FR-03). Tạo tài khoản, gán vai trò và liên kết Google
-/// nằm trong một transaction để không để lại tài khoản thiếu vai trò.
+/// nằm trong một transaction để không để lại tài khoản thiếu vai trò. Cùng transaction ghi Email chào mừng vào Outbox (FR-27),
+/// nên chỉ lần tạo tài khoản duy nhất mới sinh email và việc gửi (có thể lỗi) không chặn đăng nhập.
 /// </summary>
-public sealed class GoogleAccountService(UserManager<User> userManager, AppDbContext dbContext)
+public sealed class GoogleAccountService(
+    UserManager<User> userManager,
+    AppDbContext dbContext,
+    IOutboxMessageRepository outboxMessages,
+    TimeProvider clock)
 {
     public async Task<GoogleAccountResult> FindOrCreateStudentAsync(
         string loginProvider,
@@ -78,6 +85,8 @@ public sealed class GoogleAccountService(UserManager<User> userManager, AppDbCon
             return new GoogleAccountResult(GoogleAccountOutcome.Failed, null);
         }
 
+        outboxMessages.Add(WelcomeEmailPayload.CreateOutboxMessage(user.Id, email, clock.GetUtcNow()));
+        await dbContext.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return new GoogleAccountResult(GoogleAccountOutcome.StudentCreated, user);
     }

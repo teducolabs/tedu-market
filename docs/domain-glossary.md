@@ -90,6 +90,12 @@ Nơi chốt DUY NHẤT 1 tên cho mỗi khái niệm nghiệp vụ, và là bả
 | Trạng thái xử lý video | `VideoProcessingStatus` | Trạng thái Video của bài học sau upload: đang xử lý (ffmpeg chạy nền), sẵn sàng, hoặc lỗi (hiện thông báo và nút gửi Báo lỗi video). | trạng thái encode, trạng thái upload | Video, Báo lỗi video |
 | Báo lỗi video | `VideoErrorReport` | Báo cáo Học viên gửi Admin khi video bài học lỗi xử lý ffmpeg. | bug report, feedback, khiếu nại | Video, Bài học, Admin |
 
+## Thông báo
+
+| Hiển thị | Code | Định nghĩa | KHÔNG gọi là | Liên quan |
+|---|---|---|---|---|
+| Email chào mừng | `WelcomeEmail` | Email gửi qua Resend đúng 1 lần cho Học viên ngay sau lần đăng nhập Google đầu tiên: xác nhận tài khoản đã tạo bằng email Google đó và liên kết tới `/courses`; không có bước xác thực email riêng. | email đăng ký, email xác nhận, email xác thực | Học viên, Đăng nhập bằng Google |
+
 ## Màn hình và nhãn thao tác
 
 Tên màn hình/nhãn dùng trên UI mà chưa thuộc khái niệm nghiệp vụ nào ở trên (nguồn: [ux.md](ux.md)). Màn hình trùng tên khái niệm (Giỏ hàng, Thanh toán, Khóa học của tôi, Đơn, Doanh thu, Phiếu chi, Báo lỗi video, Category, Coupon...) dùng đúng tên khái niệm đó.
