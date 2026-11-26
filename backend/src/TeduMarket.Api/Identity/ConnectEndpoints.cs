@@ -41,7 +41,7 @@ public static class ConnectEndpoints
         return Results.SignOut(authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme]);
     }
 
-    private static async Task<IResult> AuthorizeAsync(HttpContext httpContext, UserManager<User> userManager, ConnectPrincipalFactory principalFactory)
+    private static async Task<IResult> AuthorizeAsync(HttpContext httpContext, UserManager<User> userManager, SignInManager<User> signInManager, ConnectPrincipalFactory principalFactory)
     {
         var request = GetRequest(httpContext);
         var authentication = await httpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
@@ -67,7 +67,14 @@ public static class ConnectEndpoints
             return Forbid(Errors.AccessDenied, "Tài khoản không còn tồn tại");
         }
 
-        var principal = await principalFactory.CreateAsync(user, request.GetScopes());
+        var isFirstSignIn = authentication.Principal!.HasClaim(ConnectPrincipalFactory.FirstSignInClaim, "true");
+        if (isFirstSignIn)
+        {
+            // Dùng đúng một lần: cấp lại cookie đăng nhập không còn claim để các lần authorize sau không báo "lần đầu".
+            await signInManager.SignInAsync(user, isPersistent: false);
+        }
+
+        var principal = await principalFactory.CreateAsync(user, request.GetScopes(), isFirstSignIn);
         return Results.SignIn(principal, authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
@@ -87,7 +94,10 @@ public static class ConnectEndpoints
             return Forbid(Errors.InvalidGrant, "Tài khoản không còn được phép đăng nhập");
         }
 
-        var principal = await principalFactory.CreateAsync(user, authentication.Principal!.GetScopes());
+        // id_token chỉ do lần đổi code ngay sau authorize mang cờ "lần đầu"; đổi refresh token thì không.
+        var isFirstSignIn = request.IsAuthorizationCodeGrantType()
+            && authentication.Principal!.HasClaim(ConnectPrincipalFactory.FirstSignInClaim, "true");
+        var principal = await principalFactory.CreateAsync(user, authentication.Principal!.GetScopes(), isFirstSignIn);
         return Results.SignIn(principal, authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 

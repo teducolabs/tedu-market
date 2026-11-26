@@ -75,7 +75,18 @@ public static class GoogleLoginEndpoints
             return await ReportFailureAsync(safeReturnUrl, applicationManager, httpContext.RequestAborted);
         }
 
-        await signInManager.SignInAsync(result.User!, isPersistent: false);
+        if (result.Outcome == GoogleAccountOutcome.StudentCreated)
+        {
+            await signInManager.SignInWithClaimsAsync(
+                result.User!,
+                isPersistent: false,
+                [new System.Security.Claims.Claim(ConnectPrincipalFactory.FirstSignInClaim, "true")]);
+        }
+        else
+        {
+            await signInManager.SignInAsync(result.User!, isPersistent: false);
+        }
+
         return Results.LocalRedirect(safeReturnUrl);
     }
 

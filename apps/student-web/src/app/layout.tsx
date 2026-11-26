@@ -1,8 +1,11 @@
 import { Toaster } from '@tedu-market/ui';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
+import { SignInFailedBanner } from '../components/sign-in-failed-banner';
+import { WelcomeToast } from '../components/welcome-toast';
 import { SiteHeader } from '../components/site-header';
+import { getSessionUser } from '../lib/session/get-session';
 import { getSiteUrl, SITE_DESCRIPTION, SITE_LOCALE, SITE_NAME } from '../lib/site';
 import './globals.css';
 
@@ -26,7 +29,8 @@ export function generateMetadata(): Metadata {
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const user = await getSessionUser();
   return (
     <html lang="vi" className={inter.variable}>
       <body className="min-h-screen antialiased">
@@ -36,11 +40,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Bỏ qua điều hướng
         </a>
-        <SiteHeader />
+        <Suspense>
+          <SiteHeader user={user} />
+        </Suspense>
         <main id="main-content" className="mx-auto max-w-7xl px-4 py-6 md:py-12">
+          <Suspense>
+            <SignInFailedBanner />
+          </Suspense>
           {children}
         </main>
         <Toaster />
+        <Suspense>
+          <WelcomeToast />
+        </Suspense>
       </body>
     </html>
   );

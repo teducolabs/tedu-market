@@ -1,23 +1,33 @@
 'use client';
 
 import { Button } from '@tedu-market/ui';
-import { BookOpen, Menu, Search, ShoppingCart, X } from 'lucide-react';
+import { BookOpen, LogOut, Menu, Receipt, Search, ShoppingCart, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useId, useState, type SyntheticEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { SIGN_IN_PATH, SIGN_OUT_PATH } from '../lib/oidc/oidc-options';
+import { withoutSignInFailed } from '../lib/oidc/return-path';
+import type { SessionUser } from '../lib/session/session-cookie';
 import { buildSearchUrl, SITE_NAME } from '../lib/site';
 
 export interface SiteHeaderProps {
   /** Số khóa trong Giỏ hàng; nối dữ liệu thật thuộc thẻ T50. */
   cartCount?: number;
+  /** Học viên đang đăng nhập; không có thì hiện nút Đăng nhập bằng Google. */
+  user?: SessionUser | null;
 }
 
 const NAV_LINK_CLASS =
   'inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-secondary-strong hover:bg-secondary-tint';
 
 /** Header Web học viên (ux.md mục 2, 8): dưới `sm` thu gọn thành menu, từ `sm` hiện đủ một hàng. */
-export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
+export function SiteHeader({ cartCount = 0, user = null }: SiteHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnPath = withoutSignInFailed(
+    `${pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`,
+  );
   const menuId = useId();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [keyword, setKeyword] = useState('');
@@ -111,8 +121,36 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <BookOpen aria-hidden className="size-5" />
             <span className="sm:hidden lg:inline">Khóa học của tôi</span>
           </Link>
-          {/* Nút chưa nối OIDC và menu tài khoản (Lịch sử đơn, Đăng xuất): thuộc thẻ T19. */}
-          <Button tone="primary">Đăng nhập bằng Google</Button>
+          {user === null ? (
+            <form method="get" action={SIGN_IN_PATH}>
+              <input type="hidden" name="returnTo" value={returnPath} />
+              <Button type="submit" tone="primary">
+                Đăng nhập bằng Google
+              </Button>
+            </form>
+          ) : (
+            <details className="relative">
+              <summary
+                className={`${NAV_LINK_CLASS} cursor-pointer list-none`}
+                aria-label={`Tài khoản ${user.name}`}
+              >
+                <span className="max-w-40 truncate">{user.name}</span>
+              </summary>
+              <div className="mt-1 flex flex-col gap-1 rounded-lg border border-border bg-card p-2 sm:absolute sm:right-0 sm:w-56 sm:shadow-md">
+                <p className="truncate px-3 text-xs text-text-muted">{user.email}</p>
+                <Link href="/orders" className={NAV_LINK_CLASS}>
+                  <Receipt aria-hidden className="size-5" />
+                  Lịch sử đơn
+                </Link>
+                <form method="post" action={SIGN_OUT_PATH}>
+                  <Button type="submit" tone="secondary" className="w-full justify-start">
+                    <LogOut aria-hidden className="size-4" />
+                    Đăng xuất
+                  </Button>
+                </form>
+              </div>
+            </details>
+          )}
         </nav>
       </div>
     </header>

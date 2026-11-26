@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using TeduMarket.Api.IntegrationTests.Common;
@@ -142,15 +144,106 @@ public sealed class GoogleLoginTests(PostgresFixture postgres) : IAsyncLifetime,
         Assert.Equal("/", callback.Headers.Location!.OriginalString);
     }
 
+    [Fact]
+    public async Task Authorize_GoogleFirstSignIn_IdTokenHasFirstSignInClaimAsync()
+    {
+        // Arrange
+        _google.SetProfile("code-1", _subject, _email);
+        using var client = Host.CreateHttpsClient();
+        var (verifier, challenge) = IdentityTestHost.CreatePkcePair();
+
+        // Act
+        var tokens = await SignInAndExchangeAsync(client, "code-1", verifier, challenge);
+
+        // Assert
+        Assert.True(ReadClaims(tokens, "id_token").TryGetProperty("first_sign_in", out var flag));
+        Assert.True(flag.GetBoolean());
+    }
+
+    [Fact]
+    public async Task Authorize_GoogleSecondSignIn_IdTokenHasNoFirstSignInClaimAsync()
+    {
+        // Arrange
+        _google.SetProfile("code-1", _subject, _email);
+        _google.SetProfile("code-2", _subject, _email);
+        using var firstClient = Host.CreateHttpsClient();
+        var (firstVerifier, firstChallenge) = IdentityTestHost.CreatePkcePair();
+        await SignInAndExchangeAsync(firstClient, "code-1", firstVerifier, firstChallenge);
+        using var secondClient = Host.CreateHttpsClient();
+        var (verifier, challenge) = IdentityTestHost.CreatePkcePair();
+
+        // Act
+        var tokens = await SignInAndExchangeAsync(secondClient, "code-2", verifier, challenge);
+
+        // Assert
+        Assert.False(ReadClaims(tokens, "id_token").TryGetProperty("first_sign_in", out _));
+    }
+
+    [Fact]
+    public async Task Authorize_SameBrowserAuthorizesAgainAfterFirstSignIn_IdTokenHasNoFirstSignInClaimAsync()
+    {
+        // Arrange
+        _google.SetProfile("code-1", _subject, _email);
+        using var client = Host.CreateHttpsClient();
+        var (firstVerifier, firstChallenge) = IdentityTestHost.CreatePkcePair();
+        await SignInAndExchangeAsync(client, "code-1", firstVerifier, firstChallenge);
+        var (verifier, challenge) = IdentityTestHost.CreatePkcePair();
+
+        // Act
+        var code = await IdentityTestHost.AuthorizeAsync(client, "openid profile email roles", challenge);
+        var response = await IdentityTestHost.ExchangeCodeAsync(client, code, verifier);
+
+        // Assert
+        var tokens = (await response.Content.ReadFromJsonAsync<JsonElement>()).Clone();
+        Assert.False(ReadClaims(tokens, "id_token").TryGetProperty("first_sign_in", out _));
+    }
+
+    [Fact]
+    public async Task TokenEndpoint_RefreshAfterFirstSignIn_IdTokenHasNoFirstSignInClaimAsync()
+    {
+        // Arrange
+        _google.SetProfile("code-1", _subject, _email);
+        using var client = Host.CreateHttpsClient();
+        var (verifier, challenge) = IdentityTestHost.CreatePkcePair();
+        var tokens = await SignInAndExchangeAsync(client, "code-1", verifier, challenge);
+
+        // Act
+        var response = await IdentityTestHost.RefreshAsync(client, tokens.GetProperty("refresh_token").GetString()!);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var refreshed = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(refreshed.TryGetProperty("id_token", out _));
+        Assert.False(ReadClaims(refreshed, "id_token").TryGetProperty("first_sign_in", out _));
+    }
+
+    private static async Task<JsonElement> SignInAndExchangeAsync(HttpClient client, string code, string verifier, string challenge)
+    {
+        var final = await SignInWithGoogleAsync(client, code, challenge);
+        var query = System.Web.HttpUtility.ParseQueryString(final.Headers.Location!.Query);
+        var response = await IdentityTestHost.ExchangeCodeAsync(client, query["code"]!, verifier);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<JsonElement>()).Clone();
+    }
+
+    /// <summary>Đọc payload của JWT (không kiểm chữ ký); chỉ dùng cho id_token (JWT ký, không mã hóa).</summary>
+    private static JsonElement ReadClaims(JsonElement tokens, string tokenName)
+    {
+        var payload = tokens.GetProperty(tokenName).GetString()!.Split('.')[1];
+        var padded = payload.Replace('-', '+').Replace('_', '/');
+        padded = padded.PadRight(padded.Length + ((4 - (padded.Length % 4)) % 4), '=');
+        return JsonDocument.Parse(Convert.FromBase64String(padded)).RootElement.Clone();
+    }
+
     /// <summary>
     /// Đi từ <c>/connect/authorize</c> (Học viên chưa đăng nhập, <c>identity_provider=google</c>) qua Google rồi về callback;
     /// <paramref name="code"/> null nghĩa là người dùng hủy ở Google. Trả phản hồi của <c>/connect/authorize</c> cuối cùng
     /// (hoặc của callback khi lỗi).
     /// </summary>
-    internal static async Task<HttpResponseMessage> SignInWithGoogleAsync(HttpClient client, string? code)
+    internal static async Task<HttpResponseMessage> SignInWithGoogleAsync(HttpClient client, string? code, string? codeChallenge = null)
     {
-        var (_, challenge) = IdentityTestHost.CreatePkcePair();
-        var authorizeUrl = IdentityTestHost.BuildAuthorizeUrl("openid profile email roles", challenge) + "&identity_provider=google";
+        var challenge = codeChallenge ?? IdentityTestHost.CreatePkcePair().Item2;
+        var authorizeUrl = IdentityTestHost.BuildAuthorizeUrl("openid profile email roles offline_access", challenge) + "&identity_provider=google";
 
         var authorize = await client.GetAsync(authorizeUrl);
         var start = await client.GetAsync(authorize.Headers.Location!.OriginalString);

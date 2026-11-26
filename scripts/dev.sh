@@ -29,24 +29,42 @@ echo "==> Migration database"
 (cd backend && dotnet tool restore >/dev/null \
   && dotnet ef database update --project src/TeduMarket.Infrastructure --startup-project src/TeduMarket.Api)
 
+# Mỗi tiến trình chạy trong session riêng (setsid) để dừng được cả cây tiến trình con
+# (pnpm -> next/vite, dotnet watch -> API), không để sót chạy nền.
 pids=()
+cleaned=0
 cleanup() {
+  [ "$cleaned" -eq 1 ] && return
+  cleaned=1
+  trap '' INT TERM
   echo
   echo "==> Dừng API và frontend"
   for pid in "${pids[@]}"; do
-    pkill -TERM -P "$pid" 2>/dev/null || true # tiến trình con (API do dotnet watch sinh ra)
-    kill "$pid" 2>/dev/null || true
+    kill -TERM -- "-$pid" 2>/dev/null || true
+  done
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    alive=0
+    for pid in "${pids[@]}"; do
+      kill -0 -- "-$pid" 2>/dev/null && alive=1
+    done
+    [ "$alive" -eq 0 ] && break
+    sleep 0.5
+  done
+  for pid in "${pids[@]}"; do
+    kill -KILL -- "-$pid" 2>/dev/null || true
   done
   wait 2>/dev/null || true
 }
-trap cleanup EXIT INT TERM
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 echo "==> Khởi động API (5000), Web học viên (3000), App quản trị (5173)"
-dotnet watch run --non-interactive --project backend/src/TeduMarket.Api &
+setsid dotnet watch run --non-interactive --project backend/src/TeduMarket.Api &
 pids+=($!)
-pnpm --filter @tedu-market/student-web dev &
+setsid pnpm --filter @tedu-market/student-web dev &
 pids+=($!)
-pnpm --filter @tedu-market/admin-app dev &
+setsid pnpm --filter @tedu-market/admin-app dev &
 pids+=($!)
 
 # Một tiến trình thoát (lỗi) thì dừng tất cả.

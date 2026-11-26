@@ -141,6 +141,8 @@ _Làm sau khi code các phase trước chạy ổn (đảo thứ tự so với k
 - [ ] T90 Backup và restore: pg_dump hằng ngày, đồng bộ Video và MinIO ra ngoài VPS — epic: Hạ tầng/CI-CD; phụ thuộc: T87
 - [ ] T91 Giám sát: probe ngoài VPS, alert, đĩa, TLS, backup — epic: Hạ tầng/CI-CD; phụ thuộc: T88, T90
 - [ ] T92 Chọn và ghim image MinIO cho staging/production — epic: Hạ tầng/CI-CD; phụ thuộc: T12
+- [ ] T94 Web học viên: gia hạn phiên bằng refresh token — epic: Identity; phụ thuộc: T19
+- [ ] T95 Web học viên: toast chào mừng lần đầu và màn hình "Đang đăng nhập…" — epic: Identity; phụ thuộc: T16, T19
 
 ### Phase 10 — Chất lượng và go-live (🚀 cần staging)
 
@@ -307,8 +309,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-03, NFR-06 · **Phụ thuộc:** T09, T16
 - **Mô tả:** Next.js làm OIDC client phía server, token trong cookie session httpOnly mã hóa (không localStorage), nút Đăng nhập bằng Google, quay lại đúng trang trước đó, chặn trang cần đăng nhập.
 - **Acceptance criteria:**
-  - Vào Giỏ hàng khi chưa đăng nhập chuyển sang Google rồi quay lại Giỏ hàng
-  - Hủy ở Google: về trang cũ và hiện banner "Đăng nhập chưa hoàn tất. Bạn thử lại nhé"
+  - [x] Vào Giỏ hàng khi chưa đăng nhập chuyển sang Google rồi quay lại Giỏ hàng — test `proxy.test.ts`, `sign-in-flow.test.ts` (`stores an encrypted session and returns to the original page...`); e2e `student-web-sign-in.spec.ts` đã viết nhưng chưa chạy được (Chromium thiếu thư viện hệ thống ở máy dev)
+  - [x] Hủy ở Google: về trang cũ và hiện banner "Đăng nhập chưa hoàn tất. Bạn thử lại nhé" — test `sign-in-flow.test.ts` (`returns to the original page with failed flag when user cancels...`), `sign-in-failed-banner.test.tsx`; e2e như trên
 
 ### T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu
 
@@ -902,13 +904,31 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
   - [x] Cả suite Integration chỉ dựng 1 container PostgreSQL
   - [x] Test độc lập dữ liệu, không phụ thuộc thứ tự chạy
 
+### T94 Web học viên: gia hạn phiên bằng refresh token
+
+- **Epic:** Identity · **FR/NFR:** FR-03, NFR-06 · **Phụ thuộc:** T19
+- **Mô tả:** Việc phát sinh từ T19: phiên StudentWeb hết khi access token hết hạn (~1 giờ). Xin `offline_access`, lưu refresh token trong cookie phiên mã hóa, `proxy.ts` đổi lấy token mới khi access token hết hạn; refresh lỗi thì xóa phiên (về Khách).
+- **Acceptance criteria:**
+  - [x] Access token hết hạn mà còn refresh token: request kế tiếp vẫn đăng nhập, cookie phiên được cập nhật — test `proxy.test.ts` (`renews an expired access token...`, `renews the session on public pages too...`); backend `IdentityFlowTests.TokenEndpoint_RefreshToken_ReturnsNewAccessTokenAsync`
+  - [x] Refresh token bị từ chối: xóa cookie phiên; trang cần đăng nhập chuyển sang Đăng nhập bằng Google, trang công khai hiện như Khách — test `proxy.test.ts` (`clears the session ...` hai ca)
+  - [x] Khách không có cookie không gây lời gọi API nào từ `proxy.ts` — test `proxy.test.ts` (`lets guests through public pages...`)
+
+### T95 Web học viên: toast chào mừng lần đầu và màn hình "Đang đăng nhập…"
+
+- **Epic:** Identity · **FR/NFR:** FR-03, FR-27 · **Phụ thuộc:** T16, T19
+- **Mô tả:** Việc phát sinh từ T19 theo ux.md luồng Đăng nhập bằng Google. API báo lần đầu đăng nhập bằng claim `first_sign_in` trong id_token (chỉ lần Học viên vừa được tạo); StudentWeb hiện toast "Chào mừng bạn đến TEDU Market" đúng 1 lần; lúc quay lại từ API hiện toàn trang "Đang đăng nhập…".
+- **Acceptance criteria:**
+  - [x] Lần đăng nhập Google đầu: id_token có `first_sign_in=true`; lần sau và sau khi đổi token (refresh) thì không có — test `GoogleLoginTests.Authorize_GoogleFirstSignIn_IdTokenHasFirstSignInClaimAsync`, `..._GoogleSecondSignIn_...`, `..._SameBrowserAuthorizesAgain...`, `TokenEndpoint_RefreshAfterFirstSignIn_...`
+  - [x] Lần đầu: toast "Chào mừng bạn đến TEDU Market" hiện 1 lần, tải lại trang không hiện lại — test `welcome-toast.test.tsx`, `sign-in-flow.test.ts` (`adds the welcome flag...`)
+  - [x] Lúc quay lại hiện toàn trang "Đang đăng nhập…" cho tới khi về trang cũ — test `signing-in.test.tsx`; e2e chưa chạy được (Chromium thiếu thư viện hệ thống)
+
 ## Đối chiếu FR/NFR → thẻ
 
 | Mã | Thẻ |
 |---|---|
 | FR-01 | T34, T41 |
 | FR-02 | T34, T42 |
-| FR-03 | T16, T19, T21 |
+| FR-03 | T16, T19, T21, T94, T95 |
 | FR-04 | T13, T15, T20 |
 | FR-05 | T13, T20, T77 |
 | FR-06 | T48, T50 |
@@ -932,7 +952,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-24 | T59, T63 |
 | FR-25 | T72, T73 |
 | FR-26 | T02 |
-| FR-27 | T18 |
+| FR-27 | T18, T95 |
 | FR-28 | **chưa có thẻ** |
 | FR-29 | T48, T50 |
 | FR-30 | T48, T50, T51 |
@@ -964,7 +984,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | NFR-03 | T09, T41, T42, T79 |
 | NFR-04 | T46, T53, T57, T60 |
 | NFR-05 | T17, T53, T57, T60 |
-| NFR-06 | T13, T19, T20, T21 |
+| NFR-06 | T13, T19, T20, T21, T94 |
 | NFR-07 | T53 |
 | NFR-08 | T13, T27, T64, T77 |
 | NFR-09 | T06, T21, T85, T86, T88 |

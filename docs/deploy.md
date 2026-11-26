@@ -48,10 +48,11 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `Notification__StudentWebUrl` | URL công khai của StudentWeb, gốc liên kết `/courses` trong email (không bí mật; mặc định `http://localhost:3000`) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
 | `AdminApp__RedirectUris__0`, `AdminApp__PostLogoutRedirectUris__0` | redirect URI sau đăng nhập/đăng xuất của client OIDC `admin-app` (không bí mật; thêm `__1`... nếu nhiều URI) |
-| `StudentWeb__RedirectUris__0`, `StudentWeb__PostLogoutRedirectUris__0` | như trên cho client `student-web` |
+| `StudentWeb__RedirectUris__0`, `StudentWeb__PostLogoutRedirectUris__0` | như trên cho client `student-web`: `https://<domain web>/sign-in/callback` và `https://<domain web>/` |
 | `Cors__AllowedOrigins` | origin AdminApp, StudentWeb, ngăn bởi dấu phẩy (NFR-09) |
 | `Seq__ServerUrl`, `Seq__ApiKey` | log |
-| `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server; `api` cũng đọc `StudentWeb__OidcClientSecret` để đăng ký client `student-web` (cùng giá trị với StudentWeb) |
+| `StudentWeb__SessionSecret`, `StudentWeb__OidcClientSecret` | session phía server (`SessionSecret` ≥ 32 ký tự, sinh bằng `openssl rand -hex 32`); `api` cũng đọc `StudentWeb__OidcClientSecret` để đăng ký client `student-web` (cùng giá trị với StudentWeb) |
+| `API_URL` | URL công khai của API cho container `web` (redirect sang `/connect/authorize`, đổi code ở `/connect/token`; không bí mật, đọc lúc chạy) |
 | `SITE_URL` | URL công khai của StudentWeb cho canonical, Open Graph, robots (không bí mật; đọc lúc chạy, mặc định `http://localhost:3000`) |
 | `IMAGE_TAG` | tag image cần chạy |
 | `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY` (chỉ GitHub Secrets) | CI SSH, key riêng cho CI |

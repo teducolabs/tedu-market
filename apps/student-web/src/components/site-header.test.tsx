@@ -4,7 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SiteHeader } from './site-header';
 
 const pushMock = vi.fn();
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock }) }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock }),
+  usePathname: () => '/courses',
+  useSearchParams: () => new URLSearchParams('search=react&signIn=failed'),
+}));
 
 describe('SiteHeader', () => {
   beforeEach(() => {
@@ -65,5 +69,29 @@ describe('SiteHeader', () => {
 
     // Assert
     expect(pushMock).toHaveBeenCalledWith('/courses?search=l%E1%BA%ADp%20tr%C3%ACnh');
+  });
+
+  it('sends guests to sign in and remembers the current page', () => {
+    // Arrange / Act
+    render(<SiteHeader />);
+
+    // Assert
+    const form = screen.getByRole('button', { name: 'Đăng nhập bằng Google' }).closest('form');
+    expect(form).toHaveAttribute('action', '/sign-in');
+    expect(form).toHaveAttribute('method', 'get');
+    expect(form?.querySelector('input[name="returnTo"]')).toHaveValue('/courses?search=react');
+  });
+
+  it('shows account menu with order history and sign out when student is signed in', () => {
+    // Arrange / Act
+    render(<SiteHeader user={{ name: 'Học viên A', email: 'a@example.com' }} />);
+
+    // Assert
+    expect(screen.queryByRole('button', { name: 'Đăng nhập bằng Google' })).not.toBeInTheDocument();
+    expect(screen.getByText('Học viên A')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Lịch sử đơn' })).toBeInTheDocument();
+    const signOutButton = screen.getByRole('button', { name: 'Đăng xuất' });
+    expect(signOutButton.closest('form')).toHaveAttribute('action', '/sign-out');
+    expect(signOutButton.closest('form')).toHaveAttribute('method', 'post');
   });
 });

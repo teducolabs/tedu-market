@@ -9,7 +9,10 @@ namespace TeduMarket.Infrastructure.Identity;
 /// <summary>Dựng principal cho token OpenIddict từ <see cref="User"/> (sub, name, email, role) và gắn destination của từng claim.</summary>
 public sealed class ConnectPrincipalFactory(UserManager<User> userManager)
 {
-    public async Task<ClaimsPrincipal> CreateAsync(User user, IEnumerable<string> scopes)
+    /// <summary>Claim báo lần đầu đăng nhập Google (Học viên vừa được tạo); chỉ nằm trong cookie đăng nhập một lần và id_token.</summary>
+    public const string FirstSignInClaim = "first_sign_in";
+
+    public async Task<ClaimsPrincipal> CreateAsync(User user, IEnumerable<string> scopes, bool isFirstSignIn = false)
     {
         var identity = new ClaimsIdentity(
             authenticationType: "OpenIddict",
@@ -28,6 +31,11 @@ public sealed class ConnectPrincipalFactory(UserManager<User> userManager)
             identity.AddClaim(new Claim(Claims.Role, role));
         }
 
+        if (isFirstSignIn)
+        {
+            identity.AddClaim(new Claim(FirstSignInClaim, "true", ClaimValueTypes.Boolean));
+        }
+
         var scopeList = scopes.ToImmutableArray();
         var principal = new ClaimsPrincipal(identity);
         principal.SetScopes(scopeList);
@@ -37,6 +45,13 @@ public sealed class ConnectPrincipalFactory(UserManager<User> userManager)
 
     private static IEnumerable<string> GetDestinations(Claim claim, ImmutableArray<string> scopes)
     {
+        if (claim.Type == FirstSignInClaim)
+        {
+            // Chỉ cho client biết ở id_token, không đưa vào access token gửi tới API.
+            yield return Destinations.IdentityToken;
+            yield break;
+        }
+
         yield return Destinations.AccessToken;
 
         var isIdentityTokenClaim = claim.Type switch

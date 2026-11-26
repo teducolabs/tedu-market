@@ -62,6 +62,7 @@ Muốn thử đăng nhập Google và email thật, điền thêm các biến t�
 | Biến | Dùng cho |
 |---|---|
 | `Google__ClientId`, `Google__ClientSecret` | Đăng nhập bằng Google; redirect URI đăng ký ở Google Cloud Console: `http://localhost:5000/signin-google` |
+| `StudentWeb__OidcClientSecret`, `StudentWeb__SessionSecret`, `API_URL` | Đăng nhập của Web học viên: secret client OIDC `student-web` (dùng chung với API), khóa mã hóa cookie phiên (≥ 32 ký tự, `openssl rand -hex 32`), URL API (`http://localhost:5000`) |
 | `Resend__ApiKey`, `Resend__FromAddress` | Email chào mừng; `FromAddress` bọc dấu nháy, ví dụ `"TEDU Market <no-reply@domain>"` |
 
 `.env.local` nằm trong `.gitignore` (`.env.*`), chỉ `.env.example` (tên biến, không có giá trị) được commit. Không điền secret thật vào `.env.example`, `appsettings*.json` hay docker-compose. Rồi chạy:
