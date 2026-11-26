@@ -6,6 +6,7 @@ using Npgsql;
 using TeduMarket.Application.Common.Outbox;
 using TeduMarket.Application.Identity;
 using TeduMarket.Application.Identity.Queries.ListUsers;
+using TeduMarket.Application.Instructor;
 using TeduMarket.Application.Notification;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 using TeduMarket.Domain.Common;
@@ -56,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRoleService, UserRoleService>();
         services.AddScoped<IUserReader, UserDapperReader>();
         services.AddScoped<IInstructorProfileRepository, InstructorProfileRepository>();
+        services.AddScoped<IInstructorProfileReader, InstructorProfileDapperReader>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();
         services.AddHttpClient(MinioHealthCheck.HttpClientName, client =>

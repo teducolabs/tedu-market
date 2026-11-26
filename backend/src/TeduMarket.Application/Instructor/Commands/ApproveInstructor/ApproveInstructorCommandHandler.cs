@@ -10,6 +10,7 @@ namespace TeduMarket.Application.Instructor.Commands.ApproveInstructor;
 public sealed class ApproveInstructorCommandHandler(
     ICurrentUser currentUser,
     IUserRoleService userRoleService,
+    IUserSessionRevoker userSessionRevoker,
     IInstructorProfileRepository instructorProfileRepository,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
@@ -39,6 +40,9 @@ public sealed class ApproveInstructorCommandHandler(
         var instructorProfile = InstructorProfile.Create(account.UserId, timeProvider.GetUtcNow());
         instructorProfileRepository.Add(instructorProfile);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Token cũ không mang role Instructor: thu hồi để lần đăng nhập sau nhận đúng quyền.
+        await userSessionRevoker.RevokeAllAsync(account.UserId, cancellationToken);
 
         return new InstructorApprovalDto(account.UserId, instructorProfile.InstructorProfileId);
     }

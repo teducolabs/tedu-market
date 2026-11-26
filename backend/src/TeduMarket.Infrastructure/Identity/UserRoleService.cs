@@ -35,4 +35,13 @@ internal sealed class UserRoleService(AppDbContext dbContext) : IUserRoleService
             .SingleAsync(cancellationToken);
         dbContext.UserRoles.Add(new IdentityUserRole<Guid> { UserId = userId, RoleId = roleId });
     }
+
+    public async Task StageRoleRemovalAsync(Guid userId, string roleName, CancellationToken cancellationToken)
+    {
+        var roleId = await dbContext.Roles.AsNoTracking()
+            .Where(role => role.Name == roleName)
+            .Select(role => role.Id)
+            .SingleAsync(cancellationToken);
+        dbContext.UserRoles.Remove(new IdentityUserRole<Guid> { UserId = userId, RoleId = roleId });
+    }
 }

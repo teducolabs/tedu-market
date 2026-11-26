@@ -68,7 +68,8 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 
 ### Module: Instructor
 - Trách nhiệm: `InstructorApproval` (gán role + tạo `InstructorProfile`), sửa hồ sơ của mình, `InstructorShareRate` đặt/xóa.
-- API (T21): `POST /api/v1/users/{userId}/instructor-approval` (Admin; chỉ người có role `Student` và chưa là Instructor; gán role và tạo `InstructorProfile` trong một lần lưu, [log](decision-logs/2026-11-26-duyet-instructor-gan-role-cung-transaction-voi-ho-so.md)); `GET /api/v1/users?role=&pageNumber=&pageSize=` (Admin; danh sách người dùng kèm vai trò và Id Hồ sơ Instructor, đọc bằng Dapper). Người được duyệt phải đăng nhập lại để token có role Instructor.
+- API (T21): `POST /api/v1/users/{userId}/instructor-approval` (Admin; chỉ người có role `Student` và chưa là Instructor; gán role và tạo `InstructorProfile` trong một lần lưu, [log](decision-logs/2026-11-26-duyet-instructor-gan-role-cung-transaction-voi-ho-so.md)); `GET /api/v1/users?role=&pageNumber=&pageSize=` (Admin; danh sách người dùng kèm vai trò và Id Hồ sơ Instructor, đọc bằng Dapper). Duyệt xong thì mọi token cũ của người đó bị thu hồi (`IUserSessionRevoker`), phải đăng nhập lại để có role Instructor.
+- API (T22): `GET /api/v1/instructor-profiles/me` (Instructor), `GET`/`PUT /api/v1/instructor-profiles/{instructorProfileId}` (chủ hồ sơ hoặc Admin; Instructor đụng hồ sơ người khác → 403), `DELETE` cùng đường dẫn (Admin; xóa hồ sơ và gỡ role `Instructor` trong một lần lưu, rồi thu hồi mọi token của người đó). Nội dung hồ sơ: tên hiển thị (bắt buộc ≤ 100 khi cập nhật), giới thiệu (≤ 2000), ảnh đại diện Url http/https; `PUT` thay toàn bộ. Đọc bằng Dapper ([log](decision-logs/2026-11-26-noi-dung-ho-so-instructor-va-nghia-cua-xoa.md)). Hiển thị trên khóa học thuộc module Course.
 - FR: FR-18, 39, 40, 43. Phụ thuộc: `Identity`, `Revenue` (đọc `DefaultShareRate`).
 
 ### Module: Video

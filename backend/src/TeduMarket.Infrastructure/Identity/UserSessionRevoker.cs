@@ -1,9 +1,11 @@
 using OpenIddict.Abstractions;
+using TeduMarket.Application.Identity;
 
 namespace TeduMarket.Infrastructure.Identity;
 
 /// <summary>Thu hồi mọi token (access, refresh, code) và authorization OpenIddict của một người dùng khi đăng xuất (FR-04).</summary>
 public sealed class UserSessionRevoker(IOpenIddictTokenManager tokenManager, IOpenIddictAuthorizationManager authorizationManager)
+    : IUserSessionRevoker
 {
     public async Task RevokeAllAsync(Guid userId, CancellationToken cancellationToken)
     {

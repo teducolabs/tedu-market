@@ -49,7 +49,7 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 
 _T21 rồi T22; T23-T24 sau T20._
 
-- [~] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
+- [x] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
 - [ ] T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình — epic: Instructor; phụ thuộc: T21
 - [ ] T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T20, T21, T22
 - [ ] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
@@ -75,6 +75,8 @@ _Backend T25-T34 theo chuỗi phụ thuộc; UI T35-T41 song song sau backend t�
 - [ ] T39 App quản trị: Duyệt khóa học (hàng đợi, Duyệt/Từ chối) — epic: Course; phụ thuộc: T20, T30
 - [ ] T40 Web học viên: Danh sách khóa học (lọc, sắp xếp, tìm kiếm) — epic: Course; phụ thuộc: T08, T09, T34
 - [ ] T41 Web học viên: Chi tiết khóa học (SEO, nhãn Xem thử) — epic: Course; phụ thuộc: T09, T33
+- [ ] T96 Hiển thị Hồ sơ Instructor trên khóa học (Danh sách khóa học, Chi tiết khóa học) — epic: Course; phụ thuộc: T22, T33
+- [ ] T97 Chặn Admin xóa Hồ sơ Instructor khi Instructor còn khóa học — epic: Course; phụ thuộc: T22, T26
 
 ### Phase 4 — Video: tải lên và xử lý
 
@@ -342,8 +344,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Instructor · **FR/NFR:** FR-18, FR-43 · **Phụ thuộc:** T21
 - **Mô tả:** API sửa/xóa Hồ sơ Instructor; Instructor chỉ sửa hồ sơ của chính mình.
 - **Acceptance criteria:**
-  - Instructor sửa hồ sơ người khác bị từ chối
-  - Hồ sơ sửa xong hiển thị đúng trên khóa học liên quan
+  - [x] Instructor sửa hồ sơ người khác bị từ chối — test `InstructorProfileTests` (`Update_InstructorEditsOtherInstructorProfile_ReturnsForbiddenAndKeepsProfileAsync`, `Get_InstructorReadsOtherInstructorProfile_ReturnsForbiddenAsync`), unit `UpdateInstructorProfileCommandHandlerTests` ([log](decision-logs/2026-11-26-noi-dung-ho-so-instructor-va-nghia-cua-xoa.md))
+  - [ ] Hồ sơ sửa xong hiển thị đúng trên khóa học liên quan — chưa kiểm chứng được: module Course chưa có; T22 mới có API đọc lại hồ sơ sau khi sửa (`Update_OwnerInstructor_ReturnsUpdatedProfileAndReadBackMatchesAsync`), phần hiển thị trên khóa theo dõi ở T96; chặn xóa khi còn khóa học ở T97
 
 ### T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor)
 
@@ -923,6 +925,21 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
   - Đăng nhập Google thật trên `www-stg` thành công
   - Admin seed đăng nhập vào `admin-stg` bằng mật khẩu từ `secret.json` trên VPS
 
+### T96 Hiển thị Hồ sơ Instructor trên khóa học (Danh sách khóa học, Chi tiết khóa học)
+
+- **Epic:** Course · **FR/NFR:** FR-18, FR-43 · **Phụ thuộc:** T22, T33 · **Thẻ gốc:** T22
+- **Mô tả:** Truy vấn công khai trả Tên hiển thị, Giới thiệu, Ảnh đại diện của Hồ sơ Instructor cùng khóa học; sửa hồ sơ xong thì khóa liên quan hiện thông tin mới (không qua `LastApprovedVersion`, vì hồ sơ không thuộc nội dung khóa cần duyệt lại — cần xác nhận bằng decision log).
+- **Acceptance criteria:**
+  - [ ] Hồ sơ sửa xong hiển thị đúng trên khóa học liên quan (AC thứ hai của T22)
+
+### T97 Chặn Admin xóa Hồ sơ Instructor khi Instructor còn khóa học
+
+- **Epic:** Course · **FR/NFR:** FR-18 · **Phụ thuộc:** T22, T26 · **Thẻ gốc:** T22
+- **Mô tả:** `DeleteInstructorProfileCommandHandler` kiểm tra Instructor còn khóa học (qua cổng của module Course, không truy cập bảng Course trực tiếp) thì từ chối kèm `errorCode`; chốt hành vi khi khóa đã có Enrollment trước khi làm.
+- **Acceptance criteria:**
+  - [ ] Xóa hồ sơ của Instructor còn khóa học bị từ chối, hồ sơ và role giữ nguyên
+  - [ ] Xóa hồ sơ của Instructor không còn khóa học vẫn thành công như T22
+
 ## Đối chiếu FR/NFR → thẻ
 
 | Mã | Thẻ |
@@ -944,7 +961,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-15 | T45, T61 |
 | FR-16 | T63, T65 |
 | FR-17 | T25, T35 |
-| FR-18 | T22, T23 |
+| FR-18 | T22, T23, T96, T97 |
 | FR-19 | T26, T36 |
 | FR-20 | T27, T37 |
 | FR-21 | T29, T38 |
@@ -969,7 +986,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-40 | T21, T23 |
 | FR-41 | T14 |
 | FR-42 | T15, T20 |
-| FR-43 | T22, T24 |
+| FR-43 | T22, T24, T96 |
 | FR-44 | T34, T40 |
 | FR-45 | T32, T37 |
 | FR-46 | T63, T65 |

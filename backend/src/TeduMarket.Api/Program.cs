@@ -75,6 +75,7 @@ app.MapGoogleLogin();
 var api = app.MapGroup("/api/v1");
 api.MapAccountEndpoints();
 api.MapInstructorApprovalEndpoints();
+api.MapInstructorProfileEndpoints();
 if (app.Environment.IsDevelopment())
 {
     api.MapSampleEndpoints();

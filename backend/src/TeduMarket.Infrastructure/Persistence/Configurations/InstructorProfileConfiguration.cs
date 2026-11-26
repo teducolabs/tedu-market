@@ -13,7 +13,11 @@ internal sealed class InstructorProfileConfiguration : IEntityTypeConfiguration<
         builder.HasKey(instructorProfile => instructorProfile.InstructorProfileId);
         builder.Property(instructorProfile => instructorProfile.InstructorProfileId).HasColumnName("instructor_profile_id").ValueGeneratedNever();
         builder.Property(instructorProfile => instructorProfile.UserId).HasColumnName("user_id");
+        builder.Property(instructorProfile => instructorProfile.DisplayName).HasColumnName("display_name").HasMaxLength(InstructorProfile.DisplayNameMaxLength);
+        builder.Property(instructorProfile => instructorProfile.Biography).HasColumnName("biography").HasMaxLength(InstructorProfile.BiographyMaxLength);
+        builder.Property(instructorProfile => instructorProfile.AvatarUrl).HasColumnName("avatar_url").HasMaxLength(InstructorProfile.AvatarUrlMaxLength);
         builder.Property(instructorProfile => instructorProfile.CreatedAt).HasColumnName("created_at").HasColumnType("timestamptz");
+        builder.Property(instructorProfile => instructorProfile.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamptz");
         builder.HasIndex(instructorProfile => instructorProfile.UserId).IsUnique().HasDatabaseName("ux_instructor_profiles_user_id");
         builder.HasOne<User>().WithOne().HasForeignKey<InstructorProfile>(instructorProfile => instructorProfile.UserId)
             .HasConstraintName("fk_instructor_profiles_users_user_id");

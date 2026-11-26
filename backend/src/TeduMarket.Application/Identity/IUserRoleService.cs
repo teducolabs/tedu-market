@@ -7,6 +7,9 @@ public interface IUserRoleService
 
     /// <summary>Đánh dấu gán vai trò nhưng chưa lưu: lưu cùng lần <c>IUnitOfWork.SaveChangesAsync</c> của Handler để cùng transaction.</summary>
     Task StageRoleAsync(Guid userId, string roleName, CancellationToken cancellationToken);
+
+    /// <summary>Đánh dấu gỡ vai trò nhưng chưa lưu; chỉ gọi khi <see cref="UserAccount.Roles"/> đang có vai trò đó.</summary>
+    Task StageRoleRemovalAsync(Guid userId, string roleName, CancellationToken cancellationToken);
 }
 
 /// <param name="UserId">Id tài khoản.</param>

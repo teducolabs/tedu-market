@@ -14,6 +14,7 @@ public sealed class ApproveInstructorCommandHandlerTests
     private readonly Guid _userId = Guid.NewGuid();
     private readonly FakeUserRoleService _roles = new();
     private readonly FakeRepository _repository = new();
+    private readonly FakeSessionRevoker _revoker = new();
     private readonly FakeUnitOfWork _unitOfWork = new();
     private readonly FakeTimeProvider _clock = new(new DateTimeOffset(2026, 11, 26, 0, 0, 0, TimeSpan.Zero));
 
@@ -33,6 +34,7 @@ public sealed class ApproveInstructorCommandHandlerTests
         Assert.Equal(_userId, profile.UserId);
         Assert.Equal(_clock.GetUtcNow(), profile.CreatedAt);
         Assert.Equal(1, _unitOfWork.SaveCount);
+        Assert.Equal([_userId], _revoker.Revoked);
         Assert.Equal(new InstructorApprovalDto(_userId, profile.InstructorProfileId), result);
     }
 
@@ -102,11 +104,12 @@ public sealed class ApproveInstructorCommandHandlerTests
     {
         Assert.Empty(_roles.Staged);
         Assert.Empty(_repository.Added);
+        Assert.Empty(_revoker.Revoked);
         Assert.Equal(0, _unitOfWork.SaveCount);
     }
 
     private ApproveInstructorCommandHandler CreateHandler(string callerRole) =>
-        new(new FakeCurrentUser(callerRole), _roles, _repository, _unitOfWork, _clock);
+        new(new FakeCurrentUser(callerRole), _roles, _revoker, _repository, _unitOfWork, _clock);
 
     private sealed class FakeCurrentUser(string role) : ICurrentUser
     {
@@ -128,6 +131,9 @@ public sealed class ApproveInstructorCommandHandlerTests
             Staged.Add((userId, roleName));
             return Task.CompletedTask;
         }
+
+        public Task StageRoleRemovalAsync(Guid userId, string roleName, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class FakeRepository : IInstructorProfileRepository
@@ -135,6 +141,11 @@ public sealed class ApproveInstructorCommandHandlerTests
         public List<InstructorProfile> Added { get; } = [];
 
         public void Add(InstructorProfile instructorProfile) => Added.Add(instructorProfile);
+
+        public Task<InstructorProfile?> FindAsync(Guid instructorProfileId, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public void Remove(InstructorProfile instructorProfile) => throw new NotSupportedException();
     }
 
     private sealed class FakeUnitOfWork : IUnitOfWork

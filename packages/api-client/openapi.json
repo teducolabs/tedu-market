@@ -57,6 +57,55 @@
         "responses": { "200": { "description": "OK" } }
       }
     },
+    "/api/v1/instructor-profiles/me": {
+      "get": { "tags": ["InstructorProfiles"], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/v1/instructor-profiles/{instructorProfileId}": {
+      "get": {
+        "tags": ["InstructorProfiles"],
+        "parameters": [
+          {
+            "name": "instructorProfileId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "put": {
+        "tags": ["InstructorProfiles"],
+        "parameters": [
+          {
+            "name": "instructorProfileId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateInstructorProfileRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      },
+      "delete": {
+        "tags": ["InstructorProfiles"],
+        "parameters": [
+          {
+            "name": "instructorProfileId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
     "/api/v1/samples": {
       "post": {
         "tags": ["Sample"],
@@ -142,8 +191,25 @@
         "type": "object",
         "properties": { "title": { "type": ["null", "string"] } },
         "description": "Command mẫu ghi vào PostgreSQL qua EF Core."
+      },
+      "UpdateInstructorProfileRequest": {
+        "required": ["displayName", "biography", "avatarUrl"],
+        "type": "object",
+        "properties": {
+          "displayName": { "type": ["null", "string"], "description": "Tên hiển thị (bắt buộc)." },
+          "biography": { "type": ["null", "string"], "description": "Giới thiệu (tùy chọn)." },
+          "avatarUrl": {
+            "type": ["null", "string"],
+            "description": "Url ảnh đại diện http/https (tùy chọn)."
+          }
+        }
       }
     }
   },
-  "tags": [{ "name": "Account" }, { "name": "Users" }, { "name": "Sample" }]
+  "tags": [
+    { "name": "Account" },
+    { "name": "Users" },
+    { "name": "InstructorProfiles" },
+    { "name": "Sample" }
+  ]
 }

@@ -95,6 +95,7 @@ public static class IdentityRegistration
         services.AddScoped<GoogleAccountService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<UserSessionRevoker>();
+        services.AddScoped<IUserSessionRevoker>(provider => provider.GetRequiredService<UserSessionRevoker>());
         return services;
     }
 

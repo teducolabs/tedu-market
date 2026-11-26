@@ -70,6 +70,22 @@ public sealed class InstructorApprovalTests(PostgresFixture postgres) : IAsyncLi
     }
 
     [Fact]
+    public async Task Approve_StudentByAdmin_RevokesOldTokensSoStudentMustSignInAgainAsync()
+    {
+        // Arrange
+        var studentId = await Host.CreateUserAsync(RoleNames.Student);
+        using var oldSession = await CreateAuthorizedClientAsync(studentId);
+        using var admin = await CreateAuthorizedClientAsync(await Host.CreateUserAsync(RoleNames.Admin));
+        await admin.PostAsync($"/api/v1/users/{studentId}/instructor-approval", content: null);
+
+        // Act
+        var response = await oldSession.GetAsync("/api/v1/samples/student-only");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
     public async Task Approve_SameUserTwice_ReturnsBadRequestAndKeepsSingleProfileAsync()
     {
         // Arrange

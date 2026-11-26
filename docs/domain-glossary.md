@@ -28,6 +28,9 @@ Nơi chốt DUY NHẤT 1 tên cho mỗi khái niệm nghiệp vụ, và là bả
 | Video | `Video` | File mp4 (tối đa 1 GB) của bài học, mã hóa bằng ffmpeg, lưu static folder có phân quyền. | clip, media | Bài học, Báo lỗi video |
 | Category | `Category` | Nhóm phân loại khóa học do Admin quản lý, dùng để lọc danh sách. | danh mục, chuyên mục, thể loại | Khóa học |
 | Hồ sơ Instructor | `InstructorProfile` | Thông tin hiển thị của Instructor trên khóa học; tạo khi Admin duyệt Instructor. | profile, tài khoản Instructor | Instructor, Duyệt Instructor |
+| Tên hiển thị | `DisplayName` | Tên của Instructor hiện trên khóa học, thuộc Hồ sơ Instructor; bắt buộc khi cập nhật, tối đa 100 ký tự, trống tới lần cập nhật đầu. | tên, họ tên, username | Hồ sơ Instructor |
+| Giới thiệu | `Biography` | Đoạn giới thiệu Instructor trong Hồ sơ Instructor; tùy chọn, tối đa 2000 ký tự. | bio, mô tả, tiểu sử | Hồ sơ Instructor |
+| Ảnh đại diện | `AvatarUrl` | Đường dẫn http/https tới ảnh Instructor trong Hồ sơ Instructor; tùy chọn, chưa hỗ trợ upload. | avatar, hình đại diện, ảnh profile | Hồ sơ Instructor |
 
 ## Vòng đời khóa học
 
