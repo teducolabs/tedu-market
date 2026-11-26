@@ -112,13 +112,13 @@ Mỗi luồng ghi bốn trạng thái bắt buộc: **Loading / Empty / Error / 
 - **Success:** Lưu → toast "Đã lưu"; Gửi duyệt → badge Chờ duyệt (khóa học) + dòng "Admin sẽ duyệt khóa này. Bạn không cần làm gì thêm".
 
 ### Luồng: Admin đăng nhập và đổi mật khẩu
-1. Mở App quản trị chưa đăng nhập → chuyển sang trang đăng nhập của Authorization Server `/account/login` (HTML do API dựng, một cột, đúng token mục 4): Email, Mật khẩu, nút "Đăng nhập" → quay lại App quản trị (FR-04). Instructor không dùng trang này, đăng nhập bằng Google.
+1. Mở App quản trị chưa đăng nhập → màn hình `/sign-in` của App quản trị (một cột, tiêu đề "Đăng nhập App quản trị", 2 nút: "Đăng nhập bằng Google" cho Instructor, "Đăng nhập bằng email" cho Admin) ([log](decision-logs/2026-11-26-man-hinh-sign-in-cua-app-quan-tri-o-t20.md)). Admin bấm "Đăng nhập bằng email" → chuyển sang trang đăng nhập của Authorization Server `/account/login` (HTML do API dựng, một cột, đúng token mục 4): Email, Mật khẩu, nút "Đăng nhập" → quay lại đúng trang đã mở trong App quản trị (FR-04). Instructor bấm "Đăng nhập bằng Google" → Google → quay lại App quản trị. Học viên đăng nhập bằng tài khoản không phải Admin/Instructor thấy trạng thái không có quyền kèm nút Đăng xuất.
 2. Menu tài khoản → "Đổi mật khẩu" (chỉ Admin): Mật khẩu hiện tại, Mật khẩu mới → Lưu (FR-42). Đổi xong mọi token cũ bị thu hồi, App quản trị đưa Admin về đăng nhập lại bằng mật khẩu mới.
-3. Menu tài khoản → "Đăng xuất": App quản trị gọi `/connect/logout` kèm `id_token_hint`; token cũ bị thu hồi, phiên đăng nhập ở trang đăng nhập cũng bị xóa.
+3. Menu tài khoản (cuối sidebar) → "Đăng xuất": App quản trị gọi `/connect/logout` kèm `id_token_hint`; token cũ bị thu hồi, phiên đăng nhập ở trang đăng nhập cũng bị xóa.
 - **Loading:** nút "Đăng nhập" / "Lưu" spinner khi đang gửi.
 - **Empty:** không áp dụng.
-- **Error:** sai email hoặc mật khẩu → khối lỗi đầu form "Email hoặc mật khẩu chưa đúng. Bạn thử lại nhé." (không nói sai ô nào); sai quá 5 lần → "Tài khoản tạm khóa do đăng nhập sai nhiều lần. Bạn thử lại sau ít phút."; đổi mật khẩu: lỗi theo từng ô (FR-26), ví dụ "Mật khẩu hiện tại chưa đúng".
-- **Success:** đăng nhập → vào App quản trị; Đổi mật khẩu → toast "Đã đổi mật khẩu. Bạn đăng nhập lại nhé" rồi chuyển về đăng nhập.
+- **Error:** hủy ở Google hoặc đăng nhập lỗi → về `/sign-in`, banner "Đăng nhập chưa hoàn tất. Bạn thử lại nhé"; sai email hoặc mật khẩu → khối lỗi đầu form "Email hoặc mật khẩu chưa đúng. Bạn thử lại nhé." (không nói sai ô nào); sai quá 5 lần → "Tài khoản tạm khóa do đăng nhập sai nhiều lần. Bạn thử lại sau ít phút."; đổi mật khẩu: lỗi theo từng ô (FR-26), ví dụ "Mật khẩu hiện tại chưa đúng".
+- **Success:** đăng nhập → vào App quản trị; Đổi mật khẩu → toast "Đã đổi mật khẩu. Bạn đăng nhập lại nhé" rồi App quản trị đăng xuất (gọi `/connect/logout`) và chuyển về `/sign-in`.
 
 ### Luồng: Admin Duyệt khóa học
 1. Duyệt khóa học → mở khóa Chờ duyệt (khóa học), xem đủ thông tin và Bài học.

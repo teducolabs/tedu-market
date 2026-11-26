@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Sidebar } from './sidebar';
 
 const renderSidebar = (role: 'Admin' | 'Instructor') =>
   render(
     <MemoryRouter initialEntries={['/orders']}>
-      <Sidebar role={role} />
+      <Sidebar role={role} userName="Lan" onSignOut={vi.fn()} />
     </MemoryRouter>,
   );
 

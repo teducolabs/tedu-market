@@ -115,3 +115,7 @@ Tên màn hình/nhãn dùng trên UI mà chưa thuộc khái niệm nghiệp v�
 | Gửi báo lỗi | `SendVideoErrorReport` | Nút Học viên gửi Báo lỗi video khi video ở trạng thái Lỗi. | báo cáo, khiếu nại | Báo lỗi video |
 | Tạo phiếu chi | `CreatePayout` | Nút Admin tạo Phiếu chi cho Instructor. | thanh toán cho Instructor, chuyển tiền, rút tiền | Phiếu chi, Số dư |
 | Đăng nhập bằng Google | `SignInWithGoogle` | Nút đăng nhập của Học viên và Instructor. | đăng nhập Gmail, đăng ký | Học viên, Instructor |
+| Đăng nhập bằng email | `SignInWithEmail` | Nút Admin bấm trên màn hình đăng nhập của App quản trị để sang trang đăng nhập email + mật khẩu. | đăng nhập thường, đăng nhập Admin | Admin, Đăng nhập bằng Google |
+| Menu tài khoản | `AccountMenu` | Menu ở cuối sidebar App quản trị chứa Đổi mật khẩu (chỉ Admin) và Đăng xuất. | menu người dùng, profile menu | Đổi mật khẩu, Đăng xuất |
+| Đổi mật khẩu | `ChangePassword` | Màn hình và thao tác Admin đổi mật khẩu của mình; xong thì mọi token cũ bị thu hồi và phải đăng nhập lại. | đặt lại mật khẩu, quên mật khẩu | Admin, Menu tài khoản |
+| Đăng xuất | `SignOut` | Thao tác kết thúc phiên và thu hồi token của người dùng đang đăng nhập. | thoát, logout | Menu tài khoản |

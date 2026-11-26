@@ -106,6 +106,8 @@ pnpm --filter @tedu-market/admin-app dev     # http://localhost:5173 (cổng m�
 
 Chạy 2 lệnh `dev` ở 2 terminal riêng.
 
+App quản trị đăng nhập qua API ở `http://localhost:5000` (tùy chỉnh bằng biến build `VITE_API_URL`). Redirect URI mặc định `http://localhost:5173/auth/callback` đã nằm trong `appsettings.Development.json`; Admin đăng nhập bằng "Đăng nhập bằng email" (mật khẩu seed xem mục Admin seed ở trên), Instructor bằng "Đăng nhập bằng Google".
+
 ## Kiểm tra chất lượng
 
 ```bash

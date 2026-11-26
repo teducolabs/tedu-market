@@ -2,9 +2,12 @@ import { PanelLeft } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router';
 import { getSidebarItems, type AdminAppRole } from '../lib/sidebar-items';
+import { AccountMenu } from './account-menu';
 
 export interface SidebarProps {
   role: AdminAppRole;
+  userName: string;
+  onSignOut: () => void;
 }
 
 const LINK_CLASS =
@@ -14,13 +17,13 @@ const LINK_CLASS =
  * Sidebar trái theo vai trò (ux.md mục 2, 8): từ `lg` mở rộng cố định; dưới `lg` thu thành icon,
  * bấm nút để mở rộng.
  */
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, userName, onSignOut }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const labelClass = isExpanded ? 'inline' : 'hidden lg:inline';
 
   return (
     <aside
-      className={`${isExpanded ? 'w-60' : 'w-16 lg:w-60'} sticky top-0 h-screen shrink-0 overflow-y-auto border-r border-border bg-card p-2`}
+      className={`${isExpanded ? 'w-60' : 'w-16 lg:w-60'} sticky top-0 flex h-screen shrink-0 flex-col overflow-y-auto border-r border-border bg-card p-2`}
     >
       <button
         type="button"
@@ -52,6 +55,7 @@ export function Sidebar({ role }: SidebarProps) {
           ))}
         </ul>
       </nav>
+      <AccountMenu role={role} userName={userName} labelClass={labelClass} onSignOut={onSignOut} />
     </aside>
   );
 }

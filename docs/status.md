@@ -38,12 +38,12 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 
 - [x] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
 - [x] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
-- [~] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
-- [~] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
-- [~] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
-- [~] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
-- [ ] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
-- [ ] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
+- [x] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
+- [x] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
+- [x] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
+- [x] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
+- [x] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
+- [~] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
 - [ ] T21 🚀 Xác nhận đăng nhập Google và Admin trên staging — epic: Identity; phụ thuộc: T19, T20, T88
 
 ### Phase 2 — Instructor
@@ -317,8 +317,9 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-04, FR-05, FR-42, NFR-06 · **Phụ thuộc:** T10, T15
 - **Mô tả:** `react-oidc-context` Code + PKCE, token giữ trong bộ nhớ, sidebar theo vai trò, menu Đăng xuất, Đổi mật khẩu chỉ hiện cho Admin.
 - **Acceptance criteria:**
-  - Instructor không thấy mục chỉ của Admin; Admin đổi được mật khẩu trong UI
-  - Đăng xuất xong quay lại đăng nhập và token bị thu hồi
+  - [x] Instructor không thấy mục chỉ của Admin; Admin đổi được mật khẩu trong UI — test `authenticated-layout.test.tsx` (`hides Admin only items from the sidebar for Instructor`), `account-menu.test.tsx`, `change-password-page.test.tsx`, `change-password.test.ts`; e2e `admin-app-sign-in.spec.ts`, `admin-app-shell.spec.ts` đã viết nhưng chưa chạy được (Chromium thiếu thư viện hệ thống ở máy dev)
+  - [x] Đăng xuất xong quay lại đăng nhập và token bị thu hồi — test `authenticated-layout.test.tsx` (`signs out from the account menu`), `change-password-page.test.tsx` (`shows the success toast then signs out...`); thu hồi token phía API do T15 (`/connect/logout`); e2e như trên
+  - [x] Đăng nhập OIDC Code + PKCE, token giữ trong bộ nhớ, Instructor đăng nhập bằng Google từ màn hình `/sign-in` ([log](decision-logs/2026-11-26-man-hinh-sign-in-cua-app-quan-tri-o-t20.md)) — test `auth-settings.test.ts`, `sign-in-page.test.tsx`, `auth-callback-page.test.tsx`; đã kiểm tay discovery, `/connect/authorize` (client `admin-app`) và CORS với API chạy local
 
 ### T21 🚀 Xác nhận đăng nhập Google và Admin trên staging
 

@@ -47,7 +47,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `Resend__ApiKey`, `Resend__FromAddress` | email (NFR-18); `FromAddress` dạng `TEDU Market <no-reply@domain>` với domain đã xác minh ở Resend; thiếu 1 trong 2 thì email ở lại Outbox rồi `Failed` sau 5 lần thử |
 | `Notification__StudentWebUrl` | URL công khai của StudentWeb, gốc liên kết `/courses` trong email (không bí mật; mặc định `http://localhost:3000`) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
-| `AdminApp__RedirectUris__0`, `AdminApp__PostLogoutRedirectUris__0` | redirect URI sau đăng nhập/đăng xuất của client OIDC `admin-app` (không bí mật; thêm `__1`... nếu nhiều URI) |
+| `AdminApp__RedirectUris__0`, `AdminApp__PostLogoutRedirectUris__0` | redirect URI sau đăng nhập/đăng xuất của client OIDC `admin-app`: `https://<domain admin>/auth/callback` và `https://<domain admin>/` (không bí mật; thêm `__1`... nếu nhiều URI) |
 | `StudentWeb__RedirectUris__0`, `StudentWeb__PostLogoutRedirectUris__0` | như trên cho client `student-web`: `https://<domain web>/sign-in/callback` và `https://<domain web>/` |
 | `Cors__AllowedOrigins` | origin AdminApp, StudentWeb, ngăn bởi dấu phẩy (NFR-09) |
 | `Seq__ServerUrl`, `Seq__ApiKey` | log |
@@ -57,6 +57,8 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `IMAGE_TAG` | tag image cần chạy |
 | `VPS_HOST`, `VPS_USERNAME`, `VPS_SSH_KEY` (chỉ GitHub Secrets) | CI SSH, key riêng cho CI |
 | `BACKUP_REMOTE`, `BACKUP_REMOTE_KEY` (chỉ trên VPS) | đích backup ngoài VPS |
+
+Container `admin` không có biến môi trường lúc chạy: SPA suy ra URL API từ origin của chính nó (đổi nhãn đầu `admin`/`admin-stg` thành `api`/`api-stg`, khớp bảng domain mục 1) nên một image dùng cho cả staging và production; biến build `VITE_API_URL` (không bí mật) ghi đè khi domain không theo quy ước. Origin của `admin` phải có trong `Cors__AllowedOrigins`.
 
 `api` đăng ký client OIDC `admin-app` (public, PKCE) và `student-web` (confidential) lúc khởi động từ các biến `AdminApp__*`, `StudentWeb__*`; thiếu `AdminApp__RedirectUris` hoặc thiếu `StudentWeb__RedirectUris`/`StudentWeb__OidcClientSecret` thì client tương ứng bị bỏ qua (có log cảnh báo) và không đăng nhập được.
 

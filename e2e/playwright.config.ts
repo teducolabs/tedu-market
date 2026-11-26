@@ -36,9 +36,10 @@ export default defineConfig({
       timeout: 180_000,
     },
     {
-      // Mode e2e (không phải production) cho phép `?role=Instructor` đổi vai trò giả.
-      command: `pnpm --filter @tedu-market/admin-app exec vite build --mode e2e && pnpm --filter @tedu-market/admin-app exec vite preview --port ${String(ADMIN_APP_PORT)} --strictPort`,
+      command: `pnpm --filter @tedu-market/admin-app exec vite build && pnpm --filter @tedu-market/admin-app exec vite preview --port ${String(ADMIN_APP_PORT)} --strictPort`,
       url: `http://localhost:${String(ADMIN_APP_PORT)}`,
+      // Authorization Server giả do test dựng (admin-app-oidc.ts).
+      env: { VITE_API_URL: FAKE_API_URL },
       reuseExistingServer: true,
       timeout: 180_000,
     },

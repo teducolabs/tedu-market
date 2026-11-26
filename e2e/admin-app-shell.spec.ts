@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { signInAs } from './admin-app-oidc';
 
 const ADMIN_ONLY_ITEMS = ['Duyệt khóa học', 'Đơn', 'Phiếu chi', 'Category', 'Coupon'] as const;
 
@@ -8,7 +9,7 @@ test.describe('Khung App quản trị', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
 
     // Act
-    await page.goto('/');
+    await signInAs(page, 'Admin');
 
     // Assert
     for (const label of ADMIN_ONLY_ITEMS) {
@@ -23,7 +24,7 @@ test.describe('Khung App quản trị', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
 
     // Act
-    await page.goto('/?role=Instructor');
+    await signInAs(page, 'Instructor');
 
     // Assert
     await expect(page.getByRole('link', { name: 'Hồ sơ Instructor' })).toBeVisible();
@@ -34,7 +35,7 @@ test.describe('Khung App quản trị', () => {
   test('collapses sidebar to icons at 768px and expands on click', async ({ page }) => {
     // Arrange
     await page.setViewportSize({ width: 768, height: 800 });
-    await page.goto('/');
+    await signInAs(page, 'Admin');
     await expect(page.getByText('Duyệt khóa học', { exact: true })).toBeHidden();
 
     // Act
@@ -51,7 +52,7 @@ test.describe('Khung App quản trị', () => {
     await page.setViewportSize({ width: 639, height: 800 });
 
     // Act
-    await page.goto('/');
+    await signInAs(page, 'Admin');
 
     // Assert
     await expect(

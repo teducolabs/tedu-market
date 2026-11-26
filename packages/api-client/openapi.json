@@ -2,6 +2,20 @@
   "openapi": "3.1.1",
   "info": { "title": "TeduMarket.Api | v1", "version": "1.0.0" },
   "paths": {
+    "/api/v1/account/change-password": {
+      "post": {
+        "tags": ["Account"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChangePasswordCommand" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
     "/api/v1/samples": {
       "post": {
         "tags": ["Sample"],
@@ -35,12 +49,47 @@
     "/api/v1/samples/limited": {
       "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
     },
+    "/api/v1/samples/scheme": {
+      "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/v1/samples/admin-only": {
+      "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/v1/samples/instructor-only": {
+      "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/v1/samples/student-only": {
+      "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/v1/samples/owned/{ownerId}": {
+      "get": {
+        "tags": ["Sample"],
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
     "/api/v1/samples/failure": {
       "get": { "tags": ["Sample"], "responses": { "200": { "description": "OK" } } }
     }
   },
   "components": {
     "schemas": {
+      "ChangePasswordCommand": {
+        "required": ["currentPassword", "newPassword"],
+        "type": "object",
+        "properties": {
+          "currentPassword": { "type": ["null", "string"] },
+          "newPassword": { "type": ["null", "string"] }
+        },
+        "description": "Admin đổi mật khẩu của chính mình (FR-42)."
+      },
       "CreateSampleCommand": {
         "required": ["title"],
         "type": "object",
@@ -55,5 +104,5 @@
       }
     }
   },
-  "tags": [{ "name": "Sample" }]
+  "tags": [{ "name": "Account" }, { "name": "Sample" }]
 }
