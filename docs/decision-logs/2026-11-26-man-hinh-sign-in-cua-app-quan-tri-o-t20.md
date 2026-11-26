@@ -29,7 +29,7 @@ Như mục "chọn" ở trên.
 FR-04, FR-42, NFR-06 (Code + PKCE, token không ở `localStorage`), một image cho hai môi trường (deploy.md mục 2), tiếp tục dùng thư viện đã nêu ở Tech Stack.
 
 ## Đánh đổi / hệ quả
-Quy ước đặt tên domain `admin*`/`api*` thành ràng buộc ngầm; domain khác quy ước phải đặt `VITE_API_URL` lúc build. Mất phiên khi tải lại trang (đánh đổi của token trong bộ nhớ). Vai trò ở UI chỉ để chọn sidebar, API vẫn kiểm quyền (FR-05). Chromium thiếu thư viện hệ thống ở máy dev nên e2e Playwright chưa chạy được; T95 xác nhận trên staging.
+Quy ước đặt tên domain `admin*`/`api*` thành ràng buộc ngầm; domain khác quy ước phải đặt `VITE_API_URL` lúc build. Mất phiên khi tải lại trang (đánh đổi của token trong bộ nhớ). Vai trò ở UI chỉ để chọn sidebar, API vẫn kiểm quyền (FR-05). Chromium thiếu thư viện hệ thống ở máy dev nên e2e Playwright chưa chạy được; T78 xác nhận trên staging.
 
 ## Bằng chứng
 `apps/admin-app/src/lib/auth/`, `apps/admin-app/src/routes/sign-in-page.tsx`, `apps/admin-app/src/routes/change-password-page.tsx`, `e2e/admin-app-sign-in.spec.ts`.

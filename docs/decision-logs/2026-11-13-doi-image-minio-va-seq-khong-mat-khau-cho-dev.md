@@ -27,7 +27,7 @@ Dùng `chainguard/minio` cho MinIO dev; Seq dev chạy với `SEQ_FIRSTRUN_NOAUT
 Compose dev phải chạy được từ đầu. Mọi cổng Seq chỉ bind `127.0.0.1` nên không cần mật khẩu, tránh thêm secret.
 
 ## Đánh đổi / hệ quả
-Image MinIO do bên thứ ba duy trì, tag `latest` không ghim. Staging và production (T12, T78) cần chọn và ghim image MinIO riêng. Seq dev không xác thực: không dùng cấu hình này ngoài máy local.
+Image MinIO do bên thứ ba duy trì, tag `latest` không ghim. Staging và production (T12, T66) cần chọn và ghim image MinIO riêng. Seq dev không xác thực: không dùng cấu hình này ngoài máy local.
 
 ## Bằng chứng
 Kết quả chạy thật ngày 2026-11-13: lỗi pull `minio/minio`; log Seq "No default admin password was supplied"; sau sửa MinIO `/minio/health/live` 200, Seq 200 ở `127.0.0.1:5340`.

@@ -11,7 +11,7 @@ import type { SessionUser } from '../lib/session/session-cookie';
 import { buildSearchUrl, SITE_NAME } from '../lib/site';
 
 export interface SiteHeaderProps {
-  /** Số khóa trong Giỏ hàng; nối dữ liệu thật thuộc thẻ T49. */
+  /** Số khóa trong Giỏ hàng; nối dữ liệu thật thuộc thẻ T44. */
   cartCount?: number;
   /** Học viên đang đăng nhập; không có thì hiện nút Đăng nhập bằng Google. */
   user?: SessionUser | null;
