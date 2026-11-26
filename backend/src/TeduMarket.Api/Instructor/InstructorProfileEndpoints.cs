@@ -1,5 +1,6 @@
 using Mediator;
 using TeduMarket.Api.Common;
+using TeduMarket.Application.Instructor;
 using TeduMarket.Application.Instructor.Commands.DeleteInstructorProfile;
 using TeduMarket.Application.Instructor.Commands.UpdateInstructorProfile;
 using TeduMarket.Application.Instructor.Queries.GetInstructorProfile;
@@ -16,15 +17,18 @@ public static class InstructorProfileEndpoints
 
         group.MapGet("/me", async (IMediator mediator, CancellationToken cancellationToken) =>
                 Results.Ok(await mediator.Send(new GetMyInstructorProfileQuery(), cancellationToken)))
+            .Produces<InstructorProfileDto>()
             .RequireAuthorization(AuthorizationPolicies.Instructor);
 
         group.MapGet("/{instructorProfileId:guid}", async (Guid instructorProfileId, IMediator mediator, CancellationToken cancellationToken) =>
                 Results.Ok(await mediator.Send(new GetInstructorProfileQuery(instructorProfileId), cancellationToken)))
+            .Produces<InstructorProfileDto>()
             .RequireAuthorization(AuthorizationPolicies.InstructorOrAdmin);
 
         group.MapPut("/{instructorProfileId:guid}", async (Guid instructorProfileId, UpdateInstructorProfileRequest request, IMediator mediator, CancellationToken cancellationToken) =>
                 Results.Ok(await mediator.Send(
                     new UpdateInstructorProfileCommand(instructorProfileId, request.DisplayName, request.Biography, request.AvatarUrl), cancellationToken)))
+            .Produces<InstructorProfileDto>()
             .RequireAuthorization(AuthorizationPolicies.InstructorOrAdmin);
 
         group.MapDelete("/{instructorProfileId:guid}", async (Guid instructorProfileId, IMediator mediator, CancellationToken cancellationToken) =>

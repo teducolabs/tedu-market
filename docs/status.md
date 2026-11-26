@@ -50,9 +50,11 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 _T21 rồi T22; T23-T24 sau T20._
 
 - [x] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
-- [ ] T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình — epic: Instructor; phụ thuộc: T21
+- [x] T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình — epic: Instructor; phụ thuộc: T21
 - [ ] T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T20, T21, T22
 - [ ] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
+- [~] T98 Khai báo kiểu phản hồi OpenAPI cho API người dùng và Hồ sơ Instructor — epic: Instructor; phụ thuộc: T21, T22
+- [ ] T99 Tên hiển thị trong danh sách người dùng của màn hình Instructor — epic: Instructor; phụ thuộc: T21, T22, T23
 
 ### Phase 3 — Course và catalog
 
@@ -352,8 +354,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Instructor · **FR/NFR:** FR-18, FR-40 · **Phụ thuộc:** T20, T21, T22
 - **Mô tả:** Màn hình Instructor cho Admin theo ux.md mục 2 với bảng, lọc và modal xác nhận.
 - **Acceptance criteria:**
-  - Admin duyệt Instructor trong UI rồi thấy Hồ sơ Instructor mới
-  - Đủ trạng thái Loading/Empty/Error/Success
+  - [ ] Admin duyệt Instructor trong UI rồi thấy Hồ sơ Instructor mới — unit/component đã pass (`instructors-page.test.tsx`: duyệt xong tải lại danh sách, hiện "Sửa hồ sơ"); e2e `e2e/admin-app-instructors.spec.ts` đã viết nhưng chưa chạy được: Chromium của Playwright thiếu thư viện hệ thống `libnspr4` trên máy này
+  - [x] Đủ trạng thái Loading/Empty/Error/Success — test `instructors-page.test.tsx` và `instructor-profile-edit-page.test.tsx` (Empty có 2 loại: chưa có dữ liệu, lọc không ra)
 
 ### T24 App quản trị: Hồ sơ Instructor của mình
 
@@ -940,6 +942,23 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
   - [ ] Xóa hồ sơ của Instructor còn khóa học bị từ chối, hồ sơ và role giữ nguyên
   - [ ] Xóa hồ sơ của Instructor không còn khóa học vẫn thành công như T22
 
+### T98 Khai báo kiểu phản hồi OpenAPI cho API người dùng và Hồ sơ Instructor
+
+- **Epic:** Instructor · **FR/NFR:** FR-18, FR-40 · **Phụ thuộc:** T21, T22 · **Thẻ gốc:** T23
+- **Mô tả:** Thêm `.Produces<T>()` cho `GET /users`, `POST /users/{userId}/instructor-approval`, `GET /instructor-profiles/me`, `GET`/`PUT /instructor-profiles/{id}`; sinh lại `openapi.json` và `api-client`; App quản trị dùng kiểu sinh sẵn thay cho parse `unknown` tay.
+- **Acceptance criteria:**
+  - [x] `openapi.json` có schema phản hồi 200 cho 5 endpoint trên, `api-client` sinh lại khớp
+  - [x] `instructor-api.ts` của App quản trị dùng kiểu sinh sẵn, test lib vẫn pass
+
+### T99 Tên hiển thị trong danh sách người dùng của màn hình Instructor
+
+- **Epic:** Instructor · **FR/NFR:** FR-18, FR-40 · **Phụ thuộc:** T21, T22, T23 · **Thẻ gốc:** T23
+- **Mô tả:** `GET /api/v1/users` trả thêm `displayName` (Tên hiển thị của Hồ sơ Instructor); bảng Instructor có cột Tên hiển thị.
+- **Acceptance criteria:**
+  - [x] `GET /users` trả `displayName` của hồ sơ (null khi chưa có hồ sơ hoặc chưa cập nhật) — integration `ListUsers_InstructorUpdatedProfile_ReturnsDisplayNameAsync`
+  - [x] Bảng Instructor hiện cột Tên hiển thị — test `instructors-page.test.tsx`
+  - [ ] e2e luồng Instructor chưa chạy được (chung với T23: Chromium của Playwright thiếu `libnspr4`), nên chưa đủ DoD
+
 ## Đối chiếu FR/NFR → thẻ
 
 | Mã | Thẻ |
@@ -961,7 +980,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-15 | T45, T61 |
 | FR-16 | T63, T65 |
 | FR-17 | T25, T35 |
-| FR-18 | T22, T23, T96, T97 |
+| FR-18 | T22, T23, T96, T97, T98, T99 |
 | FR-19 | T26, T36 |
 | FR-20 | T27, T37 |
 | FR-21 | T29, T38 |
@@ -983,7 +1002,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-37 | T58, T61 |
 | FR-38 | T67, T68 |
 | FR-39 | T67, T73 |
-| FR-40 | T21, T23 |
+| FR-40 | T21, T23, T98, T99 |
 | FR-41 | T14 |
 | FR-42 | T15, T20 |
 | FR-43 | T22, T24, T96 |

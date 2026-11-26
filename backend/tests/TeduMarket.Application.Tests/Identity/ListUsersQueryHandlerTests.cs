@@ -13,7 +13,7 @@ public sealed class ListUsersQueryHandlerTests
     public async Task Handle_Admin_ReturnsReaderResultForFilterAndPageAsync()
     {
         // Arrange
-        var expected = new PagedResult<UserDto>([new UserDto(Guid.NewGuid(), "a@example.test", [RoleNames.Student], null)], 2, 10, 11);
+        var expected = new PagedResult<UserDto>([new UserDto(Guid.NewGuid(), "a@example.test", [RoleNames.Student], null, null)], 2, 10, 11);
         var reader = new FakeUserReader(expected);
         var handler = new ListUsersQueryHandler(new FakeCurrentUser(RoleNames.Admin), reader);
 

@@ -184,6 +184,26 @@ public sealed class InstructorApprovalTests(PostgresFixture postgres) : IAsyncLi
     }
 
     [Fact]
+    public async Task ListUsers_InstructorUpdatedProfile_ReturnsDisplayNameAsync()
+    {
+        // Arrange
+        var instructorId = await Host.CreateUserAsync(RoleNames.Student);
+        using var admin = await CreateAuthorizedClientAsync(await Host.CreateUserAsync(RoleNames.Admin));
+        var approval = await (await admin.PostAsync($"/api/v1/users/{instructorId}/instructor-approval", content: null))
+            .Content.ReadFromJsonAsync<JsonElement>();
+        var profileId = approval.GetProperty("instructorProfileId").GetGuid();
+        await admin.PutAsJsonAsync($"/api/v1/instructor-profiles/{profileId}", new { displayName = "Cô Lan" });
+
+        // Act
+        var response = await admin.GetAsync("/api/v1/users?role=Instructor");
+
+        // Assert
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>();
+        var item = Assert.Single(body.GetProperty("items").EnumerateArray());
+        Assert.Equal("Cô Lan", item.GetProperty("displayName").GetString());
+    }
+
+    [Fact]
     public async Task ListUsers_AdminPagesWithoutFilter_ReturnsRequestedPageAndTotalAsync()
     {
         // Arrange

@@ -43,7 +43,7 @@ Sidebar trái; mục hiển thị theo vai trò (API vẫn kiểm quyền, FR-05
 | Hồ sơ Instructor | Instructor (của mình) | Sửa hồ sơ | FR-43 |
 | Duyệt khóa học | Admin | Hàng đợi Chờ duyệt (khóa học); Duyệt / Từ chối + Lý do từ chối | FR-36, FR-49 |
 | Đơn | Admin | Danh sách, chi tiết, Xử lý đơn | FR-24, FR-33 |
-| Instructor | Admin | Danh sách; Duyệt Instructor; sửa/xóa Hồ sơ Instructor; đặt/xóa Tỷ lệ chia riêng | FR-40, FR-18, FR-39 |
+| Instructor | Admin | Danh sách `/instructors` (bảng Email, Tên hiển thị, Vai trò, Hồ sơ Instructor; lọc theo vai trò; 20 dòng/trang); Duyệt Instructor (modal xác nhận); Sửa hồ sơ `/instructors/:instructorProfileId` (form Tên hiển thị, Giới thiệu, Ảnh đại diện); Xóa hồ sơ (modal xác nhận); đặt/xóa Tỷ lệ chia riêng | FR-40, FR-18, FR-39 |
 | Khoản chia chờ duyệt | Admin | Duyệt Khoản chia | FR-47 |
 | Phiếu chi | Admin | Danh sách; Tạo phiếu chi | FR-48 |
 | Category | Admin | CRUD | FR-17 |

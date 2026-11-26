@@ -1,5 +1,6 @@
 using Mediator;
 using TeduMarket.Api.Common;
+using TeduMarket.Application.Common.Paging;
 using TeduMarket.Application.Identity.Queries.ListUsers;
 using TeduMarket.Application.Instructor.Commands.ApproveInstructor;
 
@@ -14,10 +15,12 @@ public static class InstructorApprovalEndpoints
 
         group.MapGet("/", async (string? role, int? pageNumber, int? pageSize, IMediator mediator, CancellationToken cancellationToken) =>
             Results.Ok(await mediator.Send(
-                new ListUsersQuery(role, pageNumber ?? 1, pageSize ?? ListUsersQuery.DefaultPageSize), cancellationToken)));
+                new ListUsersQuery(role, pageNumber ?? 1, pageSize ?? ListUsersQuery.DefaultPageSize), cancellationToken)))
+            .Produces<PagedResult<UserDto>>();
 
         group.MapPost("/{userId:guid}/instructor-approval", async (Guid userId, IMediator mediator, CancellationToken cancellationToken) =>
-            Results.Ok(await mediator.Send(new ApproveInstructorCommand(userId), cancellationToken)));
+            Results.Ok(await mediator.Send(new ApproveInstructorCommand(userId), cancellationToken)))
+            .Produces<InstructorApprovalDto>();
 
         return api;
     }

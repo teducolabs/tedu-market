@@ -21,7 +21,8 @@ internal sealed class UserDapperReader(NpgsqlDataSource dataSource) : IUserReade
                COALESCE((SELECT array_agg(r.name ORDER BY r.name)
                          FROM user_roles ur JOIN roles r ON r.id = ur.role_id
                          WHERE ur.user_id = u.id), ARRAY[]::text[]) AS Roles,
-               p.instructor_profile_id AS InstructorProfileId
+               p.instructor_profile_id AS InstructorProfileId,
+               p.display_name AS DisplayName
         FROM users u
         LEFT JOIN instructor_profiles p ON p.user_id = u.id
         WHERE @RoleName::text IS NULL OR EXISTS (
@@ -40,7 +41,7 @@ internal sealed class UserDapperReader(NpgsqlDataSource dataSource) : IUserReade
             _listSql,
             new { RoleName = roleName, PageSize = pageSize, Offset = (pageNumber - 1) * pageSize },
             cancellationToken: cancellationToken));
-        var items = rows.Select(row => new UserDto(row.UserId, row.Email, row.Roles, row.InstructorProfileId)).ToList();
+        var items = rows.Select(row => new UserDto(row.UserId, row.Email, row.Roles, row.InstructorProfileId, row.DisplayName)).ToList();
         return new PagedResult<UserDto>(items, pageNumber, pageSize, totalCount);
     }
 
@@ -54,5 +55,7 @@ internal sealed class UserDapperReader(NpgsqlDataSource dataSource) : IUserReade
         public string[] Roles { get; set; } = [];
 
         public Guid? InstructorProfileId { get; set; }
+
+        public string? DisplayName { get; set; }
     }
 }

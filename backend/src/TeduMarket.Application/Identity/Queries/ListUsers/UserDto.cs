@@ -4,4 +4,5 @@ namespace TeduMarket.Application.Identity.Queries.ListUsers;
 /// <param name="Email">Email đăng nhập.</param>
 /// <param name="Roles">Tên các vai trò.</param>
 /// <param name="InstructorProfileId">Id Hồ sơ Instructor; <c>null</c> nếu chưa được duyệt.</param>
-public sealed record UserDto(Guid UserId, string? Email, IReadOnlyList<string> Roles, Guid? InstructorProfileId);
+/// <param name="DisplayName">Tên hiển thị trong Hồ sơ Instructor; <c>null</c> nếu chưa có hồ sơ hoặc chưa cập nhật lần nào.</param>
+public sealed record UserDto(Guid UserId, string? Email, IReadOnlyList<string> Roles, Guid? InstructorProfileId, string? DisplayName);

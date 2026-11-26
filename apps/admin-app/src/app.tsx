@@ -8,6 +8,8 @@ import { AUTH_CALLBACK_PATH, SIGN_IN_PATH } from './lib/auth/auth-settings';
 import { SIDEBAR_ITEMS } from './lib/sidebar-items';
 import { AuthCallbackPage } from './routes/auth-callback-page';
 import { ChangePasswordPage } from './routes/change-password-page';
+import { InstructorProfileEditPage } from './routes/instructor-profile-edit-page';
+import { InstructorsPage } from './routes/instructors-page';
 import { PlaceholderPage } from './routes/placeholder-page';
 import { SignInPage } from './routes/sign-in-page';
 
@@ -31,7 +33,12 @@ export function App({ userManager }: AppProps) {
             <Route element={<AuthenticatedLayout />}>
               <Route index element={<Navigate to="/revenue" replace />} />
               <Route path="/change-password" element={<ChangePasswordPage />} />
-              {SIDEBAR_ITEMS.map((item) => (
+              <Route path="/instructors" element={<InstructorsPage />} />
+              <Route
+                path="/instructors/:instructorProfileId"
+                element={<InstructorProfileEditPage />}
+              />
+              {SIDEBAR_ITEMS.filter((item) => item.path !== '/instructors').map((item) => (
                 <Route key={item.path} path={item.path} element={<PlaceholderPage />} />
               ))}
             </Route>

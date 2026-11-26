@@ -40,7 +40,16 @@
             }
           }
         ],
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PagedResultOfUserDto" }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/users/{userId}/instructor-approval": {
@@ -54,11 +63,32 @@
             "schema": { "type": "string", "format": "uuid" }
           }
         ],
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstructorApprovalDto" }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/instructor-profiles/me": {
-      "get": { "tags": ["InstructorProfiles"], "responses": { "200": { "description": "OK" } } }
+      "get": {
+        "tags": ["InstructorProfiles"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstructorProfileDto" }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/instructor-profiles/{instructorProfileId}": {
       "get": {
@@ -71,7 +101,16 @@
             "schema": { "type": "string", "format": "uuid" }
           }
         ],
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstructorProfileDto" }
+              }
+            }
+          }
+        }
       },
       "put": {
         "tags": ["InstructorProfiles"],
@@ -91,7 +130,16 @@
           },
           "required": true
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstructorProfileDto" }
+              }
+            }
+          }
+        }
       },
       "delete": {
         "tags": ["InstructorProfiles"],
@@ -186,6 +234,58 @@
         "properties": { "title": { "type": ["null", "string"] } },
         "description": "Command mẫu để kiểm chứng pipeline; thay bằng command nghiệp vụ thật khi có."
       },
+      "InstructorApprovalDto": {
+        "required": ["userId", "instructorProfileId"],
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "format": "uuid" },
+          "instructorProfileId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "InstructorProfileDto": {
+        "required": ["instructorProfileId", "userId", "displayName", "biography", "avatarUrl"],
+        "type": "object",
+        "properties": {
+          "instructorProfileId": {
+            "type": "string",
+            "description": "Id Hồ sơ Instructor.",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Id tài khoản của Instructor.",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": ["null", "string"],
+            "description": "Tên hiển thị; `null` khi chưa cập nhật lần nào."
+          },
+          "biography": { "type": ["null", "string"], "description": "Giới thiệu." },
+          "avatarUrl": { "type": ["null", "string"], "description": "Url ảnh đại diện." }
+        }
+      },
+      "PagedResultOfUserDto": {
+        "required": ["items", "pageNumber", "pageSize", "totalCount"],
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/UserDto" } },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int32"
+          },
+          "totalCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int32"
+          }
+        }
+      },
       "SaveSampleNoteCommand": {
         "required": ["title"],
         "type": "object",
@@ -201,6 +301,28 @@
           "avatarUrl": {
             "type": ["null", "string"],
             "description": "Url ảnh đại diện http/https (tùy chọn)."
+          }
+        }
+      },
+      "UserDto": {
+        "required": ["userId", "email", "roles", "instructorProfileId", "displayName"],
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "description": "Id tài khoản.", "format": "uuid" },
+          "email": { "type": ["null", "string"], "description": "Email đăng nhập." },
+          "roles": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Tên các vai trò."
+          },
+          "instructorProfileId": {
+            "type": ["null", "string"],
+            "description": "Id Hồ sơ Instructor; `null` nếu chưa được duyệt.",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": ["null", "string"],
+            "description": "Tên hiển thị trong Hồ sơ Instructor; `null` nếu chưa có hồ sơ hoặc chưa cập nhật lần nào."
           }
         }
       }
