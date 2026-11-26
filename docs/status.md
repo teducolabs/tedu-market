@@ -39,7 +39,7 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 - [x] T13 Identity: OpenIddict + ASP.NET Core Identity, Code + PKCE, vai trò, policy — epic: Identity; phụ thuộc: T03, T06
 - [x] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
 - [~] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
-- [ ] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
+- [~] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
 - [ ] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
 - [ ] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
 - [ ] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
@@ -283,8 +283,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** FR-03 · **Phụ thuộc:** T13
 - **Mô tả:** Đăng nhập Google qua OpenIddict; lần đầu tạo tài khoản Học viên, các lần sau dùng lại; người chưa đăng nhập gọi API cần đăng nhập thì bị từ chối.
 - **Acceptance criteria:**
-  - Đăng nhập Google lần đầu tạo đúng 1 tài khoản Học viên; lần hai không tạo thêm
-  - Người dùng hủy ở Google quay về với lỗi rõ ràng, không tạo tài khoản
+  - [x] Đăng nhập Google lần đầu tạo đúng 1 tài khoản Học viên; lần hai không tạo thêm — test `GoogleLoginTests` (lần đầu, lần hai, email chưa xác minh, email của Admin)
+  - [x] Người dùng hủy ở Google quay về với lỗi rõ ràng, không tạo tài khoản — test `GoogleLoginTests.Authorize_UserCancelsAtGoogle...` (`error=access_denied` + `state` về `redirect_uri`)
 
 ### T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED
 

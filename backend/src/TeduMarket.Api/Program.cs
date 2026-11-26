@@ -69,6 +69,7 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check 
 
 app.MapConnectEndpoints();
 app.MapLoginPage();
+app.MapGoogleLogin();
 
 var api = app.MapGroup("/api/v1");
 api.MapAccountEndpoints();

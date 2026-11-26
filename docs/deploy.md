@@ -43,7 +43,7 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `VideoPlayback__SigningKey` | ký token phát video |
 | `Minio__AccessKey`, `Minio__SecretKey` | thumbnail |
 | `Minio__Endpoint` | URL MinIO cho `/health/ready` (không bí mật; mặc định `http://localhost:9000`) |
-| `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google |
+| `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google; trong Google Cloud Console đăng ký redirect URI `https://<domain API>/signin-google`; thiếu 1 trong 2 thì tắt đăng nhập Google |
 | `Resend__ApiKey` | email (NFR-18) |
 | `OpenIddict__EncryptionKey`, `OpenIddict__SigningKey` | token OIDC |
 | `AdminApp__RedirectUris__0`, `AdminApp__PostLogoutRedirectUris__0` | redirect URI sau đăng nhập/đăng xuất của client OIDC `admin-app` (không bí mật; thêm `__1`... nếu nhiều URI) |
@@ -57,6 +57,8 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `BACKUP_REMOTE`, `BACKUP_REMOTE_KEY` (chỉ trên VPS) | đích backup ngoài VPS |
 
 `api` đăng ký client OIDC `admin-app` (public, PKCE) và `student-web` (confidential) lúc khởi động từ các biến `AdminApp__*`, `StudentWeb__*`; thiếu `AdminApp__RedirectUris` hoặc thiếu `StudentWeb__RedirectUris`/`StudentWeb__OidcClientSecret` thì client tương ứng bị bỏ qua (có log cảnh báo) và không đăng nhập được.
+
+Đăng nhập Google khi chạy local: `appsettings.json` để trống `Google:ClientId`/`Google:ClientSecret` (đăng nhập Google tắt, `/account/google` trả 404). Tạo OAuth client riêng cho local trong Google Cloud Console (loại Web application), đăng ký redirect URI `http://localhost:<cổng API>/signin-google`, rồi đặt `Google__ClientId`, `Google__ClientSecret` trong `.env.local` hoặc biến môi trường của shell chạy `api`. Không điền giá trị thật vào file `appsettings*.json`, không dùng OAuth client của staging/production.
 
 `OpenIddict__EncryptionKey` là chuỗi base64 từ 32 byte trở lên (vd `openssl rand -base64 32`). `OpenIddict__SigningKey` là khóa riêng RSA ≥ 2048 bit định dạng PKCS#8, dạng PEM hoặc base64 của DER (vd `openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -outform DER | base64 -w0`); OpenIddict không nhận khóa ký đối xứng. Thiếu hoặc sai định dạng thì API không khởi động ngoài môi trường Development.
 
@@ -84,7 +86,7 @@ Pull request chỉ chạy bước 1–3. Lighthouse SEO ≥ 90 (NFR-11) chạy t
 - Xem SQL trước khi merge: `dotnet ef migrations script <from> <to> --idempotent`. Migration khóa bảng lớn (Order, Course) phải chạy ngoài giờ cao điểm.
 - Mọi migration phải có `Down` chạy được **hoặc** kế hoạch rollback ghi trong PR (restore từ dump bước 6.3). Thiếu cả hai thì không lên production.
 - Đổi schema theo expand/contract: thêm cột/bảng ở bản N, bỏ cột cũ ở bản N+1, để image N-1 vẫn chạy được trên schema mới (bắt buộc cho rollback mục 7).
-- Local: `docker compose --env-file .env.local -f docker-compose.dev.yml up -d`, đặt `ConnectionStrings__Default` (cùng `POSTGRES_PASSWORD` trong `.env.local`), rồi `cd backend && dotnet tool restore` (ghim `dotnet-ef` 10.0.4 trong `backend/dotnet-tools.json`) và `dotnet ef database update --project src/TeduMarket.Infrastructure --startup-project src/TeduMarket.Api`. Staging và production: bundle trong bước 6.
+- Local: `docker compose --env-file .env.local -f docker-compose.dev.yml up -d`, đặt `ConnectionStrings__Default` (cùng `POSTGRES_PASSWORD` trong `.env.local`), rồi `cd backend && dotnet tool restore` (ghim `dotnet-ef` 10.0.15 trong `backend/dotnet-tools.json`) và `dotnet ef database update --project src/TeduMarket.Infrastructure --startup-project src/TeduMarket.Api`. Staging và production: bundle trong bước 6.
 
 ## 6. Quy trình deploy
 

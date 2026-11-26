@@ -91,7 +91,7 @@ public static class AccountEndpoints
     }
 
     /// <summary>Chỉ chấp nhận đường dẫn nội bộ (chống open redirect); khác thì về trang gốc.</summary>
-    private static string SafeReturnUrl(string? returnUrl) =>
+    internal static string SafeReturnUrl(string? returnUrl) =>
         !string.IsNullOrEmpty(returnUrl) && returnUrl[0] == '/' && (returnUrl.Length == 1 || (returnUrl[1] != '/' && returnUrl[1] != '\\'))
             ? returnUrl
             : _defaultReturnUrl;

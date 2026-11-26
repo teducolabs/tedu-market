@@ -35,7 +35,7 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
     private readonly WebApplicationFactory<Program> _factory;
     private int _userCount;
 
-    public IdentityTestHost(string connectionString)
+    public IdentityTestHost(string connectionString, FakeGoogleBackchannel? google = null)
     {
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
@@ -44,8 +44,21 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
             // (đúng đường cấu hình của production) và dùng chung một khóa ký cho cả tiến trình test.
             builder.UseSetting("OpenIddict:EncryptionKey", Convert.ToBase64String(new byte[32]));
             builder.UseSetting("OpenIddict:SigningKey", SharedSigningKey);
+            if (google is not null)
+            {
+                builder.UseSetting("Google:ClientId", "test-google-client");
+                builder.UseSetting("Google:ClientSecret", "test-google-secret");
+            }
+
             builder.ConfigureServices(services =>
             {
+                if (google is not null)
+                {
+                    // Biên ngoài duy nhất được giả: HTTP tới Google (token và userinfo); handler Google thật vẫn chạy.
+                    services.AddOptions<Microsoft.AspNetCore.Authentication.Google.GoogleOptions>(Microsoft.AspNetCore.Authentication.Google.GoogleDefaults.AuthenticationScheme)
+                        .Configure(options => options.BackchannelHttpHandler = google);
+                }
+
                 services.AddTransient<IStartupFilter, TestSignInStartupFilter>();
                 // Băm mật khẩu mặc định (PBKDF2, hàng trăm nghìn vòng) làm test đăng nhập chậm; test chỉ cần băm đúng sai.
                 services.Configure<PasswordHasherOptions>(options => options.IterationCount = 1_000);
@@ -57,6 +70,10 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
 
     public HttpClient CreateClient() =>
         _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+    /// <summary>Client gọi qua https: cookie tương quan của đăng nhập ngoài luôn có cờ <c>secure</c>, <c>CookieContainer</c> không gửi lại qua http.</summary>
+    public HttpClient CreateHttpsClient() =>
+        _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, BaseAddress = new Uri("https://localhost") });
 
     public async Task RegisterSampleClientAsync()
     {

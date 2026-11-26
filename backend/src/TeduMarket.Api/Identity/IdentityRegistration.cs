@@ -1,4 +1,6 @@
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
@@ -72,13 +74,14 @@ public static class IdentityRegistration
             });
 
         services.AddAntiforgery();
-        services.AddAuthentication(options =>
+        var authentication = services.AddAuthentication(options =>
         {
             options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             options.DefaultForbidScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
         });
+        AddGoogle(authentication, configuration);
         services.AddAuthorizationPolicies();
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
@@ -89,9 +92,36 @@ public static class IdentityRegistration
         services.Configure<OidcClientOptions>(OidcClientOptions.AdminAppSectionName, configuration.GetSection(OidcClientOptions.AdminAppSectionName));
         services.Configure<OidcClientOptions>(OidcClientOptions.StudentWebSectionName, configuration.GetSection(OidcClientOptions.StudentWebSectionName));
         services.AddHostedService<OidcClientSeeder>();
+        services.AddScoped<GoogleAccountService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<UserSessionRevoker>();
         return services;
+    }
+
+    /// <summary>Đăng ký Google khi có <c>Google:ClientId</c> và <c>Google:ClientSecret</c>; thiếu thì không có đăng nhập Google (như client OIDC chưa cấu hình).</summary>
+    private static void AddGoogle(AuthenticationBuilder authentication, IConfiguration configuration)
+    {
+        var clientId = configuration["Google:ClientId"];
+        var clientSecret = configuration["Google:ClientSecret"];
+        if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
+        {
+            return;
+        }
+
+        authentication.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+        {
+            options.ClientId = clientId;
+            options.ClientSecret = clientSecret;
+            options.SignInScheme = IdentityConstants.ExternalScheme;
+            options.ClaimActions.MapJsonKey("email_verified", "email_verified");
+            // Người dùng hủy ở Google hoặc Google lỗi: về callback để báo lỗi rõ ràng cho client, không tạo tài khoản.
+            options.Events.OnRemoteFailure = context =>
+            {
+                context.HandleResponse();
+                context.Response.Redirect(context.Properties?.RedirectUri ?? "/");
+                return Task.CompletedTask;
+            };
+        });
     }
 
     private static void ConfigureKeys(OpenIddictServerBuilder options, IConfiguration configuration, IHostEnvironment environment)

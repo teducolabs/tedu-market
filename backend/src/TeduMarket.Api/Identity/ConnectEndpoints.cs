@@ -52,6 +52,11 @@ public static class ConnectEndpoints
                 return Forbid(Errors.LoginRequired, "Người dùng chưa đăng nhập");
             }
 
+            if (string.Equals(request.GetParameter(GoogleLoginEndpoints.IdentityProviderParameter)?.ToString(), GoogleLoginEndpoints.GoogleValue, StringComparison.Ordinal))
+            {
+                return Results.Redirect($"{GoogleLoginEndpoints.Path}?returnUrl={Uri.EscapeDataString(BuildReturnUrl(httpContext))}");
+            }
+
             var properties = new AuthenticationProperties { RedirectUri = BuildReturnUrl(httpContext) };
             return Results.Challenge(properties, [IdentityConstants.ApplicationScheme]);
         }
