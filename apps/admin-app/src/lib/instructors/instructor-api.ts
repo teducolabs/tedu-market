@@ -1,9 +1,11 @@
 import {
   deleteApiV1InstructorProfilesByInstructorProfileId,
   getApiV1InstructorProfilesByInstructorProfileId,
+  getApiV1InstructorProfilesMe,
   getApiV1Users,
   postApiV1UsersByUserIdInstructorApproval,
   putApiV1InstructorProfilesByInstructorProfileId,
+  type InstructorProfileDto,
   type UserDto,
 } from '@tedu-market/api-client';
 
@@ -74,6 +76,15 @@ export async function approveInstructor(userId: string): Promise<ActionResult> {
   return { isSuccess: response?.ok === true };
 }
 
+function toProfileItem(data: InstructorProfileDto): InstructorProfileItem {
+  return {
+    instructorProfileId: data.instructorProfileId,
+    displayName: data.displayName ?? '',
+    biography: data.biography ?? '',
+    avatarUrl: data.avatarUrl ?? '',
+  };
+}
+
 /** Gọi `GET /api/v1/instructor-profiles/{id}`; hồ sơ chưa cập nhật có trường trống. */
 export async function getInstructorProfile(
   instructorProfileId: string,
@@ -84,15 +95,16 @@ export async function getInstructorProfile(
   if (response?.ok !== true || data === undefined) {
     return { isSuccess: false };
   }
-  return {
-    isSuccess: true,
-    value: {
-      instructorProfileId: data.instructorProfileId,
-      displayName: data.displayName ?? '',
-      biography: data.biography ?? '',
-      avatarUrl: data.avatarUrl ?? '',
-    },
-  };
+  return { isSuccess: true, value: toProfileItem(data) };
+}
+
+/** Gọi `GET /api/v1/instructor-profiles/me` (Instructor): hồ sơ của chính mình (FR-43). */
+export async function getMyInstructorProfile(): Promise<LoadResult<InstructorProfileItem>> {
+  const { data, response } = await getApiV1InstructorProfilesMe();
+  if (response?.ok !== true || data === undefined) {
+    return { isSuccess: false };
+  }
+  return { isSuccess: true, value: toProfileItem(data) };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

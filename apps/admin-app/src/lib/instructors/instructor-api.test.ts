@@ -4,6 +4,7 @@ import {
   approveInstructor,
   deleteInstructorProfile,
   getInstructorProfile,
+  getMyInstructorProfile,
   listUsers,
   updateInstructorProfile,
 } from './instructor-api';
@@ -12,6 +13,7 @@ vi.mock('@tedu-market/api-client', () => ({
   getApiV1Users: vi.fn(),
   postApiV1UsersByUserIdInstructorApproval: vi.fn(),
   getApiV1InstructorProfilesByInstructorProfileId: vi.fn(),
+  getApiV1InstructorProfilesMe: vi.fn(),
   putApiV1InstructorProfilesByInstructorProfileId: vi.fn(),
   deleteApiV1InstructorProfilesByInstructorProfileId: vi.fn(),
 }));
@@ -187,5 +189,37 @@ describe('instructor-api', () => {
 
     // Assert
     expect(result).toEqual({ isSuccess: true });
+  });
+
+  it('maps own profile with empty fields when loading /me succeeds', async () => {
+    // Arrange
+    vi.mocked(apiClient.getApiV1InstructorProfilesMe).mockResolvedValue(
+      asResult({
+        response: ok,
+        data: { instructorProfileId: 'p1', displayName: null, biography: null, avatarUrl: null },
+      }),
+    );
+
+    // Act
+    const result = await getMyInstructorProfile();
+
+    // Assert
+    expect(result).toEqual({
+      isSuccess: true,
+      value: { instructorProfileId: 'p1', displayName: '', biography: '', avatarUrl: '' },
+    });
+  });
+
+  it('returns failure when loading /me is rejected', async () => {
+    // Arrange
+    vi.mocked(apiClient.getApiV1InstructorProfilesMe).mockResolvedValue(
+      asResult({ response: { ok: false, status: 403 } }),
+    );
+
+    // Act
+    const result = await getMyInstructorProfile();
+
+    // Assert
+    expect(result).toEqual({ isSuccess: false });
   });
 });

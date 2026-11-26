@@ -3,32 +3,26 @@ import {
   Button,
   DelayedSkeleton,
   EmptyState,
-  FormField,
-  Input,
   Skeleton,
   showErrorToast,
   showSuccessToast,
 } from '@tedu-market/ui';
-import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router';
 import {
   getInstructorProfile,
   updateInstructorProfile,
   type InstructorProfileFieldErrors,
+  type InstructorProfileInput,
   type InstructorProfileItem,
 } from '../lib/instructors/instructor-api';
+import { InstructorProfileForm } from '../components/instructor-profile-form';
 import type { AdminAppRole } from '../lib/sidebar-items';
 
 const LOAD_ERROR_MESSAGE = 'Có sự cố khi tải Hồ sơ Instructor. Bạn thử lại sau ít phút.';
-const REQUIRED_DISPLAY_NAME_MESSAGE = 'Bạn cần nhập Tên hiển thị';
 
 type LoadState =
   { kind: 'Loading' } | { kind: 'Error' } | { kind: 'Success'; profile: InstructorProfileItem };
-
-function readText(form: FormData, name: string): string {
-  const value = form.get(name);
-  return typeof value === 'string' ? value : '';
-}
 
 /** Admin sửa Hồ sơ Instructor (FR-18): `/instructors/:instructorProfileId`, lỗi 400 gắn đúng ô. */
 export function InstructorProfileEditPage() {
@@ -39,7 +33,6 @@ export function InstructorProfileEditPage() {
   const [reloadCount, setReloadCount] = useState(0);
   const [errors, setErrors] = useState<InstructorProfileFieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (role !== 'Admin') {
@@ -68,26 +61,10 @@ export function InstructorProfileEditPage() {
     );
   }
 
-  const focusFirstInvalid = () => {
-    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
-  };
-
-  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const displayName = readText(form, 'displayName');
-    if (displayName.trim() === '') {
-      setErrors({ displayName: REQUIRED_DISPLAY_NAME_MESSAGE });
-      queueMicrotask(focusFirstInvalid);
-      return;
-    }
+  const handleSubmit = async (input: InstructorProfileInput) => {
     setErrors({});
     setIsSubmitting(true);
-    const result = await updateInstructorProfile(instructorProfileId, {
-      displayName,
-      biography: readText(form, 'biography'),
-      avatarUrl: readText(form, 'avatarUrl'),
-    });
+    const result = await updateInstructorProfile(instructorProfileId, input);
     setIsSubmitting(false);
     if (result.isSuccess) {
       showSuccessToast('Đã lưu');
@@ -98,7 +75,6 @@ export function InstructorProfileEditPage() {
     if (result.message !== null) {
       showErrorToast(result.message);
     }
-    queueMicrotask(focusFirstInvalid);
   };
 
   const renderBody = () => {
@@ -130,51 +106,14 @@ export function InstructorProfileEditPage() {
         </div>
       );
     }
-    const { profile } = state;
     return (
-      <form
-        ref={formRef}
-        noValidate
-        onSubmit={(event) => {
-          void handleSubmit(event);
-        }}
-        className="flex max-w-md flex-col gap-4"
-      >
-        <FormField label="Tên hiển thị" isRequired error={errors.displayName}>
-          {(control) => (
-            <Input
-              {...control}
-              name="displayName"
-              maxLength={100}
-              defaultValue={profile.displayName}
-            />
-          )}
-        </FormField>
-        <FormField label="Giới thiệu" error={errors.biography}>
-          {(control) => (
-            <textarea
-              {...control}
-              name="biography"
-              rows={5}
-              maxLength={2000}
-              defaultValue={profile.biography}
-              className="w-full rounded-lg border border-border-input bg-card px-3 py-2 text-base text-text aria-[invalid=true]:border-error"
-            />
-          )}
-        </FormField>
-        <FormField
-          label="Ảnh đại diện"
-          error={errors.avatarUrl}
-          hint="Đường dẫn http hoặc https tới ảnh."
-        >
-          {(control) => (
-            <Input {...control} name="avatarUrl" type="url" defaultValue={profile.avatarUrl} />
-          )}
-        </FormField>
-        <div className="flex gap-3">
-          <Button type="submit" isLoading={isSubmitting}>
-            Lưu
-          </Button>
+      <InstructorProfileForm
+        profile={state.profile}
+        errors={errors}
+        isSubmitting={isSubmitting}
+        onSubmit={handleSubmit}
+        onInvalid={setErrors}
+        secondaryAction={
           <Button
             tone="secondary"
             disabled={isSubmitting}
@@ -182,8 +121,8 @@ export function InstructorProfileEditPage() {
           >
             Quay lại
           </Button>
-        </div>
-      </form>
+        }
+      />
     );
   };
 

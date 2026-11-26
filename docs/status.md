@@ -51,10 +51,10 @@ _T21 rồi T22; T23-T24 sau T20._
 
 - [x] T21 Duyệt Instructor: gán role và tạo Hồ sơ Instructor — epic: Instructor; phụ thuộc: T13
 - [x] T22 Hồ sơ Instructor: Admin sửa/xóa, Instructor sửa của mình — epic: Instructor; phụ thuộc: T21
-- [ ] T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T20, T21, T22
-- [ ] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
-- [~] T98 Khai báo kiểu phản hồi OpenAPI cho API người dùng và Hồ sơ Instructor — epic: Instructor; phụ thuộc: T21, T22
-- [ ] T99 Tên hiển thị trong danh sách người dùng của màn hình Instructor — epic: Instructor; phụ thuộc: T21, T22, T23
+- [x] T23 App quản trị: Instructor (danh sách, Duyệt Instructor, sửa/xóa Hồ sơ Instructor) — epic: Instructor; phụ thuộc: T20, T21, T22
+- [~] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
+- [x] T98 Khai báo kiểu phản hồi OpenAPI cho API người dùng và Hồ sơ Instructor — epic: Instructor; phụ thuộc: T21, T22
+- [x] T99 Tên hiển thị trong danh sách người dùng của màn hình Instructor — epic: Instructor; phụ thuộc: T21, T22, T23
 
 ### Phase 3 — Course và catalog
 
@@ -362,8 +362,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Instructor · **FR/NFR:** FR-43, NFR-23 · **Phụ thuộc:** T20, T22
 - **Mô tả:** Instructor tự sửa hồ sơ bằng form, lỗi theo từng trường.
 - **Acceptance criteria:**
-  - Instructor lưu hồ sơ thấy toast "Đã lưu"
-  - Lỗi theo trường hiện đúng dưới ô nhập
+  - [x] Instructor lưu hồ sơ thấy toast "Đã lưu" — test `instructor-profile-page.test.tsx` (`saves own profile by its id and shows the saved toast`), `instructor-api.test.ts` (`/me`); e2e `e2e/admin-app-instructor-profile.spec.ts` pass
+  - [x] Lỗi theo trường hiện đúng dưới ô nhập — test `instructor-profile-page.test.tsx` (`shows field error under the input when server returns 400`, `shows required error...`); e2e `shows field error under the input when server rejects Ảnh đại diện` pass
 
 ### T25 Category: CRUD
 
