@@ -34,6 +34,7 @@ cleanup() {
   echo
   echo "==> Dừng API và frontend"
   for pid in "${pids[@]}"; do
+    pkill -TERM -P "$pid" 2>/dev/null || true # tiến trình con (API do dotnet watch sinh ra)
     kill "$pid" 2>/dev/null || true
   done
   wait 2>/dev/null || true
@@ -41,7 +42,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 echo "==> Khởi động API (5000), Web học viên (3000), App quản trị (5173)"
-dotnet run --project backend/src/TeduMarket.Api &
+dotnet watch run --non-interactive --project backend/src/TeduMarket.Api &
 pids+=($!)
 pnpm --filter @tedu-market/student-web dev &
 pids+=($!)

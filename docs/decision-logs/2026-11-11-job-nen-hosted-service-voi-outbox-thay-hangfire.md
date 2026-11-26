@@ -6,7 +6,7 @@ reconstructed: false
 supersedes: []
 superseded_by:
 related: [FR-14, FR-32, FR-35, FR-52, NFR-02, NFR-05]
-cards: []
+cards: [T17]
 ---
 # Job nền dùng BackgroundService + bảng Outbox, không dùng Hangfire
 
@@ -26,6 +26,11 @@ Ghi Paid và OutboxMessage cùng transaction (NFR-05); chu kỳ thăm dò vài g
 
 ## Đánh đổi / hệ quả
 Tự viết retry/backoff và theo dõi job lỗi; thăm dò DB liên tục tốn chút tải. Job ffmpeg chạy chung process API (giới hạn song song) có thể tranh CPU với request.
+
+## Chi tiết triển khai ở T17
+- Lô: một transaction khóa tối đa `Outbox:BatchSize` (mặc định 20) dòng `Pending` đến hạn bằng `FOR UPDATE SKIP LOCKED`; thăm dò mỗi `Outbox:PollingInterval` (mặc định 2 giây), lấy liên tục tới khi hết việc.
+- Mỗi message chạy handler trong scope (DbContext) riêng, nên giao tối thiểu một lần (at-least-once): handler phải idempotent. Chỉ đặt `processed_at` sau khi handler thành công.
+- Lỗi: tăng `attempt_count`, backoff 5 s × 2^(lần−1) (5/10/20/40 s); lần thứ 5 chuyển `Failed`, log mức Error.
 
 ## Bằng chứng
 Agent chọn tạm khi viết [docs/architecture.md](../architecture.md); chủ dự án chưa xác nhận. Outline TEDU-67 (bài 2.6, 2.7 và ghi chú sản xuất điểm 2).

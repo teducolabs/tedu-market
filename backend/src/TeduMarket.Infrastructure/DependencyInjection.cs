@@ -4,8 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using TeduMarket.Application.Sample.Queries.GetSampleNotes;
 using TeduMarket.Domain.Common;
+using TeduMarket.Domain.Outbox;
 using TeduMarket.Domain.Sample;
 using TeduMarket.Infrastructure.Health;
+using TeduMarket.Infrastructure.Outbox;
 using TeduMarket.Infrastructure.Persistence;
 using TeduMarket.Infrastructure.Sample;
 
@@ -28,6 +30,10 @@ public static class DependencyInjection
                 options.UseOpenIddict<Guid>();
             });
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<AppDbContext>());
+        services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
+        services.Configure<OutboxOptions>(configuration.GetSection(OutboxOptions.SectionName));
+        services.AddSingleton<OutboxProcessor>();
+        services.AddHostedService<OutboxBackgroundService>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();
         services.AddHttpClient(MinioHealthCheck.HttpClientName, client =>

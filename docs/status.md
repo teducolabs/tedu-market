@@ -40,7 +40,7 @@ _T13 trước; T14-T18 song song sau T13/T17; UI T19-T20 sau backend tương ứ
 - [x] T14 Seeding Admin: mật khẩu ngẫu nhiên ghi `secret.json` — epic: Identity; phụ thuộc: T13
 - [~] T15 Đăng nhập Admin bằng email + mật khẩu, đổi mật khẩu, đăng xuất thu hồi token — epic: Identity; phụ thuộc: T13, T14
 - [~] T16 Google external login, tạo Học viên ở lần đăng nhập đầu — epic: Identity; phụ thuộc: T13
-- [ ] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
+- [~] T17 Outbox và BackgroundService: OutboxMessage, thăm dò ~2 giây, SKIP LOCKED — epic: Identity; phụ thuộc: T03
 - [ ] T18 Notification: gửi email qua Resend từ Outbox, email chào mừng — epic: Identity; phụ thuộc: T16, T17
 - [ ] T19 Web học viên: Đăng nhập bằng Google (OIDC server session) — epic: Identity; phụ thuộc: T09, T16
 - [ ] T20 App quản trị: đăng nhập OIDC, sidebar theo vai trò, menu tài khoản, Đổi mật khẩu — epic: Identity; phụ thuộc: T10, T15
@@ -291,8 +291,8 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Identity · **FR/NFR:** NFR-02, NFR-05 · **Phụ thuộc:** T03
 - **Mô tả:** Dựng bảng `OutboxMessage`, BackgroundService xử lý theo lô bằng `FOR UPDATE SKIP LOCKED`, retry, đánh dấu đã xử lý.
 - **Acceptance criteria:**
-  - Message ghi trong transaction chỉ xuất hiện sau khi commit
-  - Hai instance xử lý song song không xử lý trùng một message
+  - [x] Message ghi trong transaction chỉ xuất hiện sau khi commit — test `OutboxProcessingTests.ProcessBatch_MessageInUncommittedTransaction_...` và `..._RolledBackTransaction_...`
+  - [x] Hai instance xử lý song song không xử lý trùng một message — test `OutboxProcessingTests.ProcessBatch_TwoInstancesRunningConcurrently_...`
 
 ### T18 Notification: gửi email qua Resend từ Outbox, email chào mừng
 

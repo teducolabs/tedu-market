@@ -105,6 +105,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 - FR: FR-03, 04, 05, 41, 42. Phụ thuộc: `Notification` (email chào mừng FR-27).
 
 ### Module: Notification
+- Hạ tầng Outbox dùng chung (T17, không thuộc module nghiệp vụ nào): `OutboxMessage` (Domain), `IOutboxMessageRepository` ghi cùng unit of work với thay đổi nghiệp vụ, `IOutboxMessageHandler` (Application; mỗi loại message một handler, idempotent), `OutboxProcessor` + `OutboxBackgroundService` (Infrastructure; cấu hình mục `Outbox`: `Enabled`, `PollingInterval`, `BatchSize`).
 - Trách nhiệm: gửi email qua Resend từ `OutboxMessage`, retry; tách khỏi Enrollment để lỗi email không chặn quyền học.
 - FR: FR-14 (email), FR-27; NFR-18. Phụ thuộc: không.
 
