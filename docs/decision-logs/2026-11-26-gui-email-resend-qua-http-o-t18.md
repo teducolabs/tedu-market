@@ -29,7 +29,7 @@ FR-27 (gửi ngay sau khi tạo tài khoản, không bước xác thực riêng)
 
 ## Đánh đổi / hệ quả
 - Tự bọc lỗi HTTP và theo dõi thay đổi API Resend thay vì dùng SDK.
-- Hạn mức gói free chưa kiểm tra ở thẻ này (thẻ T84).
+- Hạn mức gói free chưa kiểm tra ở thẻ này (thẻ T92).
 - Nội dung email do agent soạn tạm theo FR-27 ("do PO soạn" ở prd.md); cần PO xác nhận.
 
 ## Bằng chứng

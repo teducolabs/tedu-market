@@ -25,7 +25,7 @@ function redirectToSignIn(request: NextRequest, siteUrl: string): NextResponse {
 }
 
 /**
- * Chạy trước mọi trang: giữ phiên đăng nhập (gia hạn bằng refresh token khi access token hết hạn, T94) và chuyển Khách
+ * Chạy trước mọi trang: giữ phiên đăng nhập (gia hạn bằng refresh token khi access token hết hạn, T83) và chuyển Khách
  * vào trang cần đăng nhập sang Đăng nhập bằng Google rồi quay lại đúng trang (FR-03). Khách không có cookie thì không làm gì.
  */
 export async function proxy(request: NextRequest) {

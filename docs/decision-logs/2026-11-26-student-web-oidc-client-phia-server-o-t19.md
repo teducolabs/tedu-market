@@ -6,7 +6,7 @@ reconstructed: false
 supersedes: []
 superseded_by:
 related: [FR-03, NFR-06, NFR-09]
-cards: [T19, T94, T95]
+cards: [T19, T83, T84]
 ---
 # StudentWeb làm OIDC client phía server, tự viết trên Node crypto
 
@@ -19,8 +19,8 @@ T19 cần Next.js đăng nhập Code + PKCE với API, giữ token trong cookie 
 - Phiên: AES-256-GCM, khóa dẫn từ `StudentWeb__SessionSecret` (≥ 32 ký tự); cookie `httpOnly`, `SameSite=Lax`, `Secure` khi HTTPS; chia thành `tm_session.0..7` vì token OpenIddict (JWE) lớn hơn 4 KB khi gộp.
 - Cookie tạm `tm_sign_in` (10 phút, path `/sign-in`) giữ `state`, `codeVerifier`, trang quay lại; trang quay lại chỉ nhận đường dẫn nội bộ (chống open redirect).
 - Chặn trang cần đăng nhập bằng `proxy.ts` (Next 16) cho `/cart`, `/my-courses`, `/orders`, `/checkout`; chỉ kiểm cookie phiên còn hạn.
-- Gia hạn phiên (T94): xin `offline_access`, lưu refresh token trong cookie phiên; `proxy.ts` chạy trước mọi trang (trừ file tĩnh và `/sign-in*`, `/sign-out`), access token hết hạn (hoặc còn dưới 30 giây) thì đổi refresh token lấy token mới, ghi lại cookie và chuyển tiếp cho chính request đó. Refresh bị từ chối thì xóa cookie: trang cần đăng nhập chuyển sang Đăng nhập bằng Google, trang công khai hiện như Khách. Khách không có cookie thì proxy không đọc cấu hình, không gọi API. Cookie phiên sống 14 ngày (mặc định refresh token OpenIddict); hạn thật do API quyết định.
-- Lần đăng nhập đầu (T95): API thêm claim `first_sign_in=true` vào id_token (chỉ id_token, không vào access token) ở lần đổi code ngay sau khi Học viên được tạo bằng Google; claim đi qua cookie đăng nhập của API và bị bỏ sau lần authorize đầu, nên lần authorize sau, đăng nhập lại, hay đổi refresh token đều không có claim. StudentWeb thêm `welcome=1` vào URL quay lại, toast hiện một lần rồi bỏ tham số khỏi URL.
+- Gia hạn phiên (T83): xin `offline_access`, lưu refresh token trong cookie phiên; `proxy.ts` chạy trước mọi trang (trừ file tĩnh và `/sign-in*`, `/sign-out`), access token hết hạn (hoặc còn dưới 30 giây) thì đổi refresh token lấy token mới, ghi lại cookie và chuyển tiếp cho chính request đó. Refresh bị từ chối thì xóa cookie: trang cần đăng nhập chuyển sang Đăng nhập bằng Google, trang công khai hiện như Khách. Khách không có cookie thì proxy không đọc cấu hình, không gọi API. Cookie phiên sống 14 ngày (mặc định refresh token OpenIddict); hạn thật do API quyết định.
+- Lần đăng nhập đầu (T84): API thêm claim `first_sign_in=true` vào id_token (chỉ id_token, không vào access token) ở lần đổi code ngay sau khi Học viên được tạo bằng Google; claim đi qua cookie đăng nhập của API và bị bỏ sau lần authorize đầu, nên lần authorize sau, đăng nhập lại, hay đổi refresh token đều không có claim. StudentWeb thêm `welcome=1` vào URL quay lại, toast hiện một lần rồi bỏ tham số khỏi URL.
 - `redirect_uri` `/sign-in/callback` là trang hiện toàn trang "Đang đăng nhập…", rồi chuyển tiếp `code`/`state` (một lần duy nhất) sang route `/sign-in/complete` làm việc đổi token và ghi cookie.
 - Tên và email lấy từ id_token nhận trực tiếp từ token endpoint qua kết nối tin cậy, không kiểm chữ ký lại (OIDC Core 3.1.3.7).
 - Cấu hình đọc lúc chạy: `API_URL` (URL công khai của API, dùng cả cho redirect trình duyệt và back-channel), `SITE_URL`, `StudentWeb__OidcClientSecret`, `StudentWeb__SessionSecret`.

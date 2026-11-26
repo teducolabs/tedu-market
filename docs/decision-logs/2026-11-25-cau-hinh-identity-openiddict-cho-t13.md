@@ -28,7 +28,7 @@ Như mục "chọn" ở trên.
 Đúng NFR-06, NFR-22 (khóa ngoài source), FR-05; không thêm thư viện ngoài Tech Stack.
 
 ## Đánh đổi / hệ quả
-Instructor phải luôn có cả 2 vai trò (T22 phải gán thêm, không thay). Chạy API ngoài Development cần đủ 2 khóa, kể cả `docker run` thử.
+Instructor phải luôn có cả 2 vai trò (T21 phải gán thêm, không thay). Chạy API ngoài Development cần đủ 2 khóa, kể cả `docker run` thử.
 Sau reverse proxy TLS, OpenIddict đòi HTTPS: cần forwarded headers ở T-deploy (ghi ở báo cáo T13).
 
 ## Bằng chứng
