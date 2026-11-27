@@ -286,6 +286,64 @@
         "responses": { "200": { "description": "OK" } }
       }
     },
+    "/api/v1/courses/{courseId}/thumbnail-upload": {
+      "post": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ThumbnailUploadRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ThumbnailUploadDto" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/{courseId}/thumbnail": {
+      "put": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SetThumbnailRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CourseDto" } }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/courses/{courseId}/lessons": {
       "get": {
         "tags": ["Courses"],
@@ -542,7 +600,8 @@
           "slug",
           "description",
           "price",
-          "status"
+          "status",
+          "thumbnailUrl"
         ],
         "type": "object",
         "properties": {
@@ -565,7 +624,11 @@
             "description": "Giá (đồng, số nguyên).",
             "format": "double"
           },
-          "status": { "type": "string", "description": "Tên trạng thái vòng đời (`Draft`...)." }
+          "status": { "type": "string", "description": "Tên trạng thái vòng đời (`Draft`...)." },
+          "thumbnailUrl": {
+            "type": ["null", "string"],
+            "description": "Url ảnh thumbnail; `null` khi chưa có."
+          }
         }
       },
       "CreateCourseRequest": {
@@ -718,6 +781,61 @@
         "type": "object",
         "properties": { "title": { "type": ["null", "string"] } },
         "description": "Command mẫu ghi vào PostgreSQL qua EF Core."
+      },
+      "SetThumbnailRequest": {
+        "required": ["objectKey"],
+        "type": "object",
+        "properties": {
+          "objectKey": {
+            "type": ["null", "string"],
+            "description": "Khóa ảnh do `thumbnail-upload` trả về, ảnh đã tải lên xong (bắt buộc)."
+          }
+        }
+      },
+      "ThumbnailUploadDto": {
+        "required": ["uploadUrl", "objectKey", "contentType", "contentLength", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "uploadUrl": {
+            "type": "string",
+            "description": "Url PUT đã ký; client gửi thân file kèm đúng header `Content-Type`."
+          },
+          "objectKey": {
+            "type": "string",
+            "description": "Khóa đối tượng, gửi lại khi gắn thumbnail vào Khóa học."
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Kiểu ảnh phải gửi trong header `Content-Type`."
+          },
+          "contentLength": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Số byte của file; khác số này thì kho lưu trữ từ chối.",
+            "format": "int64"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Thời điểm url hết hạn.",
+            "format": "date-time"
+          }
+        }
+      },
+      "ThumbnailUploadRequest": {
+        "required": ["contentType", "contentLength"],
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": ["null", "string"],
+            "description": "Kiểu ảnh: `image/jpeg`, `image/png` hoặc `image/webp` (bắt buộc)."
+          },
+          "contentLength": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "description": "Số byte của ảnh, lớn hơn 0 và tối đa 2 MB (bắt buộc).",
+            "format": "int64"
+          }
+        }
       },
       "UpdateCourseRequest": {
         "required": ["categoryId", "title", "description", "price"],

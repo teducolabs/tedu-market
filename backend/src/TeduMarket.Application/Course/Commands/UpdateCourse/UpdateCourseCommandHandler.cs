@@ -13,6 +13,7 @@ public sealed class UpdateCourseCommandHandler(
     ICategoryRepository categoryRepository,
     ICourseRepository courseRepository,
     IUnitOfWork unitOfWork,
+    IThumbnailStorage thumbnailStorage,
     TimeProvider timeProvider)
     : ICommandHandler<UpdateCourseCommand, CourseDto>
 {
@@ -26,6 +27,6 @@ public sealed class UpdateCourseCommandHandler(
         await CourseAccess.EnsureCategoryExistsAsync(categoryRepository, command.CategoryId, cancellationToken);
         course.Update(command.CategoryId, command.Title, command.Description, command.Price!.Value, timeProvider.GetUtcNow());
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return CourseAccess.ToDto(course);
+        return CourseAccess.ToDto(course, thumbnailStorage);
     }
 }

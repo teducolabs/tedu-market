@@ -55,15 +55,18 @@ _T21 rồi T22; T23-T24 sau T20._
 - [x] T24 App quản trị: Hồ sơ Instructor của mình — epic: Instructor; phụ thuộc: T20, T22
 - [x] T98 Khai báo kiểu phản hồi OpenAPI cho API người dùng và Hồ sơ Instructor — epic: Instructor; phụ thuộc: T21, T22
 - [x] T99 Tên hiển thị trong danh sách người dùng của màn hình Instructor — epic: Instructor; phụ thuộc: T21, T22, T23
+- [ ] T100 Kiểm tra magic bytes của thumbnail đã tải lên MinIO — epic: Course; phụ thuộc: T28
+- [ ] T101 Test tự động với MinIO thật (Testcontainers) cho thumbnail — epic: Course; phụ thuộc: T28
+- [ ] T102 Dọn thumbnail trong MinIO khi xóa Khóa học — epic: Course; phụ thuộc: T28
 
 ### Phase 3 — Course và catalog
 
 _Backend T25-T32 theo chuỗi phụ thuộc; UI T33-T37 song song sau backend tương ứng (mỗi thẻ Category, Coupon, duyệt khóa gộp cả API và UI)._
 
-- [~] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
-- [~] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
-- [~] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
-- [ ] T28 Thumbnail khóa học: MinIO, presigned URL — epic: Course; phụ thuộc: T03, T26
+- [x] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
+- [x] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
+- [x] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
+- [~] T28 Thumbnail khóa học: MinIO, presigned URL — epic: Course; phụ thuộc: T03, T26
 - [ ] T29 Vòng đời duyệt khóa học: Gửi duyệt, Gửi lại, Duyệt, Từ chối kèm Lý do từ chối, Admin đăng không cần duyệt — epic: Course; phụ thuộc: T27
 - [ ] T30 LastApprovedVersion (snapshot JSONB) và sửa khóa Đã đăng phải duyệt lại — epic: Course; phụ thuộc: T29
 - [ ] T31 Truy vấn công khai: danh sách, lọc Category, sắp xếp, chi tiết kèm Hồ sơ Instructor (Dapper) — epic: Course; phụ thuộc: T06, T22, T30
@@ -387,8 +390,12 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Course · **FR/NFR:** FR-23 · **Phụ thuộc:** T03, T26
 - **Mô tả:** Cấp presigned PUT giới hạn kiểu và dung lượng; lưu khóa thumbnail vào Khóa học.
 - **Acceptance criteria:**
-  - Tải ảnh trực tiếp lên MinIO bằng URL cấp và thumbnail hiển thị trên khóa
-  - File sai kiểu hoặc quá dung lượng bị từ chối
+  - [x] Tải ảnh trực tiếp lên MinIO bằng URL cấp và thumbnail hiển thị trên khóa — integration `Course/CourseThumbnailTests.cs` (`Thumbnail_OwnerUploadsWithIssuedUrlAndSetsKey_CourseShowsThumbnailUrlAsync`, `Thumbnail_UploadedAgain_...`, `Thumbnail_AdminOnInstructorCourse_...`; MinIO giả ở biên HTTP tính lại chữ ký SigV4); unit `CourseThumbnailTests` (Domain), `ThumbnailCommandHandlerTests`, `PresignedUrlSignerTests` (ví dụ chuẩn của AWS). Đã kiểm tay một lần với MinIO thật của `docker-compose.dev.yml` (PUT đúng, sai dung lượng/kiểu bị từ chối, đọc công khai 200, xóa); test tự động với MinIO thật thuộc T101; phần hiển thị trên màn hình thuộc T33/T31
+  - [x] File sai kiểu hoặc quá dung lượng bị từ chối — API: `RequestUpload_DisallowedContentType_...`, `RequestUpload_ContentLengthOutOfRange_...`, `ThumbnailCommandValidatorTests`; kho lưu trữ: `Put_FileLargerThanAnnouncedSize_IsRejectedByStorageAsync`, `Put_FileOfOtherTypeThanAnnounced_...` (chữ ký buộc `Content-Type`, `Content-Length`)
+  - [x] (mở rộng) Thay thumbnail thì ảnh cũ bị xóa khỏi MinIO — unit `SetThumbnail_ReplacingExistingThumbnail_DeletesPreviousObject...`, `...FirstThumbnail_DeletesNothing`, `...SameKeyAgain_KeepsObject`; integration `Thumbnail_UploadedAgain_ReplacesPreviousKeyAsync`
+  - [x] (mở rộng) `docker-compose.dev.yml` tự tạo bucket `thumbnails` và cho đọc ẩn danh (`minio-bucket`, `minio-policy`) — đã chạy thật
+  - [x] (mở rộng) Chỉ chủ khóa hoặc Admin cấp URL và gắn thumbnail; ảnh phải có trong MinIO và đúng khóa học — `Thumbnail_InstructorOfOtherCourse_...`, `Thumbnail_StudentAndNoToken_...`, `SetThumbnail_FileNeverUploaded_...`, `SetThumbnail_KeyOfOtherCourse_...`
+  - [x] (mở rộng) `packages/api-client/openapi.json` có `/thumbnail-upload` và `/thumbnail` — sinh từ host test tạm
 
 ### T29 Vòng đời duyệt khóa học: Gửi duyệt, Gửi lại, Duyệt, Từ chối kèm Lý do từ chối, Admin đăng không cần duyệt
 
@@ -846,6 +853,30 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
   - [x] Bảng Instructor hiện cột Tên hiển thị — test `instructors-page.test.tsx`
   - [ ] e2e luồng Instructor chưa chạy được (chung với T23: Chromium của Playwright thiếu `libnspr4`), nên chưa đủ DoD
 
+### T100 Kiểm tra magic bytes của thumbnail đã tải lên MinIO
+
+- **Epic:** Course · **FR/NFR:** FR-23 · **Phụ thuộc:** T28 · **Thẻ gốc:** T28
+- **Mô tả:** Khi gắn thumbnail, API đọc vài byte đầu của đối tượng trong MinIO và từ chối nếu không đúng JPEG/PNG/WebP (hiện chỉ tin `Content-Type` đã ký); ảnh sai bị xóa khỏi MinIO.
+- **Acceptance criteria:**
+  - [ ] Tệp không phải ảnh nhưng khai `image/png` bị từ chối khi gắn, lỗi gắn vào `objectKey`
+  - [ ] Ảnh hợp lệ JPEG/PNG/WebP vẫn gắn được
+
+### T101 Test tự động với MinIO thật (Testcontainers) cho thumbnail
+
+- **Epic:** Course · **FR/NFR:** FR-23, NFR-03 · **Phụ thuộc:** T28 · **Thẻ gốc:** T28
+- **Mô tả:** Thêm integration test chạy MinIO trong container (cần decision log nếu thêm gói Testcontainers.Minio): xin URL, PUT, gắn, đọc công khai, thay ảnh, từ chối sai kiểu/dung lượng. T28 mới chỉ kiểm tay một lần với MinIO của docker-compose.dev.
+- **Acceptance criteria:**
+  - [ ] Test chạy trong CI không cần MinIO dựng sẵn
+  - [ ] Phủ luồng tải lên, đọc công khai, thay ảnh và từ chối sai kiểu/dung lượng
+
+### T102 Dọn thumbnail trong MinIO khi xóa Khóa học
+
+- **Epic:** Course · **FR/NFR:** FR-23 · **Phụ thuộc:** T28 · **Thẻ gốc:** T28
+- **Mô tả:** `DeleteCourseCommandHandler` xóa đối tượng thumbnail (cố gắng hết sức, như khi thay ảnh) sau khi xóa khóa thành công.
+- **Acceptance criteria:**
+  - [ ] Xóa khóa có thumbnail thì ảnh bị xóa khỏi MinIO
+  - [ ] Lỗi xóa ảnh không làm hỏng việc xóa khóa
+
 ## Đối chiếu FR/NFR → thẻ
 
 | Mã | Thẻ |
@@ -872,7 +903,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-20 | T27, T34 |
 | FR-21 | T29, T35 |
 | FR-22 | T26, T30, T33 |
-| FR-23 | T28, T33 |
+| FR-23 | T28, T33, T100, T101, T102 |
 | FR-24 | T52, T55 |
 | FR-25 | T63 |
 | FR-26 | T02 |
@@ -905,7 +936,7 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 | FR-53 | T49, T53 |
 | NFR-01 | T06, T31, T32, T74 |
 | NFR-02 | T17, T50, T75 |
-| NFR-03 | T09, T36, T37, T73 |
+| NFR-03 | T09, T36, T37, T73, T101 |
 | NFR-04 | T41, T47, T50 |
 | NFR-05 | T17, T47, T50 |
 | NFR-06 | T13, T19, T20, T70, T78 |

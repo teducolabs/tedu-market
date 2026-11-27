@@ -6,7 +6,7 @@ reconstructed: false
 supersedes: []
 superseded_by:
 related: [FR-23, NFR-03]
-cards: []
+cards: [T28]
 ---
 # Dùng MinIO (tương thích S3) lưu thumbnail, upload bằng presigned URL
 

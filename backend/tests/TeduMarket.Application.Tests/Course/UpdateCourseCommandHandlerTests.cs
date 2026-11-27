@@ -26,6 +26,7 @@ public sealed class UpdateCourseCommandHandlerTests
             new FakeCategoryRepository(categoryExists ? _category : null),
             new FakeCourseRepository(course),
             _unitOfWork,
+            new FakeThumbnailStorage(),
             new FakeTimeProvider());
 
     [Fact]

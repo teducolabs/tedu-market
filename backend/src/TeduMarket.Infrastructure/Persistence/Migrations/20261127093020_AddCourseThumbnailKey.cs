@@ -1,0 +1,28 @@
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace TeduMarket.Infrastructure.Persistence.Migrations;
+
+/// <inheritdoc />
+public partial class AddCourseThumbnailKey : Migration
+{
+    /// <inheritdoc />
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AddColumn<string>(
+            name: "thumbnail_key",
+            table: "courses",
+            type: "character varying(200)",
+            maxLength: 200,
+            nullable: true);
+    }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "thumbnail_key",
+            table: "courses");
+    }
+}

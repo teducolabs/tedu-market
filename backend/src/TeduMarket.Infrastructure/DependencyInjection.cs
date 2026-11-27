@@ -69,11 +69,14 @@ public static class DependencyInjection
         services.AddScoped<IInstructorProfileReader, InstructorProfileDapperReader>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();
         services.AddScoped<ISampleNoteReader, SampleNoteDapperReader>();
+        services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.SectionName));
         services.AddHttpClient(MinioHealthCheck.HttpClientName, client =>
         {
             client.BaseAddress = new Uri(configuration["Minio:Endpoint"] ?? throw new InvalidOperationException("Thiếu cấu hình Minio:Endpoint"));
             client.Timeout = TimeSpan.FromSeconds(3);
         });
+        services.AddHttpClient(MinioThumbnailStorage.HttpClientName, client => client.Timeout = TimeSpan.FromSeconds(10));
+        services.AddScoped<IThumbnailStorage, MinioThumbnailStorage>();
         services.AddHealthChecks()
             .AddCheck<PostgresHealthCheck>("postgres", tags: [ReadyTag])
             .AddCheck<MinioHealthCheck>("minio", tags: [ReadyTag]);

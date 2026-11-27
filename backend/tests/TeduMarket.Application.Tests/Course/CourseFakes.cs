@@ -39,3 +39,26 @@ internal sealed class FakeCourseProfileReader(InstructorProfileDto? byId, Instru
 
     public Task<InstructorProfileDto?> FindByUserIdAsync(Guid userId, CancellationToken cancellationToken) => Task.FromResult(byUserId);
 }
+
+internal sealed class FakeThumbnailStorage(bool exists = true) : IThumbnailStorage
+{
+    public List<(string ObjectKey, string ContentType, long ContentLength)> Uploads { get; } = [];
+
+    public ThumbnailUploadTicket CreateUpload(string objectKey, string contentType, long contentLength)
+    {
+        Uploads.Add((objectKey, contentType, contentLength));
+        return new ThumbnailUploadTicket($"https://storage.test/put/{objectKey}", new DateTimeOffset(2026, 11, 27, 0, 5, 0, TimeSpan.Zero));
+    }
+
+    public List<string> Deleted { get; } = [];
+
+    public Task<bool> ExistsAsync(string objectKey, CancellationToken cancellationToken) => Task.FromResult(exists);
+
+    public Task DeleteAsync(string objectKey, CancellationToken cancellationToken)
+    {
+        Deleted.Add(objectKey);
+        return Task.CompletedTask;
+    }
+
+    public string GetPublicUrl(string objectKey) => $"https://storage.test/thumbnails/{objectKey}";
+}

@@ -8,4 +8,5 @@ namespace TeduMarket.Application.Course;
 /// <param name="Description">Mô tả khóa học; <c>null</c> khi để trống.</param>
 /// <param name="Price">Giá (đồng, số nguyên).</param>
 /// <param name="Status">Tên trạng thái vòng đời (<c>Draft</c>...).</param>
-public sealed record CourseDto(Guid CourseId, Guid InstructorProfileId, Guid CategoryId, string Title, string Slug, string? Description, decimal Price, string Status);
+/// <param name="ThumbnailUrl">Url ảnh thumbnail; <c>null</c> khi chưa có.</param>
+public sealed record CourseDto(Guid CourseId, Guid InstructorProfileId, Guid CategoryId, string Title, string Slug, string? Description, decimal Price, string Status, string? ThumbnailUrl);

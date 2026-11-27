@@ -54,6 +54,7 @@ internal static class CourseAccess
         }
     }
 
-    public static CourseDto ToDto(Domain.Course.Course course) => new(
-        course.CourseId, course.InstructorProfileId, course.CategoryId, course.Title, course.Slug, course.Description, course.Price, course.Status.ToString());
+    public static CourseDto ToDto(Domain.Course.Course course, IThumbnailStorage thumbnailStorage) => new(
+        course.CourseId, course.InstructorProfileId, course.CategoryId, course.Title, course.Slug, course.Description, course.Price, course.Status.ToString(),
+        course.ThumbnailKey is null ? null : thumbnailStorage.GetPublicUrl(course.ThumbnailKey));
 }

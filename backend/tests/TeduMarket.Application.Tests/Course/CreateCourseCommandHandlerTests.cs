@@ -22,6 +22,7 @@ public sealed class CreateCourseCommandHandlerTests
             new FakeCategoryRepository(categoryExists ? _category : null),
             _courses,
             _unitOfWork,
+            new FakeThumbnailStorage(),
             new FakeTimeProvider());
 
     [Fact]
@@ -168,6 +169,7 @@ public sealed class CreateCourseCommandHandlerTests
             new FakeCategoryRepository(_category),
             courses,
             _unitOfWork,
+            new FakeThumbnailStorage(),
             new FakeTimeProvider());
 
         // Act

@@ -37,6 +37,7 @@ Nơi chốt DUY NHẤT 1 tên cho mỗi khái niệm nghiệp vụ, và là bả
 | Tên hiển thị | `DisplayName` | Tên của Instructor hiện trên khóa học, thuộc Hồ sơ Instructor; bắt buộc khi cập nhật, tối đa 100 ký tự, trống tới lần cập nhật đầu. | tên, họ tên, username | Hồ sơ Instructor |
 | Giới thiệu | `Biography` | Đoạn giới thiệu Instructor trong Hồ sơ Instructor; tùy chọn, tối đa 2000 ký tự. | bio, mô tả, tiểu sử | Hồ sơ Instructor |
 | Ảnh đại diện | `AvatarUrl` | Đường dẫn http/https tới ảnh Instructor trong Hồ sơ Instructor; tùy chọn, chưa hỗ trợ upload. | avatar, hình đại diện, ảnh profile | Hồ sơ Instructor |
+| Thumbnail | `Thumbnail` | Ảnh đại diện của Khóa học (JPEG, PNG hoặc WebP, tối đa 2 MB), thuộc Khóa học; tùy chọn; tải thẳng lên MinIO bằng presigned URL, Khóa học giữ khóa đối tượng (`ThumbnailKey`) và hiển thị qua `ThumbnailUrl`. | ảnh khóa, ảnh bìa, banner, cover, hình khóa học | Khóa học |
 
 ## Vòng đời khóa học
 

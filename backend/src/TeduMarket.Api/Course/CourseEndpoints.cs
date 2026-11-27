@@ -3,9 +3,11 @@ using TeduMarket.Api.Common;
 using TeduMarket.Application.Course;
 using TeduMarket.Application.Course.Commands.AddLesson;
 using TeduMarket.Application.Course.Commands.CreateCourse;
+using TeduMarket.Application.Course.Commands.CreateThumbnailUpload;
 using TeduMarket.Application.Course.Commands.DeleteCourse;
 using TeduMarket.Application.Course.Commands.DeleteLesson;
 using TeduMarket.Application.Course.Commands.ReorderLessons;
+using TeduMarket.Application.Course.Commands.SetCourseThumbnail;
 using TeduMarket.Application.Course.Commands.SetLessonPreview;
 using TeduMarket.Application.Course.Commands.UpdateCourse;
 using TeduMarket.Application.Course.Commands.UpdateLesson;
@@ -42,6 +44,16 @@ public static class CourseEndpoints
                 await mediator.Send(new DeleteCourseCommand(courseId), cancellationToken);
                 return Results.NoContent();
             })
+            .RequireAuthorization(AuthorizationPolicies.InstructorOrAdmin);
+
+        group.MapPost("/{courseId:guid}/thumbnail-upload", async (Guid courseId, ThumbnailUploadRequest request, IMediator mediator, CancellationToken cancellationToken) =>
+                Results.Ok(await mediator.Send(new CreateThumbnailUploadCommand(courseId, request.ContentType, request.ContentLength), cancellationToken)))
+            .Produces<ThumbnailUploadDto>()
+            .RequireAuthorization(AuthorizationPolicies.InstructorOrAdmin);
+
+        group.MapPut("/{courseId:guid}/thumbnail", async (Guid courseId, SetThumbnailRequest request, IMediator mediator, CancellationToken cancellationToken) =>
+                Results.Ok(await mediator.Send(new SetCourseThumbnailCommand(courseId, request.ObjectKey), cancellationToken)))
+            .Produces<CourseDto>()
             .RequireAuthorization(AuthorizationPolicies.InstructorOrAdmin);
 
         group.MapGet("/{courseId:guid}/lessons", async (Guid courseId, IMediator mediator, CancellationToken cancellationToken) =>
@@ -104,3 +116,10 @@ public sealed record ReorderLessonsRequest(IReadOnlyList<Guid>? LessonIds);
 
 /// <param name="IsPreview">true để đánh dấu Bài học xem thử, false để bỏ đánh dấu (bắt buộc).</param>
 public sealed record LessonPreviewRequest(bool? IsPreview);
+
+/// <param name="ContentType">Kiểu ảnh: <c>image/jpeg</c>, <c>image/png</c> hoặc <c>image/webp</c> (bắt buộc).</param>
+/// <param name="ContentLength">Số byte của ảnh, lớn hơn 0 và tối đa 2 MB (bắt buộc).</param>
+public sealed record ThumbnailUploadRequest(string? ContentType, long? ContentLength);
+
+/// <param name="ObjectKey">Khóa ảnh do <c>thumbnail-upload</c> trả về, ảnh đã tải lên xong (bắt buộc).</param>
+public sealed record SetThumbnailRequest(string? ObjectKey);

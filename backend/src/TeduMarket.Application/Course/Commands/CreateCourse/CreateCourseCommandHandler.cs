@@ -14,6 +14,7 @@ public sealed class CreateCourseCommandHandler(
     ICategoryRepository categoryRepository,
     ICourseRepository courseRepository,
     IUnitOfWork unitOfWork,
+    IThumbnailStorage thumbnailStorage,
     TimeProvider timeProvider)
     : ICommandHandler<CreateCourseCommand, CourseDto>
 {
@@ -29,7 +30,7 @@ public sealed class CreateCourseCommandHandler(
             instructorProfileId, command.CategoryId, command.Title, slug, command.Description, command.Price!.Value, timeProvider.GetUtcNow());
         courseRepository.Add(course);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return CourseAccess.ToDto(course);
+        return CourseAccess.ToDto(course, thumbnailStorage);
     }
 
     private async Task<Guid> ResolveInstructorProfileIdAsync(CreateCourseCommand command, CancellationToken cancellationToken)

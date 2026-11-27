@@ -18,6 +18,7 @@ internal sealed class CourseConfiguration : IEntityTypeConfiguration<CourseAggre
         builder.Property(course => course.Slug).HasColumnName("slug").HasMaxLength(CourseAggregate.SlugMaxLength).IsRequired();
         builder.Property(course => course.Description).HasColumnName("description").HasMaxLength(CourseAggregate.DescriptionMaxLength);
         builder.Property(course => course.Price).HasColumnName("price").HasColumnType("numeric(18,0)");
+        builder.Property(course => course.ThumbnailKey).HasColumnName("thumbnail_key").HasMaxLength(CourseAggregate.ThumbnailKeyMaxLength);
         builder.Property(course => course.Status).HasColumnName("status").HasConversion<string>().HasMaxLength(32).IsRequired();
         builder.Property(course => course.CreatedAt).HasColumnName("created_at").HasColumnType("timestamptz");
         builder.Property(course => course.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamptz");

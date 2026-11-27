@@ -6,6 +6,7 @@ public sealed class Course
     public const int TitleMaxLength = 200;
     public const int DescriptionMaxLength = 5000;
     public const int SlugMaxLength = 120;
+    public const int ThumbnailKeyMaxLength = 200;
 
     /// <summary>Giá lớn nhất lưu được trong cột <c>numeric(18,0)</c>.</summary>
     public const decimal PriceMax = 999_999_999_999_999_999m;
@@ -29,6 +30,9 @@ public sealed class Course
     public string? Description { get; private set; }
 
     public decimal Price { get; private set; }
+
+    /// <summary>Khóa đối tượng thumbnail trong kho lưu trữ; <c>null</c> khi chưa có thumbnail.</summary>
+    public string? ThumbnailKey { get; private set; }
 
     public CourseStatus Status { get; private set; }
 
@@ -66,6 +70,18 @@ public sealed class Course
     public void Update(Guid categoryId, string? title, string? description, decimal price, DateTimeOffset updatedAt)
     {
         Apply(categoryId, title, description, price);
+        UpdatedAt = updatedAt;
+    }
+
+    /// <summary>Gắn thumbnail đã tải lên kho lưu trữ; thay thumbnail cũ nếu có.</summary>
+    public void SetThumbnail(string? thumbnailKey, DateTimeOffset updatedAt)
+    {
+        if (string.IsNullOrWhiteSpace(thumbnailKey) || thumbnailKey.Length > ThumbnailKeyMaxLength)
+        {
+            throw new Common.DomainException("INVALID_COURSE", $"Khóa thumbnail bắt buộc, tối đa {ThumbnailKeyMaxLength} ký tự");
+        }
+
+        ThumbnailKey = thumbnailKey;
         UpdatedAt = updatedAt;
     }
 

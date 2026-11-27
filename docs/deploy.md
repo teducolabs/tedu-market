@@ -41,8 +41,9 @@ Một VPS, Docker Compose, Nginx theo subdomain (khớp architecture.md mục 1,
 | `ConnectionStrings__Default`, `POSTGRES_PASSWORD` | PostgreSQL |
 | `PaymentHook__ApiToken` | `X-API-Token` của hook (NFR-07) |
 | `VideoPlayback__SigningKey` | ký token phát video |
-| `Minio__AccessKey`, `Minio__SecretKey` | thumbnail |
-| `Minio__Endpoint` | URL MinIO cho `/health/ready` (không bí mật; mặc định `http://localhost:9000`) |
+| `Minio__AccessKey`, `Minio__SecretKey` | thumbnail: ký presigned URL và kiểm tra ảnh đã tải lên |
+| `Minio__Endpoint` | URL MinIO mà API gọi tới (`/health/ready`, kiểm tra ảnh; không bí mật; mặc định `http://localhost:9000`) |
+| `Minio__PublicEndpoint`, `Minio__Bucket` | URL MinIO mà trình duyệt gọi tới để tải/xem thumbnail (bỏ trống thì dùng `Minio__Endpoint`) và tên bucket (mặc định `thumbnails`); bucket phải tồn tại và cho phép đọc ẩn danh (dev: `docker-compose.dev.yml` tự tạo qua `minio-bucket`/`minio-policy`; prod: làm tương tự bằng `mc mb` và `mc anonymous set download`), CORS cho phép `PUT` từ origin AdminApp |
 | `Google__ClientId`, `Google__ClientSecret` | đăng nhập Google; trong Google Cloud Console đăng ký redirect URI `https://<domain API>/signin-google`; thiếu 1 trong 2 thì tắt đăng nhập Google |
 | `Resend__ApiKey`, `Resend__FromAddress` | email (NFR-18); `FromAddress` dạng `TEDU Market <no-reply@domain>` với domain đã xác minh ở Resend; thiếu 1 trong 2 thì email ở lại Outbox rồi `Failed` sau 5 lần thử |
 | `Notification__StudentWebUrl` | URL công khai của StudentWeb, gốc liên kết `/courses` trong email (không bí mật; mặc định `http://localhost:3000`) |

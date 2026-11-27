@@ -491,6 +491,11 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(32)")
                         .HasColumnName("status");
 
+                    b.Property<string>("ThumbnailKey")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("thumbnail_key");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)

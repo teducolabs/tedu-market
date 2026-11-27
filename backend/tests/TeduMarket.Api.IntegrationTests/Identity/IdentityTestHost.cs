@@ -41,7 +41,8 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
         string connectionString,
         FakeGoogleBackchannel? google = null,
         Notification.FakeResendBackchannel? resend = null,
-        Microsoft.Extensions.Time.Testing.FakeTimeProvider? clock = null)
+        Microsoft.Extensions.Time.Testing.FakeTimeProvider? clock = null,
+        Course.FakeMinioBackchannel? minio = null)
     {
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
@@ -59,6 +60,12 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
                 builder.UseSetting("Notification:StudentWebUrl", "https://hoc.example.test");
             }
 
+            if (minio is not null)
+            {
+                builder.UseSetting("Minio:AccessKey", Course.FakeMinioBackchannel.AccessKey);
+                builder.UseSetting("Minio:SecretKey", Course.FakeMinioBackchannel.SecretKey);
+            }
+
             if (google is not null)
             {
                 builder.UseSetting("Google:ClientId", "test-google-client");
@@ -72,6 +79,13 @@ internal sealed class IdentityTestHost : IAsyncDisposable, IDisposable
                     // Biên ngoài: HTTP tới Resend; sender thật vẫn chạy.
                     services.AddHttpClient(TeduMarket.Infrastructure.Notification.ResendEmailSender.HttpClientName)
                         .ConfigurePrimaryHttpMessageHandler(() => resend);
+                }
+
+                if (minio is not null)
+                {
+                    // Biên ngoài: HTTP tới MinIO; kho lưu trữ thật (ký URL, kiểm tra ảnh) vẫn chạy.
+                    services.AddHttpClient(TeduMarket.Infrastructure.Course.MinioThumbnailStorage.HttpClientName)
+                        .ConfigurePrimaryHttpMessageHandler(() => minio);
                 }
 
                 if (clock is not null)
