@@ -62,7 +62,7 @@ _Backend T25-T32 theo chuỗi phụ thuộc; UI T33-T37 song song sau backend t�
 
 - [~] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
 - [~] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
-- [ ] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
+- [~] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
 - [ ] T28 Thumbnail khóa học: MinIO, presigned URL — epic: Course; phụ thuộc: T03, T26
 - [ ] T29 Vòng đời duyệt khóa học: Gửi duyệt, Gửi lại, Duyệt, Từ chối kèm Lý do từ chối, Admin đăng không cần duyệt — epic: Course; phụ thuộc: T27
 - [ ] T30 LastApprovedVersion (snapshot JSONB) và sửa khóa Đã đăng phải duyệt lại — epic: Course; phụ thuộc: T29
@@ -374,12 +374,13 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 ### T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử
 
 - **Epic:** Course · **FR/NFR:** FR-20, FR-45 · **Phụ thuộc:** T26
-- **Mô tả:** API quản lý Bài học trong Khóa học với thứ tự; Admin hoặc Instructor sở hữu khóa đánh dấu/bỏ đánh dấu Bài học xem thử; quyền sở hữu như T26.
+- **Mô tả:** API quản lý Bài học trong Khóa học với thứ tự; Admin hoặc Instructor sở hữu khóa đánh dấu/bỏ đánh dấu Bài học xem thử; quyền sở hữu như T26. Bài học gồm Tiêu đề bài học + Thứ tự bài học + cờ xem thử (chủ dự án chọn trong phiên T27).
 - **Acceptance criteria:**
-  - Sắp xếp lại thì thứ tự lưu và trả đúng
-  - Bài học của khóa người khác không sửa được
-  - Bài học đã đánh dấu trả cờ xem thử trong chi tiết khóa
-  - Người không sở hữu khóa đánh dấu bị từ chối
+  - [x] Sắp xếp lại thì thứ tự lưu và trả đúng — integration `Course/LessonTests.cs` (`Reorder_FullNewOrder_StoresAndListReturnsItAsync`, `Reorder_MissingLesson_...`, `Delete_MiddleLesson_RemovesItAndCompactsOrderAsync`); unit `LessonCommandHandlerTests`, `LessonTests` (Domain)
+  - [x] Bài học của khóa người khác không sửa được — integration `Write_InstructorOfOtherCourse_ReturnsForbiddenAndKeepsLessonAsync`, `Update_LessonOfAnotherCourseViaOwnCoursePath_...`, `Write_StudentAndNoToken_...`; unit `LessonCommandHandlerTests`
+  - [x] Bài học đã đánh dấu trả cờ xem thử — integration `SetPreview_OwnerInstructor_ListReturnsPreviewFlagAndUnmarkClearsItAsync` qua `GET /courses/{courseId}/lessons`; phần hiển thị trên chi tiết khóa công khai của Khách thuộc T31 (chủ dự án chọn, xem decision log)
+  - [x] Người không sở hữu khóa đánh dấu bị từ chối — integration `SetPreview_InstructorOfOtherCourse_ReturnsForbiddenAndKeepsFlagAsync`; Admin đánh dấu được `SetPreview_AdminOnInstructorCourse_MarksLessonAsync`
+  - [x] (mở rộng) `packages/api-client/openapi.json` có `/api/v1/courses/{courseId}/lessons` — sinh từ host test tạm
 
 ### T28 Thumbnail khóa học: MinIO, presigned URL
 

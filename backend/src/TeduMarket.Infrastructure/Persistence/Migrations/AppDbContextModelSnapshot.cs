@@ -515,6 +515,46 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.ToTable("courses", (string)null);
                 });
 
+            modelBuilder.Entity("TeduMarket.Domain.Course.Lesson", b =>
+                {
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lesson_id");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("course_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsPreview")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_preview");
+
+                    b.Property<int>("LessonOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("lesson_order");
+
+                    b.Property<string>("LessonTitle")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("lesson_title");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("LessonId");
+
+                    b.HasIndex("CourseId", "LessonOrder")
+                        .HasDatabaseName("ix_lessons_course_id_lesson_order");
+
+                    b.ToTable("lessons", (string)null);
+                });
+
             modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>
                 {
                     b.Property<Guid>("InstructorProfileId")
@@ -858,6 +898,16 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_courses_categories_category_id");
+                });
+
+            modelBuilder.Entity("TeduMarket.Domain.Course.Lesson", b =>
+                {
+                    b.HasOne("TeduMarket.Domain.Course.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_lessons_courses_course_id");
                 });
 
             modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>

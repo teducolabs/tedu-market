@@ -286,6 +286,171 @@
         "responses": { "200": { "description": "OK" } }
       }
     },
+    "/api/v1/courses/{courseId}/lessons": {
+      "get": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LessonDto" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LessonRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LessonDto" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/{courseId}/lessons/order": {
+      "put": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReorderLessonsRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LessonDto" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/{courseId}/lessons/{lessonId}": {
+      "put": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "lessonId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LessonRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LessonDto" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "lessonId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/courses/{courseId}/lessons/{lessonId}/preview": {
+      "put": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "lessonId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LessonPreviewRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LessonDto" } }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/samples": {
       "post": {
         "tags": ["Sample"],
@@ -465,6 +630,46 @@
           "avatarUrl": { "type": ["null", "string"], "description": "Url ảnh đại diện." }
         }
       },
+      "LessonDto": {
+        "required": ["lessonId", "courseId", "lessonTitle", "lessonOrder", "isPreview"],
+        "type": "object",
+        "properties": {
+          "lessonId": { "type": "string", "description": "Id Bài học.", "format": "uuid" },
+          "courseId": {
+            "type": "string",
+            "description": "Id Khóa học chứa bài.",
+            "format": "uuid"
+          },
+          "lessonTitle": { "type": "string", "description": "Tiêu đề bài học." },
+          "lessonOrder": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Thứ tự trong khóa, từ 1.",
+            "format": "int32"
+          },
+          "isPreview": { "type": "boolean", "description": "Có phải Bài học xem thử hay không." }
+        }
+      },
+      "LessonPreviewRequest": {
+        "required": ["isPreview"],
+        "type": "object",
+        "properties": {
+          "isPreview": {
+            "type": ["null", "boolean"],
+            "description": "true để đánh dấu Bài học xem thử, false để bỏ đánh dấu (bắt buộc)."
+          }
+        }
+      },
+      "LessonRequest": {
+        "required": ["lessonTitle"],
+        "type": "object",
+        "properties": {
+          "lessonTitle": {
+            "type": ["null", "string"],
+            "description": "Tiêu đề bài học (bắt buộc, tối đa 200 ký tự)."
+          }
+        }
+      },
       "PagedResultOfUserDto": {
         "required": ["items", "pageNumber", "pageSize", "totalCount"],
         "type": "object",
@@ -484,6 +689,17 @@
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": ["integer", "string"],
             "format": "int32"
+          }
+        }
+      },
+      "ReorderLessonsRequest": {
+        "required": ["lessonIds"],
+        "type": "object",
+        "properties": {
+          "lessonIds": {
+            "type": ["null", "array"],
+            "items": { "type": "string", "format": "uuid" },
+            "description": "Id mọi Bài học của khóa theo thứ tự mới, mỗi bài đúng một lần."
           }
         }
       },

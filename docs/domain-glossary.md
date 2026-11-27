@@ -25,6 +25,8 @@ Nơi chốt DUY NHẤT 1 tên cho mỗi khái niệm nghiệp vụ, và là bả
 | Khóa học | `Course` | Sản phẩm bán, gồm thông tin, giá, các bài học; thuộc 1 Instructor và 1 Category. | sản phẩm, course (trên UI), lớp học | Bài học, Category, Instructor |
 | Bài học | `Lesson` | Đơn vị nội dung trong khóa học, gắn 1 video; có thứ tự. | Lesson (trên UI), bài giảng, tiết học | Khóa học, Video, Bài học xem thử |
 | Bài học xem thử | `PreviewLesson` | Bài học được đánh dấu cho xem không cần mua, kể cả Khách. | free lesson, bài miễn phí, demo | Bài học, Khách |
+| Tiêu đề bài học | `LessonTitle` | Tên hiển thị của Bài học, thuộc Bài học; bắt buộc, tối đa 200 ký tự. Khác "Tiêu đề khóa học". | tên bài, name, Title (của Bài học) | Bài học |
+| Thứ tự bài học | `LessonOrder` | Vị trí của Bài học trong Khóa học, số nguyên liên tục từ 1; Instructor/Admin sắp xếp lại được. | số thứ tự, index, position, sort order | Bài học, Khóa học |
 | Video | `Video` | File mp4 (tối đa 1 GB) của bài học, mã hóa bằng ffmpeg, lưu static folder có phân quyền. | clip, media | Bài học, Báo lỗi video |
 | Category | `Category` | Nhóm phân loại khóa học do Admin quản lý, dùng để lọc danh sách. | danh mục, chuyên mục, thể loại | Khóa học |
 | Tiêu đề khóa học | `Title` | Tên hiển thị của Khóa học, thuộc Khóa học; bắt buộc, tối đa 200 ký tự. | tên khóa, name, tên sản phẩm | Khóa học |
