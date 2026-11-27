@@ -64,6 +64,7 @@ Tên module theo cột Code của glossary; `Identity` và `Notification` là **
 ### Module: Course
 - Trách nhiệm: `Course`, `Lesson`, `Category`, `PreviewLesson`, vòng đời `Draft` → `PendingApproval` → `Published`/`Rejected`, `CourseApproval`, `LastApprovedVersion`, danh sách + tìm kiếm + chi tiết công khai.
 - FR: FR-01, 02, 17, 19–23, 36, 44, 45, 49, 51. Phụ thuộc: `Instructor`, `Video`.
+- API (T25): `GET /api/v1/categories` (công khai, mảng `{categoryId, name}` xếp theo tên, Output Cache `Catalog`); `POST /api/v1/categories`, `PUT`/`DELETE /api/v1/categories/{categoryId}` (Admin; ghi xong xóa cache tag `catalog`). Tên bắt buộc ≤ 100 ký tự, duy nhất không phân biệt hoa thường (lỗi 400 gắn vào `name`); bảng `categories` có cột kỹ thuật `normalized_name` cho unique index. Xóa hiện chưa kiểm tra Khóa học vì chưa có bảng Khóa học ([log](decision-logs/2026-11-27-category-chi-co-ten-va-quy-tac-xoa-tam.md)).
 - Thuật ngữ: `RejectionReason`, `Resubmit`. Truy vấn công khai đọc `LastApprovedVersion` (chỉ khi `Published`); khóa sửa khi `Published` → `PendingApproval` (Admin sửa thì không cần duyệt).
 
 ### Module: Instructor

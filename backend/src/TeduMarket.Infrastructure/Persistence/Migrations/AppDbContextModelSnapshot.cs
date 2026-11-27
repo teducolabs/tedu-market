@@ -417,6 +417,41 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.ToTable("openiddict_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("TeduMarket.Domain.Course.Category", b =>
+                {
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("normalized_name");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("CategoryId");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("ux_categories_normalized_name");
+
+                    b.ToTable("categories", (string)null);
+                });
+
             modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>
                 {
                     b.Property<Guid>("InstructorProfileId")

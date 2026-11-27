@@ -46,7 +46,7 @@ Sidebar trái; mục hiển thị theo vai trò (API vẫn kiểm quyền, FR-05
 | Instructor | Admin | Danh sách `/instructors` (bảng Email, Tên hiển thị, Vai trò, Hồ sơ Instructor; lọc theo vai trò; 20 dòng/trang); Duyệt Instructor (modal xác nhận); Sửa hồ sơ `/instructors/:instructorProfileId` (form Tên hiển thị, Giới thiệu, Ảnh đại diện); Xóa hồ sơ (modal xác nhận); đặt/xóa Tỷ lệ chia riêng | FR-40, FR-18, FR-39 |
 | Khoản chia chờ duyệt | Admin | Duyệt Khoản chia | FR-47 |
 | Phiếu chi | Admin | Danh sách; Tạo phiếu chi | FR-48 |
-| Category | Admin | CRUD | FR-17 |
+| Category | Admin | `/categories`: bảng Tên; Tạo/Sửa bằng form một ô Tên ngay trên bảng; Xóa bằng modal xác nhận | FR-17 |
 | Coupon | Admin | CRUD | FR-31 |
 | Báo lỗi video | Admin | Danh sách báo lỗi kèm Bài học liên quan | FR-50 |
 | Menu tài khoản | Cả hai | Đăng xuất; Đổi mật khẩu (chỉ Admin) | FR-04, FR-42 |

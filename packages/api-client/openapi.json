@@ -154,6 +154,80 @@
         "responses": { "200": { "description": "OK" } }
       }
     },
+    "/api/v1/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CategoryDto" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Categories"],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SaveCategoryRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CategoryDto" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories/{categoryId}": {
+      "put": {
+        "tags": ["Categories"],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SaveCategoryRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CategoryDto" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Categories"],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
     "/api/v1/samples": {
       "post": {
         "tags": ["Sample"],
@@ -219,6 +293,14 @@
   },
   "components": {
     "schemas": {
+      "CategoryDto": {
+        "required": ["categoryId", "name"],
+        "type": "object",
+        "properties": {
+          "categoryId": { "type": "string", "description": "Id Category.", "format": "uuid" },
+          "name": { "type": "string", "description": "Tên Category." }
+        }
+      },
       "ChangePasswordCommand": {
         "required": ["currentPassword", "newPassword"],
         "type": "object",
@@ -286,6 +368,16 @@
           }
         }
       },
+      "SaveCategoryRequest": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"],
+            "description": "Tên Category (bắt buộc, tối đa 100 ký tự)."
+          }
+        }
+      },
       "SaveSampleNoteCommand": {
         "required": ["title"],
         "type": "object",
@@ -332,6 +424,7 @@
     { "name": "Account" },
     { "name": "Users" },
     { "name": "InstructorProfiles" },
+    { "name": "Categories" },
     { "name": "Sample" }
   ]
 }

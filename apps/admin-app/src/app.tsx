@@ -7,6 +7,7 @@ import { ErrorBoundary } from './components/error-boundary';
 import { AUTH_CALLBACK_PATH, SIGN_IN_PATH } from './lib/auth/auth-settings';
 import { SIDEBAR_ITEMS } from './lib/sidebar-items';
 import { AuthCallbackPage } from './routes/auth-callback-page';
+import { CategoriesPage } from './routes/categories-page';
 import { ChangePasswordPage } from './routes/change-password-page';
 import { InstructorProfilePage } from './routes/instructor-profile-page';
 import { InstructorProfileEditPage } from './routes/instructor-profile-edit-page';
@@ -35,13 +36,17 @@ export function App({ userManager }: AppProps) {
               <Route index element={<Navigate to="/revenue" replace />} />
               <Route path="/change-password" element={<ChangePasswordPage />} />
               <Route path="/instructor-profile" element={<InstructorProfilePage />} />
+              <Route path="/categories" element={<CategoriesPage />} />
               <Route path="/instructors" element={<InstructorsPage />} />
               <Route
                 path="/instructors/:instructorProfileId"
                 element={<InstructorProfileEditPage />}
               />
               {SIDEBAR_ITEMS.filter(
-                (item) => item.path !== '/instructors' && item.path !== '/instructor-profile',
+                (item) =>
+                  item.path !== '/instructors' &&
+                  item.path !== '/instructor-profile' &&
+                  item.path !== '/categories',
               ).map((item) => (
                 <Route key={item.path} path={item.path} element={<PlaceholderPage />} />
               ))}

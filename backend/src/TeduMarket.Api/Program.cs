@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using TeduMarket.Api.Common;
+using TeduMarket.Api.Course;
 using TeduMarket.Api.Identity;
 using TeduMarket.Api.Instructor;
 using TeduMarket.Api.Sample;
@@ -76,6 +77,7 @@ var api = app.MapGroup("/api/v1");
 api.MapAccountEndpoints();
 api.MapInstructorApprovalEndpoints();
 api.MapInstructorProfileEndpoints();
+api.MapCategoryEndpoints();
 if (app.Environment.IsDevelopment())
 {
     api.MapSampleEndpoints();

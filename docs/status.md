@@ -60,7 +60,7 @@ _T21 rồi T22; T23-T24 sau T20._
 
 _Backend T25-T32 theo chuỗi phụ thuộc; UI T33-T37 song song sau backend tương ứng (mỗi thẻ Category, Coupon, duyệt khóa gộp cả API và UI)._
 
-- [ ] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
+- [~] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
 - [ ] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
 - [ ] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
 - [ ] T28 Thumbnail khóa học: MinIO, presigned URL — epic: Course; phụ thuộc: T03, T26
@@ -353,10 +353,10 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 - **Epic:** Course · **FR/NFR:** FR-17 · **Phụ thuộc:** T13, T20
 - **Mô tả:** API tạo/sửa/xóa Category chỉ cho Admin; màn hình bảng + form + modal xóa trong App quản trị theo ux.md.
 - **Acceptance criteria:**
-  - Admin tạo, sửa, xóa được; Instructor/Học viên bị từ chối
-  - Danh sách Category công khai phản ánh thay đổi
-  - Tạo/sửa/xóa Category trong UI thấy cập nhật ngay
-  - Đủ 4 trạng thái Loading/Empty/Error/Success
+  - [x] Admin tạo, sửa, xóa được; Instructor/Học viên bị từ chối — integration `Course/CategoryTests.cs` (`Create_Admin_...`, `Update_Admin_...`, `Delete_Admin_...`, `Write_NotAdmin_ReturnsForbiddenAndKeepsCategoryAsync`, `Write_NoToken_...`); unit handler/validator/domain
+  - [x] Danh sách Category công khai phản ánh thay đổi — integration (`Update_Admin_RenamesAndPublicListReflectsChangeImmediatelyAsync`, `Delete_Admin_...NoLongerShowsIt...`, gọi không token, qua cache `Catalog`)
+  - [x] Tạo/sửa/xóa Category trong UI thấy cập nhật ngay — `categories-page.test.tsx`; e2e `e2e/admin-app-categories.spec.ts` pass
+  - [x] Đủ 4 trạng thái Loading/Empty/Error/Success — `categories-page.test.tsx`
 
 ### T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa
 
