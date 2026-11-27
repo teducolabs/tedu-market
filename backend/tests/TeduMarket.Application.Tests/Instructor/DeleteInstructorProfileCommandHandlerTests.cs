@@ -1,4 +1,6 @@
 using TeduMarket.Application.Common.Exceptions;
+using TeduMarket.Application.Tests.Course;
+using TeduMarket.Domain.Common;
 using TeduMarket.Application.Identity;
 using TeduMarket.Application.Instructor.Commands.DeleteInstructorProfile;
 using TeduMarket.Domain.Identity;
@@ -22,7 +24,7 @@ public sealed class DeleteInstructorProfileCommandHandlerTests
         var profile = InstructorProfile.Create(_ownerId, _now);
         var repository = new FakeProfileRepository(profile);
         var roles = new FakeProfileRoleService(new UserAccount(_ownerId, null, [RoleNames.Student, RoleNames.Instructor]));
-        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, _unitOfWork);
+        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, new FakeInstructorCourseGate(false), _unitOfWork);
 
         // Act
         await handler.Handle(new DeleteInstructorProfileCommand(profile.InstructorProfileId), CancellationToken.None);
@@ -41,7 +43,7 @@ public sealed class DeleteInstructorProfileCommandHandlerTests
         var profile = InstructorProfile.Create(_ownerId, _now);
         var repository = new FakeProfileRepository(profile);
         var roles = new FakeProfileRoleService(new UserAccount(_ownerId, null, [RoleNames.Student]));
-        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, _unitOfWork);
+        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, new FakeInstructorCourseGate(false), _unitOfWork);
 
         // Act
         await handler.Handle(new DeleteInstructorProfileCommand(profile.InstructorProfileId), CancellationToken.None);
@@ -61,7 +63,7 @@ public sealed class DeleteInstructorProfileCommandHandlerTests
         var profile = InstructorProfile.Create(_ownerId, _now);
         var repository = new FakeProfileRepository(profile);
         var roles = new FakeProfileRoleService(new UserAccount(_ownerId, null, [RoleNames.Instructor]));
-        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(role, _ownerId), roles, _revoker, repository, _unitOfWork);
+        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(role, _ownerId), roles, _revoker, repository, new FakeInstructorCourseGate(false), _unitOfWork);
 
         // Act
         var act = async () => await handler.Handle(new DeleteInstructorProfileCommand(profile.InstructorProfileId), CancellationToken.None);
@@ -80,7 +82,7 @@ public sealed class DeleteInstructorProfileCommandHandlerTests
         // Arrange
         var repository = new FakeProfileRepository(null);
         var roles = new FakeProfileRoleService(null);
-        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, _unitOfWork);
+        var handler = new DeleteInstructorProfileCommandHandler(new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, new FakeInstructorCourseGate(false), _unitOfWork);
 
         // Act
         var act = async () => await handler.Handle(new DeleteInstructorProfileCommand(Guid.NewGuid()), CancellationToken.None);
@@ -88,5 +90,27 @@ public sealed class DeleteInstructorProfileCommandHandlerTests
         // Assert
         await Assert.ThrowsAsync<NotFoundException>(act);
         Assert.Equal(0, _unitOfWork.SaveCount);
+    }
+
+    [Fact]
+    public async Task Handle_InstructorStillHasCourses_ThrowsInstructorHasCoursesAndKeepsProfileAndRoleAsync()
+    {
+        // Arrange
+        var profile = InstructorProfile.Create(_ownerId, _now);
+        var repository = new FakeProfileRepository(profile);
+        var roles = new FakeProfileRoleService(new UserAccount(_ownerId, null, [RoleNames.Student, RoleNames.Instructor]));
+        var handler = new DeleteInstructorProfileCommandHandler(
+            new FakeCurrentUser(RoleNames.Admin), roles, _revoker, repository, new FakeInstructorCourseGate(true), _unitOfWork);
+
+        // Act
+        var act = async () => await handler.Handle(new DeleteInstructorProfileCommand(profile.InstructorProfileId), CancellationToken.None);
+
+        // Assert
+        var exception = await Assert.ThrowsAsync<DomainException>(act);
+        Assert.Equal("INSTRUCTOR_HAS_COURSES", exception.ErrorCode);
+        Assert.Empty(repository.Removed);
+        Assert.Empty(roles.Removed);
+        Assert.Equal(0, _unitOfWork.SaveCount);
+        Assert.Empty(_revoker.Revoked);
     }
 }

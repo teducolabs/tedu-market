@@ -78,6 +78,7 @@ api.MapAccountEndpoints();
 api.MapInstructorApprovalEndpoints();
 api.MapInstructorProfileEndpoints();
 api.MapCategoryEndpoints();
+api.MapCourseEndpoints();
 if (app.Environment.IsDevelopment())
 {
     api.MapSampleEndpoints();

@@ -27,6 +27,10 @@ Nơi chốt DUY NHẤT 1 tên cho mỗi khái niệm nghiệp vụ, và là bả
 | Bài học xem thử | `PreviewLesson` | Bài học được đánh dấu cho xem không cần mua, kể cả Khách. | free lesson, bài miễn phí, demo | Bài học, Khách |
 | Video | `Video` | File mp4 (tối đa 1 GB) của bài học, mã hóa bằng ffmpeg, lưu static folder có phân quyền. | clip, media | Bài học, Báo lỗi video |
 | Category | `Category` | Nhóm phân loại khóa học do Admin quản lý, dùng để lọc danh sách. | danh mục, chuyên mục, thể loại | Khóa học |
+| Tiêu đề khóa học | `Title` | Tên hiển thị của Khóa học, thuộc Khóa học; bắt buộc, tối đa 200 ký tự. | tên khóa, name, tên sản phẩm | Khóa học |
+| Mô tả khóa học | `Description` | Đoạn văn bản thuần giới thiệu Khóa học, thuộc Khóa học; tùy chọn, tối đa 5000 ký tự. | giới thiệu khóa, nội dung khóa, summary | Khóa học |
+| Slug | `Slug` | Chuỗi chữ thường không dấu, nối bằng gạch ngang, sinh từ Tiêu đề khóa học lúc tạo; duy nhất, không đổi khi sửa Tiêu đề; dùng trong `/courses/[slug]`. | url, đường dẫn, alias | Khóa học, Chi tiết khóa học |
+| Giá | `Price` | Giá niêm yết của Khóa học bằng đồng, số nguyên không âm; trước khi áp Coupon. Khác "Giá cuối". | giá gốc, cost, đơn giá | Khóa học, Giá cuối |
 | Hồ sơ Instructor | `InstructorProfile` | Thông tin hiển thị của Instructor trên khóa học; tạo khi Admin duyệt Instructor. | profile, tài khoản Instructor | Instructor, Duyệt Instructor |
 | Tên hiển thị | `DisplayName` | Tên của Instructor hiện trên khóa học, thuộc Hồ sơ Instructor; bắt buộc khi cập nhật, tối đa 100 ký tự, trống tới lần cập nhật đầu. | tên, họ tên, username | Hồ sơ Instructor |
 | Giới thiệu | `Biography` | Đoạn giới thiệu Instructor trong Hồ sơ Instructor; tùy chọn, tối đa 2000 ký tự. | bio, mô tả, tiểu sử | Hồ sơ Instructor |

@@ -228,6 +228,64 @@
         "responses": { "200": { "description": "OK" } }
       }
     },
+    "/api/v1/courses": {
+      "post": {
+        "tags": ["Courses"],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCourseRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CourseDto" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/{courseId}": {
+      "put": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateCourseRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CourseDto" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
     "/api/v1/samples": {
       "post": {
         "tags": ["Sample"],
@@ -310,6 +368,67 @@
         },
         "description": "Admin đổi mật khẩu của chính mình (FR-42)."
       },
+      "CourseDto": {
+        "required": [
+          "courseId",
+          "instructorProfileId",
+          "categoryId",
+          "title",
+          "slug",
+          "description",
+          "price",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "courseId": { "type": "string", "description": "Id Khóa học.", "format": "uuid" },
+          "instructorProfileId": {
+            "type": "string",
+            "description": "Id Hồ sơ Instructor sở hữu khóa.",
+            "format": "uuid"
+          },
+          "categoryId": { "type": "string", "description": "Id Category.", "format": "uuid" },
+          "title": { "type": "string", "description": "Tiêu đề khóa học." },
+          "slug": { "type": "string", "description": "Slug khóa học." },
+          "description": {
+            "type": ["null", "string"],
+            "description": "Mô tả khóa học; `null` khi để trống."
+          },
+          "price": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["number", "string"],
+            "description": "Giá (đồng, số nguyên).",
+            "format": "double"
+          },
+          "status": { "type": "string", "description": "Tên trạng thái vòng đời (`Draft`...)." }
+        }
+      },
+      "CreateCourseRequest": {
+        "required": ["instructorProfileId", "categoryId", "title", "description", "price"],
+        "type": "object",
+        "properties": {
+          "instructorProfileId": {
+            "type": ["null", "string"],
+            "description": "Id Hồ sơ Instructor chủ khóa; bắt buộc với Admin, Instructor bỏ trống hoặc truyền hồ sơ của mình.",
+            "format": "uuid"
+          },
+          "categoryId": { "type": "string", "description": "Id Category.", "format": "uuid" },
+          "title": {
+            "type": ["null", "string"],
+            "description": "Tiêu đề khóa học (bắt buộc, tối đa 200 ký tự)."
+          },
+          "description": {
+            "type": ["null", "string"],
+            "description": "Mô tả khóa học (tùy chọn, tối đa 5000 ký tự)."
+          },
+          "price": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "description": "Giá bằng đồng, số nguyên không âm (bắt buộc).",
+            "format": "double"
+          }
+        }
+      },
       "CreateSampleCommand": {
         "required": ["title"],
         "type": "object",
@@ -384,6 +503,27 @@
         "properties": { "title": { "type": ["null", "string"] } },
         "description": "Command mẫu ghi vào PostgreSQL qua EF Core."
       },
+      "UpdateCourseRequest": {
+        "required": ["categoryId", "title", "description", "price"],
+        "type": "object",
+        "properties": {
+          "categoryId": { "type": "string", "description": "Id Category.", "format": "uuid" },
+          "title": {
+            "type": ["null", "string"],
+            "description": "Tiêu đề khóa học (bắt buộc, tối đa 200 ký tự)."
+          },
+          "description": {
+            "type": ["null", "string"],
+            "description": "Mô tả khóa học (tùy chọn, tối đa 5000 ký tự)."
+          },
+          "price": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "description": "Giá bằng đồng, số nguyên không âm (bắt buộc).",
+            "format": "double"
+          }
+        }
+      },
       "UpdateInstructorProfileRequest": {
         "required": ["displayName", "biography", "avatarUrl"],
         "type": "object",
@@ -425,6 +565,7 @@
     { "name": "Users" },
     { "name": "InstructorProfiles" },
     { "name": "Categories" },
+    { "name": "Courses" },
     { "name": "Sample" }
   ]
 }

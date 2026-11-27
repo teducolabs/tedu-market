@@ -61,6 +61,8 @@ public static class DependencyInjection
         services.AddScoped<IUserReader, UserDapperReader>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICategoryReader, CategoryDapperReader>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IInstructorCourseGate, InstructorCourseGate>();
         services.AddScoped<IInstructorProfileRepository, InstructorProfileRepository>();
         services.AddScoped<IInstructorProfileReader, InstructorProfileDapperReader>();
         services.AddScoped<ISampleNoteRepository, SampleNoteRepository>();

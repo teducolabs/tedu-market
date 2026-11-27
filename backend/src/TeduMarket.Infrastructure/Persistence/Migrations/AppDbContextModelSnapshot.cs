@@ -452,6 +452,69 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
+            modelBuilder.Entity("TeduMarket.Domain.Course.Course", b =>
+                {
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("course_id");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)")
+                        .HasColumnName("description");
+
+                    b.Property<Guid>("InstructorProfileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("instructor_profile_id");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric(18,0)")
+                        .HasColumnName("price");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("slug");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("CourseId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("InstructorProfileId")
+                        .HasDatabaseName("ix_courses_instructor_profile_id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ux_courses_slug");
+
+                    b.ToTable("courses", (string)null);
+                });
+
             modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>
                 {
                     b.Property<Guid>("InstructorProfileId")
@@ -785,6 +848,16 @@ namespace TeduMarket.Infrastructure.Persistence.Migrations
                     b.Navigation("Application");
 
                     b.Navigation("Authorization");
+                });
+
+            modelBuilder.Entity("TeduMarket.Domain.Course.Course", b =>
+                {
+                    b.HasOne("TeduMarket.Domain.Course.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_courses_categories_category_id");
                 });
 
             modelBuilder.Entity("TeduMarket.Domain.Instructor.InstructorProfile", b =>

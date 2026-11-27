@@ -61,7 +61,7 @@ _T21 rồi T22; T23-T24 sau T20._
 _Backend T25-T32 theo chuỗi phụ thuộc; UI T33-T37 song song sau backend tương ứng (mỗi thẻ Category, Coupon, duyệt khóa gộp cả API và UI)._
 
 - [~] T25 Category: CRUD API và App quản trị — epic: Course; phụ thuộc: T13, T20
-- [ ] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
+- [~] T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa — epic: Course; phụ thuộc: T21, T22, T25
 - [ ] T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử — epic: Course; phụ thuộc: T26
 - [ ] T28 Thumbnail khóa học: MinIO, presigned URL — epic: Course; phụ thuộc: T03, T26
 - [ ] T29 Vòng đời duyệt khóa học: Gửi duyệt, Gửi lại, Duyệt, Từ chối kèm Lý do từ chối, Admin đăng không cần duyệt — epic: Course; phụ thuộc: T27
@@ -361,12 +361,15 @@ _Các thẻ này chạy sau khi tính năng liên quan đã lên staging._
 ### T26 Khóa học: tạo/sửa ở trạng thái Chưa đăng, kiểm tra sở hữu, chặn xóa Hồ sơ Instructor còn khóa
 
 - **Epic:** Course · **FR/NFR:** FR-18, FR-19, FR-22, NFR-08 · **Phụ thuộc:** T21, T22, T25
-- **Mô tả:** Instructor/Admin tạo và sửa Khóa học (thông tin, giá, Category); Instructor chỉ sửa khóa của mình, Admin sửa mọi khóa. Gộp từ thẻ chặn xóa: `DeleteInstructorProfileCommandHandler` kiểm tra Instructor còn khóa học (qua cổng của module Course, không truy cập bảng Course trực tiếp) thì từ chối kèm `errorCode`; chốt hành vi khi khóa đã có Enrollment trước khi làm.
+- **Mô tả:** Instructor/Admin tạo, sửa và xóa Khóa học (thông tin, giá, Category; Slug sinh lúc tạo — mở rộng theo yêu cầu của người dùng, cùng `openapi.json` cập nhật); Instructor chỉ sửa khóa của mình, Admin sửa mọi khóa. Gộp từ thẻ chặn xóa: `DeleteInstructorProfileCommandHandler` kiểm tra Instructor còn khóa học (qua cổng của module Course, không truy cập bảng Course trực tiếp) thì từ chối kèm `errorCode`; chốt hành vi khi khóa đã có Enrollment trước khi làm.
 - **Acceptance criteria:**
-  - Khóa mới ở trạng thái Chưa đăng
-  - Instructor sửa khóa của người khác bị từ chối kể cả khi gọi thẳng API
-  - Xóa hồ sơ của Instructor còn khóa học bị từ chối, hồ sơ và role giữ nguyên
-  - Xóa hồ sơ của Instructor không còn khóa học vẫn thành công như T22
+  - [x] Khóa mới ở trạng thái Chưa đăng — integration `Course/CourseTests.cs` (`Create_Instructor_ReturnsDraftOwnedByOwnProfileAndPersistsItAsync`, `Create_AdminForInstructor_...`); unit `CourseTests` (Domain), `CreateCourseCommandHandlerTests`
+  - [x] Instructor sửa khóa của người khác bị từ chối kể cả khi gọi thẳng API — integration `Update_InstructorOfOtherCourse_ReturnsForbiddenAndKeepsCourseAsync`, `Create_InstructorForOtherInstructorProfile_...`; unit `UpdateCourseCommandHandlerTests`
+  - [x] Xóa hồ sơ của Instructor còn khóa học bị từ chối, hồ sơ và role giữ nguyên — integration `DeleteInstructorProfile_InstructorHasCourse_ReturnsInstructorHasCoursesAndKeepsProfileAndRoleAsync`; unit `DeleteInstructorProfileCommandHandlerTests`
+  - [x] Xóa hồ sơ của Instructor không còn khóa học vẫn thành công như T22 — integration `DeleteInstructorProfile_InstructorHasNoCourse_StillSucceedsAsync` và các test T22
+  - [x] (mở rộng) Slug sinh từ tiêu đề, không trùng, không đổi khi sửa — integration `Create_TwoCoursesWithSameTitle_GetDistinctSlugsFromTitleAsync`, `Update_NewTitle_KeepsSlugAsync`; unit `CourseSlugTests`
+  - [x] (mở rộng) Admin/Instructor sở hữu xóa được khóa, người khác bị từ chối — integration `Delete_*` trong `CourseTests`; unit `DeleteCourseCommandHandlerTests`
+  - [x] (mở rộng) `packages/api-client/openapi.json` có `/api/v1/courses` — sinh từ host test tạm
 
 ### T27 Bài học: thêm, sửa, xóa, sắp xếp lại, đánh dấu Xem thử
 
